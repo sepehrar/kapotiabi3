@@ -1,8 +1,4 @@
 {
-  "home": {
-    "title": "CarFix",
-    "description": "Your trusted car repair service"
-  },
   "header": {
     "login": "Log in",
     "startSearch": "Start search",
@@ -15,5 +11,21 @@
       "howItWorks": "How it works",
       "forBusinesses": "For businesses"
     }
+  },
+  "home": {
+    "title": "CarFix",
+    "description": "Your trusted car repair service. Find a service near you, compare prices, ratings and distance. Book an appointment and get your car fixed hassle-free.",
+    "subtitle": "Describe what needs to be done to the car, and the AI will suggest suitable services, confirm the make and model, and display prices, ratings, distance and the date the prices were last updated.",
+    "button": "Start search",
+    "secondaryButton": "How it works"
+  },
+  "howitworks": {
+    "title": "How it works",
+    "step1": "Describe what you need",
+    "step2": "Answer 2–4 questions",
+    "step3": " Compare servicese",
+    "step1desc": "For example: an oil change, tyre fitting, or air conditioning check.",
+    "step2desc": "The AI will clarify the make and model of your car, the quality of parts, the area, and the search radius.",
+    "step3desc": "Get a list showing price, distance, rating, and the date the price was last updated."
   }
 }

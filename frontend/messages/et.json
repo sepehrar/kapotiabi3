@@ -1,8 +1,4 @@
 {
-  "home": {
-    "title": "CarFix",
-    "description": "Sinu usaldusväärne autohoolduse ja remondi teenus"
-  },
   "header": {
     "login": "Logi sisse",
     "startSearch": "Alusta otsingut",
@@ -15,5 +11,21 @@
       "howItWorks": "Kuidas see toimib",
       "forBusinesses": "Ettevõtetele"
     }
+  },
+  "home": {
+    "title": "CarFix",
+    "description": "Sinu usaldusväärne autohoolduse ja remondi teenus. Leia teenus enda lähedal, võrdle hindu, hinnanguid ja vahekaugust. Broneeri aeg ja lase oma auto muretult korda teha.",
+    "subtitle": "Kirjeldage, mida autoga vaja teha, ja tehisintellekt soovitab sobivaid teenuseid, kinnitab automargi ja mudeli ning kuvab hinnad, hinnangud, vahekauguse ja viimase hinnauuenduse kuupäeva.",
+    "button": "Alusta otsingut",
+    "secondaryButton": "Kuidas see toimib"
+  },
+  "howitworks": {
+    "title": "Kuidas see toimib",
+    "step1": "Kirjeldage, mida vajate",
+    "step2": "Vastake 2–4 küsimusele",
+    "step3": "Võrdle teenuseid",
+    "step1desc": "Näiteks: mootoriõli vahetus, kummide paigaldamine või kütusevahetus.",
+    "step2desc": "Tehisintellekt selgitab teie auto marki ja mudeli, osade kvaliteeti, ala ja otsinguradiuse.",
+    "step3desc": "Saage nimekiri, mis kuvab hinda, vahekaugust, hinnangut ja kuupäeva, millal hind viimati uuendati."
   }
 }

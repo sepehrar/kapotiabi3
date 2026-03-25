@@ -20,7 +20,7 @@ export default function Header() {
   ];
 
   return (
-    <div className="bg-white">
+    <div className="bg-black">
       <header>
         <nav
           aria-label="Global"
@@ -36,9 +36,7 @@ export default function Header() {
                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                 className="h-8 w-8"
               />
-              <span className="text-lg font-bold text-gray-900">
-                {t("brand")}
-              </span>
+              <span className="text-lg font-bold text-white">{t("brand")}</span>
             </a>
           </div>
 
@@ -46,7 +44,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-white"
             >
               <span className="sr-only">{t("openMenu")}</span>
               <Bars3Icon aria-hidden="true" className="size-6" />
@@ -58,7 +56,7 @@ export default function Header() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm font-semibold text-gray-900 hover:text-indigo-600"
+                className="text-sm  text-white hover:text-[#f44b05]"
               >
                 {item.name}
               </a>
@@ -66,18 +64,16 @@ export default function Header() {
           </div>
 
           <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:gap-x-6">
-            <LocaleSwitcher />
-
-            <a href="#" className="text-sm font-semibold text-gray-900">
+            <a href="#" className="text-sm  text-white hover:text-[#f44b05]">
               {t("login")}
             </a>
-
             <a
               href="#"
-              className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
+              className="rounded-full bg-[#f44b05] px-4 py-2 text-sm font-semibold text-white hover:bg-[#902d03]"
             >
               {t("startSearch")}
-            </a>
+            </a>{" "}
+            <LocaleSwitcher />
           </div>
         </nav>
 
@@ -86,8 +82,8 @@ export default function Header() {
           onClose={setMobileMenuOpen}
           className="lg:hidden"
         >
-          <div className="fixed inset-0 z-50 bg-black/20" />
-          <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm">
+          <div className="fixed inset-0 z-50 bg-black" />
+          <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-black p-6 sm:max-w-sm">
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 flex items-center gap-2 p-1.5">
                 <span className="sr-only">{t("brand")}</span>
@@ -98,7 +94,7 @@ export default function Header() {
                   src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                   className="h-8 w-8"
                 />
-                <span className="text-lg font-bold text-gray-900">
+                <span className="text-lg font-bold text-white">
                   {t("brand")}
                 </span>
               </a>
@@ -120,7 +116,7 @@ export default function Header() {
                     <a
                       key={item.name}
                       href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50"
+                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-white hover:text-[#f44b05]"
                     >
                       {item.name}
                     </a>
@@ -132,14 +128,14 @@ export default function Header() {
 
                   <a
                     href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-white hover:text-[#f44b05]"
                   >
                     {t("login")}
                   </a>
 
                   <a
                     href="#"
-                    className="block rounded-full bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-indigo-500"
+                    className="block rounded-full bg-[#f44b05] px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#902d03]"
                   >
                     {t("startSearch")}
                   </a>
