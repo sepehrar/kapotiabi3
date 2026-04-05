@@ -14,18 +14,79 @@
   },
   "home": {
     "title": "CarFix",
-    "description": "Your trusted car repair service. Find a service near you, compare prices, ratings and distance. Book an appointment and get your car fixed hassle-free.",
-    "subtitle": "Describe what needs to be done to the car, and the AI will suggest suitable services, confirm the make and model, and display prices, ratings, distance and the date the prices were last updated.",
+    "description": "Find nearby repair shops and compare prices, ratings, and distance in one simple search.",
+    "subtitle": "Describe what your car needs, answer a few short questions, and get matching services with transparent pricing and up-to-date information.",
     "button": "Start search",
-    "secondaryButton": "How it works"
+    "secondaryButton": "See how it works"
   },
-  "howitworks": {
-    "title": "How it works",
-    "step1": "Describe what you need",
-    "step2": "Answer 2–4 questions",
-    "step3": " Compare servicese",
-    "step1desc": "For example: an oil change, tyre fitting, or air conditioning check.",
-    "step2desc": "The AI will clarify the make and model of your car, the quality of parts, the area, and the search radius.",
-    "step3desc": "Get a list showing price, distance, rating, and the date the price was last updated."
+  "howItWorks": {
+    "title": "Find the right car service in 3 simple steps",
+    "step1Title": "Describe what you need",
+    "step1Description": "Tell us what service your car needs and where you are located.",
+    "step2Title": "Answer a few quick questions",
+    "step2Description": "We clarify your car details, parts preference, and search radius.",
+    "step3Title": "Compare your options",
+    "step3Description": "Review nearby repair shops by price, rating, distance, and price update date."
+  },
+  "whatYouCanCompare": {
+    "title": "What you can compare",
+    "description": "Everything you need to choose the right repair shop more confidently.",
+    "item1Title": "Final price",
+    "item1Description": "See the final price or starting price for the service you need.",
+    "item2Title": "Distance",
+    "item2Description": "Check how far each repair shop is from your preferred location.",
+    "item3Title": "Ratings and reviews",
+    "item3Description": "Review Google ratings and the number of reviews at a glance.",
+    "item4Title": "Price freshness",
+    "item4Description": "See when each price was last updated before making your choice."
+  },
+  "popularCategories": {
+    "title": "Popular services",
+    "description": "Start with the service you need most.",
+    "item1": "Oil change",
+    "item2": "Tire service",
+    "item3": "A/C service",
+    "item4": "Brakes",
+    "item5": "Diagnostics",
+    "item6": "Bodywork"
+  },
+  "whyUseCarFix": {
+    "title": "Why use CarFix",
+    "description": "A simpler way to find the right repair shop without searching manually.",
+    "item1Title": "Compare in one place",
+    "item1Description": "See prices, ratings, distance, and service details without opening dozens of pages.",
+    "item2Title": "Save time",
+    "item2Description": "Answer a few short questions and get matching repair shops faster.",
+    "item3Title": "See trusted signals",
+    "item3Description": "Use Google ratings and review counts to compare options more confidently.",
+    "item4Title": "Check price freshness",
+    "item4Description": "See when the listed price was last updated before choosing a repair shop."
+  },
+  "forBusinesses": {
+    "title": "For repair shops",
+    "description": "Show your services, manage your pricing, and reach more local customers through CarFix.",
+    "button": "Claim your listing",
+    "item1Title": "Claim or create your listing",
+    "item1Description": "Find your business, verify ownership, or create a new listing if it does not exist yet.",
+    "item2Title": "Manage services and prices",
+    "item2Description": "Add your service categories, update prices, and show transparent pricing to customers.",
+    "item3Title": "Get more visibility",
+    "item3Description": "Appear where car owners compare repair shops by price, distance, and reviews.",
+    "item4Title": "Track simple performance stats",
+    "item4Description": "See views, calls, directions, and website clicks in one place."
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "description": "Everything you need to know before using CarFix.",
+    "item1Question": "Do I need to sign up to start searching?",
+    "item1Answer": "No. You can start as a guest and explore matching repair shops right away.",
+    "item2Question": "How are prices shown?",
+    "item2Answer": "We show a final price or a starting price, depending on the available information for each service.",
+    "item3Question": "Can I book through CarFix?",
+    "item3Answer": "Not in the MVP. You compare options and then contact the repair shop directly.",
+    "item4Question": "What can I compare?",
+    "item4Answer": "You can compare price, distance, Google rating, review count, and when the price was last updated.",
+    "item5Question": "Why should I create an account?",
+    "item5Answer": "An account lets you save repair shops, compare options, report price issues, and continue after the guest limit."
   }
 }

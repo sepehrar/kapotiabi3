@@ -7,6 +7,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
+import Link from "next/link";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,14 +30,14 @@ export default function Header() {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 flex items-center gap-2 p-1.5">
               <span className="sr-only">{t("brand")}</span>
-              <Image
+              {/* <Image
                 alt={`${t("brand")} logo`}
                 width={32}
                 height={32}
                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                 className="h-8 w-8"
-              />
-              <span className="text-lg font-bold text-white">{t("brand")}</span>
+              /> */}
+              <span className="text-xl font-bold text-white">{t("brand")}</span>
             </a>
           </div>
 
@@ -67,12 +68,12 @@ export default function Header() {
             <a href="#" className="text-sm  text-white hover:text-[#f44b05]">
               {t("login")}
             </a>
-            <a
-              href="#"
+            <Link
+              href="/search"
               className="rounded-full bg-[#f44b05] px-4 py-2 text-sm font-semibold text-white hover:bg-[#902d03]"
             >
               {t("startSearch")}
-            </a>{" "}
+            </Link>{" "}
             <LocaleSwitcher />
           </div>
         </nav>

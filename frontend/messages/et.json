@@ -14,18 +14,79 @@
   },
   "home": {
     "title": "CarFix",
-    "description": "Sinu usaldusväärne autohoolduse ja remondi teenus. Leia teenus enda lähedal, võrdle hindu, hinnanguid ja vahekaugust. Broneeri aeg ja lase oma auto muretult korda teha.",
-    "subtitle": "Kirjeldage, mida autoga vaja teha, ja tehisintellekt soovitab sobivaid teenuseid, kinnitab automargi ja mudeli ning kuvab hinnad, hinnangud, vahekauguse ja viimase hinnauuenduse kuupäeva.",
+    "description": "Leia lähedal asuvaid autoteenindusi ning võrdle hindu, hinnanguid ja kaugust ühe lihtsa otsinguga.",
+    "subtitle": "Kirjelda, mida sinu auto vajab, vasta mõnele lühikesele küsimusele ning saa sobivad teenused koos selgete hindade ja ajakohase infoga.",
     "button": "Alusta otsingut",
-    "secondaryButton": "Kuidas see toimib"
+    "secondaryButton": "Vaata, kuidas see töötab"
   },
-  "howitworks": {
-    "title": "Kuidas see toimib",
-    "step1": "Kirjeldage, mida vajate",
-    "step2": "Vastake 2–4 küsimusele",
-    "step3": "Võrdle teenuseid",
-    "step1desc": "Näiteks: mootoriõli vahetus, kummide paigaldamine või kütusevahetus.",
-    "step2desc": "Tehisintellekt selgitab teie auto marki ja mudeli, osade kvaliteeti, ala ja otsinguradiuse.",
-    "step3desc": "Saage nimekiri, mis kuvab hinda, vahekaugust, hinnangut ja kuupäeva, millal hind viimati uuendati."
+  "howItWorks": {
+    "title": "Kuidas see töötab",
+    "step1Title": "Kirjelda, mida sinu auto vajab",
+    "step1Description": "Sisesta vajalik teenus ja oma linn.",
+    "step2Title": "Vasta mõnele lühikesele küsimusele",
+    "step2Description": "Küsime sinu auto, varuosade eelistuse ja sobiva kauguse kohta.",
+    "step3Title": "Võrdle lähedal asuvaid teenindusi",
+    "step3Description": "Vaata sobivaid teenuseid koos hindade, hinnangute, kauguse ja ajakohase infoga."
+  },
+  "whatYouCanCompare": {
+    "title": "Mida saad võrrelda",
+    "description": "Kõik oluline, et valida õige autoteenus kindlama tundega.",
+    "item1Title": "Lõpphind",
+    "item1Description": "Vaata teenuse lõpphinda või alghinda.",
+    "item2Title": "Kaugus",
+    "item2Description": "Kontrolli, kui kaugel iga autoteenus sinu eelistatud asukohast asub.",
+    "item3Title": "Hinnangud ja arvustused",
+    "item3Description": "Vaata kiiresti Google’i hinnanguid ja arvustuste arvu.",
+    "item4Title": "Hinna ajakohasus",
+    "item4Description": "Näe, millal iga hind viimati uuendati enne otsuse tegemist."
+  },
+  "popularCategories": {
+    "title": "Populaarsed teenused",
+    "description": "Alusta teenusest, mida sinu auto kõige rohkem vajab.",
+    "item1": "Õlivahetus",
+    "item2": "Rehviteenus",
+    "item3": "Kliimaseadme hooldus",
+    "item4": "Pidurid",
+    "item5": "Diagnostika",
+    "item6": "Keretööd"
+  },
+  "whyUseCarFix": {
+    "title": "Miks kasutada CarFixi",
+    "description": "Lihtsam viis sobiva autoteenuse leidmiseks ilma käsitsi otsimata.",
+    "item1Title": "Võrdle ühest kohast",
+    "item1Description": "Näe hindu, hinnanguid, kaugust ja teenuse andmeid ilma kümneid lehti avamata.",
+    "item2Title": "Säästa aega",
+    "item2Description": "Vasta mõnele lühikesele küsimusele ja leia sobivad teenindused kiiremini.",
+    "item3Title": "Kasuta usaldusväärseid signaale",
+    "item3Description": "Võrdle valikuid kindlamalt Google’i hinnangute ja arvustuste arvu põhjal.",
+    "item4Title": "Kontrolli hinna ajakohasust",
+    "item4Description": "Näe, millal hind viimati uuendati enne autoteenuse valimist."
+  },
+  "forBusinesses": {
+    "title": "Autoteenindustele",
+    "description": "Näita oma teenuseid, halda hindu ja jõua rohkemate kohalike klientideni CarFixi kaudu.",
+    "button": "Halda oma kuulutust",
+    "item1Title": "Halda või loo oma kuulutus",
+    "item1Description": "Leia oma ettevõte, kinnita omandiõigus või loo uus kuulutus, kui seda veel ei ole.",
+    "item2Title": "Halda teenuseid ja hindu",
+    "item2Description": "Lisa teenusekategooriad, uuenda hindu ja näita klientidele läbipaistvat hinnastust.",
+    "item3Title": "Saa rohkem nähtavust",
+    "item3Description": "Ole nähtav seal, kus autojuhid võrdlevad autoteenuseid hinna, kauguse ja arvustuste järgi.",
+    "item4Title": "Jälgi peamisi näitajaid",
+    "item4Description": "Vaata ühest kohast vaatamisi, kõnesid, marsruudipäringuid ja veebilehe klikke."
+  },
+  "faq": {
+    "title": "Korduma kippuvad küsimused",
+    "description": "Kõik, mida pead enne CarFixi kasutamist teadma.",
+    "item1Question": "Kas otsingu alustamiseks peab konto looma?",
+    "item1Answer": "Ei. Saad alustada külalisena ja vaadata sobivaid autoteenindusi kohe.",
+    "item2Question": "Kuidas hinnad kuvatakse?",
+    "item2Answer": "Kuvame lõpphinna või alghinna, sõltuvalt sellest, milline info on teenuse kohta saadaval.",
+    "item3Question": "Kas CarFixi kaudu saab broneerida?",
+    "item3Answer": "MVP faasis mitte. Sa võrdled valikuid ja võtad seejärel autoteenindusega ise ühendust.",
+    "item4Question": "Mida ma saan võrrelda?",
+    "item4Answer": "Saad võrrelda hinda, kaugust, Google’i hinnangut, arvustuste arvu ja kuupäeva, millal hind viimati uuendati.",
+    "item5Question": "Miks peaksin konto looma?",
+    "item5Answer": "Konto abil saad teenindusi salvestada, valikuid võrrelda, hinnaprobleemidest teada anda ja jätkata pärast külalise limiidi täitumist."
   }
 }
