@@ -1,10 +1,19 @@
 package com.kapotiabi.repository;
 
 import com.kapotiabi.entity.RepairShopEntity;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface RepairShopRepository extends JpaRepository<RepairShopEntity, Long> {
+  List<RepairShopEntity> findByOwnerId(Long ownerId);
 
-public interface RepairShopRepository extends JpaRepository<RepairShopEntity, Integer> {
-    Optional<RepairShopEntity> findByOwnerId(Integer ownerId);
+  List<RepairShopEntity> findByCity(String city);
+
+  List<RepairShopEntity> findByCounty(String county);
+
+  List<RepairShopEntity> findByStatus(String status);
+
+  List<RepairShopEntity> findByStatusAndCity(String status, String city);
+
+  List<RepairShopEntity> findByStatusAndCounty(String status, String county);
 }

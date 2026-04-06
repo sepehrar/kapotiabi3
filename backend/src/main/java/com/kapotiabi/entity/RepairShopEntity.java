@@ -1,12 +1,11 @@
 package com.kapotiabi.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -16,42 +15,43 @@ import java.time.LocalDateTime;
 @Table(name = "repair_shops")
 public class RepairShopEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "owner_id", nullable = false)
-    private Integer ownerId;
+  @Column(name = "owner_id", nullable = false)
+  private Long ownerId;
 
-    @Column(nullable = false)
-    private String name;
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    private String address;
-    private String city;
-    private String county;
-    private String phone;
-    private String email;
-    private String website;
+  @Column(name = "address")
+  private String address;
 
-    @Column(name = "google_maps_url")
-    private String googleMapsUrl;
+  @Column(name = "city")
+  private String city;
 
-    private String status;
+  @Column(name = "county")
+  private String county;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+  @Column(name = "phone")
+  private String phone;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @Column(name = "email")
+  private String email;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+  @Column(name = "website")
+  private String website;
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+  @Column(name = "google_maps_url")
+  private String googleMapsUrl;
+
+  @Column(name = "status")
+  private String status;
+
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
+
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 }

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;NON_KEYWORDS=YEAR,VALUE,USER
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -11,6 +11,5 @@ spring:
   flyway:
     enabled: false
 
-jwt:
-  secret: test-secret-key-min-256-bits-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  expiration-ms: 86400000
+app:
+  upload-dir: /tmp/test-uploads
