@@ -1,9 +1,10 @@
 package com.kapotiabi.repository;
 
-import com.kapotiabi.entity.CarEntity;
-import java.util.List;
+import com.kapotiabi.entity.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CarRepository extends JpaRepository<CarEntity, Long> {
-  List<CarEntity> findByOwnerId(Long ownerId);
+import java.util.List;
+
+public interface CarRepository extends JpaRepository<Car, Long> {
+    List<Car> findByOwnerId(Long ownerId);
 }

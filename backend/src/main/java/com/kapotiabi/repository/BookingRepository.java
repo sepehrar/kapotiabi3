@@ -1,14 +1,13 @@
 package com.kapotiabi.repository;
 
-import com.kapotiabi.entity.BookingEntity;
-import java.util.List;
-import java.util.Optional;
+import com.kapotiabi.entity.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
-  List<BookingEntity> findByUserId(Long userId);
+import java.util.List;
+import java.util.Optional;
 
-  List<BookingEntity> findByShopId(Long shopId);
-
-  Optional<BookingEntity> findByOfferId(Long offerId);
+public interface BookingRepository extends JpaRepository<Booking, Long> {
+    List<Booking> findByUserId(Long userId);
+    List<Booking> findByShopId(Long shopId);
+    Optional<Booking> findByOfferId(Long offerId);
 }

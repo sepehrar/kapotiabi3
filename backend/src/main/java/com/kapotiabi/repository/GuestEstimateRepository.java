@@ -1,6 +1,7 @@
 package com.kapotiabi.repository;
 
-import com.kapotiabi.entity.GuestEstimateEntity;
+import com.kapotiabi.entity.GuestEstimate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GuestEstimateRepository extends JpaRepository<GuestEstimateEntity, Long> {}
+public interface GuestEstimateRepository extends JpaRepository<GuestEstimate, Long> {
+}

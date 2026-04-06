@@ -1,10 +1,10 @@
 package com.kapotiabi.repository;
 
-import com.kapotiabi.entity.GuestEstimateResultEntity;
-import java.util.List;
+import com.kapotiabi.entity.GuestEstimateResult;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GuestEstimateResultRepository
-    extends JpaRepository<GuestEstimateResultEntity, Long> {
-  List<GuestEstimateResultEntity> findByGuestEstimateId(Long guestEstimateId);
+import java.util.List;
+
+public interface GuestEstimateResultRepository extends JpaRepository<GuestEstimateResult, Long> {
+    List<GuestEstimateResult> findByGuestEstimateId(Long guestEstimateId);
 }

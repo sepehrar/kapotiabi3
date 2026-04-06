@@ -1,15 +1,13 @@
 package com.kapotiabi.repository;
 
-import com.kapotiabi.entity.JobRequestEntity;
-import java.util.List;
+import com.kapotiabi.entity.JobRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface JobRequestRepository extends JpaRepository<JobRequestEntity, Long> {
-  List<JobRequestEntity> findByUserId(Long userId);
+import java.util.List;
 
-  List<JobRequestEntity> findByStatusAndCity(String status, String city);
-
-  List<JobRequestEntity> findByStatusAndCounty(String status, String county);
-
-  List<JobRequestEntity> findByStatus(String status);
+public interface JobRequestRepository extends JpaRepository<JobRequest, Long> {
+    List<JobRequest> findByUserId(Long userId);
+    List<JobRequest> findByStatusAndCity(String status, String city);
+    List<JobRequest> findByStatusAndCounty(String status, String county);
+    List<JobRequest> findByStatus(String status);
 }

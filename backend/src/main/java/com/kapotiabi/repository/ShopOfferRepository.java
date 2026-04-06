@@ -1,11 +1,11 @@
 package com.kapotiabi.repository;
 
-import com.kapotiabi.entity.ShopOfferEntity;
-import java.util.List;
+import com.kapotiabi.entity.ShopOffer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ShopOfferRepository extends JpaRepository<ShopOfferEntity, Long> {
-  List<ShopOfferEntity> findByJobRequestId(Long jobRequestId);
+import java.util.List;
 
-  List<ShopOfferEntity> findByShopId(Long shopId);
+public interface ShopOfferRepository extends JpaRepository<ShopOffer, Long> {
+    List<ShopOffer> findByJobRequestId(Long jobRequestId);
+    List<ShopOffer> findByShopId(Long shopId);
 }

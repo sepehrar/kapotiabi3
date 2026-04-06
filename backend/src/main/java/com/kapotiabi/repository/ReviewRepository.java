@@ -1,12 +1,12 @@
 package com.kapotiabi.repository;
 
-import com.kapotiabi.entity.ReviewEntity;
-import java.util.List;
-import java.util.Optional;
+import com.kapotiabi.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
-  List<ReviewEntity> findByShopId(Long shopId);
+import java.util.List;
+import java.util.Optional;
 
-  Optional<ReviewEntity> findByBookingId(Long bookingId);
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+    List<Review> findByShopId(Long shopId);
+    Optional<Review> findByBookingId(Long bookingId);
 }

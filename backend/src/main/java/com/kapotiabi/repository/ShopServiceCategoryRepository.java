@@ -1,10 +1,10 @@
 package com.kapotiabi.repository;
 
-import com.kapotiabi.entity.ShopServiceCategoryEntity;
-import java.util.List;
+import com.kapotiabi.entity.ShopServiceCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ShopServiceCategoryRepository
-    extends JpaRepository<ShopServiceCategoryEntity, Long> {
-  List<ShopServiceCategoryEntity> findByShopId(Long shopId);
+import java.util.List;
+
+public interface ShopServiceCategoryRepository extends JpaRepository<ShopServiceCategory, Long> {
+    List<ShopServiceCategory> findByShopId(Long shopId);
 }
