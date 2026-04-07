@@ -38,7 +38,12 @@ export default function Hero() {
               >
                 {t("button")}
               </Link>
-
+              {/* <AccentButton
+                href="/search"
+                className="flex w-full justify-center py-2.5"
+              >
+                {t("startSearch")}
+              </AccentButton> */}
               <a href="#" className="mt-8 text-sm text-white">
                 {t("secondaryButton")}
               </a>

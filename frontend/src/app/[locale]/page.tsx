@@ -1,12 +1,12 @@
-import Hero from "@/components/ui/landing/Hero";
+import Hero from "@/components/landing/Hero";
 import CTA from "@/components/ui/CTA";
 import Testimonials from "@/components/ui/Testimonials";
-import HowItWorks from "@/components/ui/landing/HowItworks";
-import WhatCompare from "@/components/ui/landing/WhatСompare";
-import PopularCategories from "@/components/ui/landing/PopularCategories";
-import WhyUseCarFix from "@/components/ui/landing/WhyUseCarFix";
-import ForBusinesses from "@/components/ui/landing/ForBusinesses";
-import FAQ from "@/components/ui/landing/FAQ";
+import HowItWorks from "@/components/landing/HowItworks";
+import WhatCompare from "@/components/landing/WhatСompare";
+import PopularCategories from "@/components/landing/PopularCategories";
+import WhyUseCarFix from "@/components/landing/WhyUseCarFix";
+import ForBusinesses from "@/components/landing/ForBusinesses";
+import FAQ from "@/components/landing/FAQ";
 // import { useTranslations } from "next-intl";
 
 export default function Home() {

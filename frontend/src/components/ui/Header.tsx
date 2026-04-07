@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 import Link from "next/link";
+import AccentButton from "@/components/ui/AccentButton";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -68,12 +69,7 @@ export default function Header() {
             <a href="#" className="text-sm  text-white hover:text-[#f44b05]">
               {t("login")}
             </a>
-            <Link
-              href="/search"
-              className="rounded-full bg-[#f44b05] px-4 py-2 text-sm font-semibold text-white hover:bg-[#902d03]"
-            >
-              {t("startSearch")}
-            </Link>{" "}
+            <AccentButton href="/search">{t("startSearch")}</AccentButton>
             <LocaleSwitcher />
           </div>
         </nav>
@@ -86,7 +82,7 @@ export default function Header() {
           <div className="fixed inset-0 z-50 bg-black" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-black p-6 sm:max-w-sm">
             <div className="flex items-center justify-between">
-              <a href="#" className="-m-1.5 flex items-center gap-2 p-1.5">
+              <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
                 <span className="sr-only">{t("brand")}</span>
                 <Image
                   alt={`${t("brand")} logo`}
@@ -98,7 +94,7 @@ export default function Header() {
                 <span className="text-lg font-bold text-white">
                   {t("brand")}
                 </span>
-              </a>
+              </Link>
 
               <button
                 type="button"
@@ -134,12 +130,7 @@ export default function Header() {
                     {t("login")}
                   </a>
 
-                  <a
-                    href="#"
-                    className="block rounded-full bg-[#f44b05] px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#902d03]"
-                  >
-                    {t("startSearch")}
-                  </a>
+                  <AccentButton href="/search">{t("startSearch")}</AccentButton>
                 </div>
               </div>
             </div>

@@ -88,5 +88,47 @@
     "item4Answer": "Saad võrrelda hinda, kaugust, Google’i hinnangut, arvustuste arvu ja kuupäeva, millal hind viimati uuendati.",
     "item5Question": "Miks peaksin konto looma?",
     "item5Answer": "Konto abil saad teenindusi salvestada, valikuid võrrelda, hinnaprobleemidest teada anda ja jätkata pärast külalise limiidi täitumist."
+  },
+  "register": {
+    "title": "Loo oma konto",
+    "description": "Registreeru, et kasutada platvormi ja leida töökodasid kiiremini.",
+    "fields": {
+      "name": {
+        "label": "Täisnimi",
+        "placeholder": "Sisesta oma täisnimi"
+      },
+      "email": {
+        "label": "E-post",
+        "placeholder": "Sisesta oma e-post"
+      },
+      "password": {
+        "label": "Parool",
+        "placeholder": "Loo parool"
+      },
+      "confirmPassword": {
+        "label": "Kinnita parool",
+        "placeholder": "Sisesta parool uuesti"
+      }
+    },
+    "actions": {
+      "submit": "Loo konto",
+      "submitting": "Loomine..."
+    },
+    "messages": {
+      "success": "Konto loodi edukalt."
+    },
+    "links": {
+      "loginPrompt": "Kas sul on juba konto?",
+      "login": "Logi sisse"
+    },
+    "errors": {
+      "allFieldsRequired": "Palun täida kõik väljad.",
+      "invalidEmail": "Palun sisesta korrektne e-posti aadress.",
+      "passwordTooShort": "Parool peab olema vähemalt 6 tähemärki pikk.",
+      "passwordsDoNotMatch": "Paroolid ei kattu.",
+      "generic": "Midagi läks valesti. Palun proovi uuesti.",
+      "nameTooShort": "Täisnimi peab olema vähemalt 2 tähemärki pikk.",
+      "nameTooLong": "Täisnimi ei tohi olla pikem kui 80 tähemärki."
+    }
   }
 }

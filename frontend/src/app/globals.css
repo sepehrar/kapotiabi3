@@ -4,6 +4,10 @@
   --background: #ffffff;
   --foreground: #171717;
   --font-sans: var(--font-montserrat);
+
+  --accent: #f44b05;
+  --accent-hover: #902d03;
+  --accent-foreground: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {

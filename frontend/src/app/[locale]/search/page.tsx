@@ -1,4 +1,4 @@
-import SearchPageView from "../../../components/ui/search/SearchPageView";
+import SearchPageView from "../../../components/search/SearchPageView";
 
 export default function SearchPage() {
   return <SearchPageView />;
