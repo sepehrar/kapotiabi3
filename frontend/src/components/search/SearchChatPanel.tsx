@@ -1,6 +1,6 @@
 import GuestCounter from "./GuestCounter";
 
-type Message = {
+export type Message = {
   id: number;
   role: "assistant" | "user";
   text: string;

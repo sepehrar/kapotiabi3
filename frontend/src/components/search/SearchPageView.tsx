@@ -1,10 +1,10 @@
 import SearchHeader from "./SearchHeader";
-import SearchChatPanel from "./SearchChatPanel";
+import SearchChatPanel, { type Message } from "./SearchChatPanel";
 import SearchSummary from "./SearchSummary";
 import SearchResultsToolbar from "./SearchResultsToolbar";
 import SearchResultsPanel from "./SearchResultsPanel";
 
-const mockMessages = [
+const mockMessages: Message[] = [
   {
     id: 1,
     role: "assistant",
@@ -76,11 +76,12 @@ export default function SearchPageView() {
   return (
     <section className="bg-black">
       <div className="mx-auto w-full max-w-7xl px-6 py-8 sm:px-12 lg:px-8 lg:py-10">
-        <div className="flex flex-col lg:flex-row gap-10">
-          <div className="max-w-xl gap-12 flex flex-col">
+        <div className="flex flex-col gap-10 lg:flex-row">
+          <div className="flex max-w-xl flex-col gap-12">
             <SearchHeader />
             <SearchSummary filters={mockFilters} />
           </div>
+
           <div className="w-full">
             <SearchChatPanel
               messages={mockMessages}

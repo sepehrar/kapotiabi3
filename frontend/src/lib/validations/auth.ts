@@ -1,3 +1,5 @@
+// frontend\src\lib\validations\auth.ts
+// register
 export type RegisterFormData = {
   firstName: string;
   lastName: string;
@@ -63,6 +65,31 @@ export function validateRegisterForm(
 
   if (form.password !== form.confirmPassword) {
     return "passwordsDoNotMatch";
+  }
+
+  return "";
+}
+
+// login
+export type LoginFormData = {
+  email: string;
+  password: string;
+};
+
+export type LoginValidationErrorKey = "allFieldsRequired" | "invalidEmail" | "";
+
+export function validateLoginForm(
+  form: LoginFormData,
+): LoginValidationErrorKey {
+  const email = form.email.trim();
+
+  if (!email || !form.password) {
+    return "allFieldsRequired";
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return "invalidEmail";
   }
 
   return "";

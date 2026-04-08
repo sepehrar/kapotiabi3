@@ -143,5 +143,34 @@
       "passwordsDoNotMatch": "Passwords do not match.",
       "generic": "Something went wrong. Please try again."
     }
+  },
+  "login": {
+    "title": "Welcome back!",
+    "description": "Log in to continue using the platform and manage your account.",
+    "fields": {
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter your email"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password",
+        "show": "Show password",
+        "hide": "Hide password"
+      }
+    },
+    "actions": {
+      "submit": "Log in",
+      "submitting": "Logging in..."
+    },
+    "links": {
+      "registerPrompt": "Don’t have an account?",
+      "register": "Create one"
+    },
+    "errors": {
+      "allFieldsRequired": "Please fill in all required fields.",
+      "invalidEmail": "Please enter a valid email address.",
+      "generic": "Something went wrong. Please try again."
+    }
   }
 }

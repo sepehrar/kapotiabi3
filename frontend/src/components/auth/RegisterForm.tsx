@@ -126,8 +126,8 @@ export default function RegisterForm() {
 
   return (
     <section className="bg-black">
-      <div className="mx-auto grid min-h-screen max-w-7xl lg:grid-cols-2">
-        <div className="flex items-start px-6 py-8 sm:py-20 lg:px-8">
+      <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
+        <div className="flex items-start px-6 sm:pt-20 pb-20 lg:pb-52 lg:px-8 lg:justify-start justify-center">
           <div className="w-full max-w-xl lg:max-w-lg">
             <SectionTitle title={t("title")} description={t("description")} />
 
@@ -313,14 +313,14 @@ export default function RegisterForm() {
           </div>
         </div>
 
-        <div className="relative min-h-60">
+        <div className="relative min-h-40 lg:block hidden">
           <Image
             alt="Car workshop"
             src="/img/vidhi00.jpg"
             fill
             priority
             sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover"
+            className="object-contain"
           />
         </div>
       </div>

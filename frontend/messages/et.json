@@ -143,5 +143,34 @@
       "passwordsDoNotMatch": "Paroolid ei kattu.",
       "generic": "Midagi läks valesti. Palun proovi uuesti."
     }
+  },
+  "login": {
+    "title": "Tere tulemast tagasi!",
+    "description": "Logi sisse, et jätkata platvormi kasutamist ja hallata oma kontot.",
+    "fields": {
+      "email": {
+        "label": "E-post",
+        "placeholder": "Sisesta oma e-post"
+      },
+      "password": {
+        "label": "Parool",
+        "placeholder": "Sisesta oma parool",
+        "show": "Näita parooli",
+        "hide": "Peida parool"
+      }
+    },
+    "actions": {
+      "submit": "Logi sisse",
+      "submitting": "Sisselogimine..."
+    },
+    "links": {
+      "registerPrompt": "Kas sul ei ole veel kontot?",
+      "register": "Loo konto"
+    },
+    "errors": {
+      "allFieldsRequired": "Palun täida kõik kohustuslikud väljad.",
+      "invalidEmail": "Palun sisesta korrektne e-posti aadress.",
+      "generic": "Midagi läks valesti. Palun proovi uuesti."
+    }
   }
 }
