@@ -1,5 +1,6 @@
 "use client";
 
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
@@ -10,19 +11,31 @@ import {
   type RegisterFormData,
 } from "@/lib/validations/auth";
 
+type RegisterApiResponse = {
+  token: string;
+  expiresAt: string;
+  role: string;
+  userId: number;
+  shopStatus: string | null;
+};
+
 export default function RegisterForm() {
   const t = useTranslations("register");
 
   const [form, setForm] = useState<RegisterFormData>({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
+    phone: "",
   });
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,21 +60,62 @@ export default function RegisterForm() {
     try {
       setLoading(true);
 
-      console.log("Register payload:", {
-        name: form.name,
-        email: form.email,
-        password: form.password,
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      if (!apiUrl) {
+        throw new Error("NEXT_PUBLIC_API_URL is not configured.");
+      }
+
+      const response = await fetch(`${apiUrl}/api/v1/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: form.firstName.trim(),
+          lastName: form.lastName.trim(),
+          email: form.email.trim(),
+          password: form.password,
+          phone: form.phone.trim(),
+          role: "car_owner",
+        }),
       });
+
+      const data = (await response.json().catch(() => null)) as
+        | RegisterApiResponse
+        | { message?: string; error?: string }
+        | null;
+
+      if (!response.ok) {
+        const message =
+          (data && "message" in data && data.message) ||
+          (data && "error" in data && data.error) ||
+          t("errors.generic");
+
+        throw new Error(message);
+      }
+
+      console.log("Register response:", data);
+
+      // Temporary solution for now. You can decide later where auth should be stored.
+      // I do not recommend localStorage as a final solution.
+      // For the demo stage, sessionStorage is safer than localStorage.
+      if (data && "token" in data && data.token) {
+        sessionStorage.setItem("authToken", data.token);
+      }
 
       setSuccess(t("messages.success"));
       setForm({
-        name: "",
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         confirmPassword: "",
+        phone: "",
       });
-    } catch {
-      setError(t("errors.generic"));
+      setShowPassword(false);
+      setShowConfirmPassword(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("errors.generic"));
     } finally {
       setLoading(false);
     }
@@ -79,20 +133,38 @@ export default function RegisterForm() {
 
             <form onSubmit={handleSubmit} className="mt-12" noValidate>
               <div className="grid grid-cols-1 gap-y-8">
-                <div>
-                  <label htmlFor="name" className="sr-only">
-                    {t("fields.name.label")}
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    placeholder={t("fields.name.placeholder")}
-                    value={form.name}
-                    onChange={handleChange}
-                    className={inputClassName}
-                  />
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="firstName" className="sr-only">
+                      {t("fields.firstName.label")}
+                    </label>
+                    <input
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      autoComplete="given-name"
+                      placeholder={t("fields.firstName.placeholder")}
+                      value={form.firstName}
+                      onChange={handleChange}
+                      className={inputClassName}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="lastName" className="sr-only">
+                      {t("fields.lastName.label")}
+                    </label>
+                    <input
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      autoComplete="family-name"
+                      placeholder={t("fields.lastName.placeholder")}
+                      value={form.lastName}
+                      onChange={handleChange}
+                      className={inputClassName}
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -112,35 +184,91 @@ export default function RegisterForm() {
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="sr-only">
-                    {t("fields.password.label")}
+                  <label htmlFor="phone" className="sr-only">
+                    {t("fields.phone.label")}
                   </label>
                   <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder={t("fields.password.placeholder")}
-                    value={form.password}
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    placeholder={t("fields.phone.placeholder")}
+                    value={form.phone}
                     onChange={handleChange}
                     className={inputClassName}
                   />
                 </div>
 
                 <div>
+                  <label htmlFor="password" className="sr-only">
+                    {t("fields.password.label")}
+                  </label>
+
+                  <div className="relative">
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      placeholder={t("fields.password.placeholder")}
+                      value={form.password}
+                      onChange={handleChange}
+                      className={`${inputClassName} pr-10`}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      aria-label={
+                        showPassword
+                          ? t("fields.password.hide")
+                          : t("fields.password.show")
+                      }
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-white"
+                    >
+                      {showPassword ? (
+                        <EyeSlashIcon className="size-5" />
+                      ) : (
+                        <EyeIcon className="size-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
                   <label htmlFor="confirmPassword" className="sr-only">
                     {t("fields.confirmPassword.label")}
                   </label>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder={t("fields.confirmPassword.placeholder")}
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    className={inputClassName}
-                  />
+
+                  <div className="relative">
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      placeholder={t("fields.confirmPassword.placeholder")}
+                      value={form.confirmPassword}
+                      onChange={handleChange}
+                      className={`${inputClassName} pr-10`}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      aria-label={
+                        showConfirmPassword
+                          ? t("fields.confirmPassword.hide")
+                          : t("fields.confirmPassword.show")
+                      }
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-white"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeSlashIcon className="size-5" />
+                      ) : (
+                        <EyeIcon className="size-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
 

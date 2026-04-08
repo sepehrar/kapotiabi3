@@ -2,7 +2,7 @@ import Hero from "@/components/landing/Hero";
 import CTA from "@/components/ui/CTA";
 import Testimonials from "@/components/ui/Testimonials";
 import HowItWorks from "@/components/landing/HowItworks";
-import WhatCompare from "@/components/landing/WhatСompare";
+import WhatCompare from "@/components/landing/WhatCompare";
 import PopularCategories from "@/components/landing/PopularCategories";
 import WhyUseCarFix from "@/components/landing/WhyUseCarFix";
 import ForBusinesses from "@/components/landing/ForBusinesses";

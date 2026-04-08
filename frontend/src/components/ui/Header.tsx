@@ -29,7 +29,7 @@ export default function Header() {
           className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
         >
           <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 flex items-center gap-2 p-1.5">
+            <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
               <span className="sr-only">{t("brand")}</span>
               {/* <Image
                 alt={`${t("brand")} logo`}
@@ -39,7 +39,7 @@ export default function Header() {
                 className="h-8 w-8"
               /> */}
               <span className="text-xl font-bold text-white">{t("brand")}</span>
-            </a>
+            </Link>
           </div>
 
           <div className="flex lg:hidden">
@@ -53,12 +53,12 @@ export default function Header() {
             </button>
           </div>
 
-          <div className="hidden lg:flex lg:gap-x-12">
+          <div className="hidden lg:flex lg:gap-x-6">
             {navigation.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm  text-white hover:text-[#f44b05]"
+                className="text-sm  text-white hover:text-(--accent)"
               >
                 {item.name}
               </a>
@@ -66,9 +66,12 @@ export default function Header() {
           </div>
 
           <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:gap-x-6">
-            <a href="#" className="text-sm  text-white hover:text-[#f44b05]">
+            <Link
+              href="/login"
+              className="text-sm  text-white hover:text-(--accent)"
+            >
               {t("login")}
-            </a>
+            </Link>
             <AccentButton href="/search">{t("startSearch")}</AccentButton>
             <LocaleSwitcher />
           </div>
@@ -84,14 +87,14 @@ export default function Header() {
             <div className="flex items-center justify-between">
               <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
                 <span className="sr-only">{t("brand")}</span>
-                <Image
+                {/* <Image
                   alt={`${t("brand")} logo`}
                   width={32}
                   height={32}
                   src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                   className="h-8 w-8"
-                />
-                <span className="text-lg font-bold text-white">
+                /> */}
+                <span className="text-2xl font-bold text-white">
                   {t("brand")}
                 </span>
               </Link>
@@ -99,7 +102,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="-m-2.5 rounded-md p-2.5 text-gray-700"
+                className="-m-2.5 rounded-md p-2.5 text-white"
               >
                 <span className="sr-only">{t("closeMenu")}</span>
                 <XMarkIcon aria-hidden="true" className="size-6" />
@@ -108,27 +111,27 @@ export default function Header() {
 
             <div className="mt-6 flow-root">
               <div className="-my-6 divide-y divide-gray-200">
-                <div className="space-y-2 py-6">
+                <div className="space-y-1 py-6">
                   {navigation.map((item) => (
                     <a
                       key={item.name}
                       href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-white hover:text-[#f44b05]"
+                      className="-mx-3 block rounded-lg px-2 py-2 text-base font-semibold text-white hover:text-(--accent)"
                     >
                       {item.name}
                     </a>
                   ))}
                 </div>
 
-                <div className="space-y-4 py-6">
+                <div className="space-y-2 py-6">
                   <LocaleSwitcher />
 
-                  <a
-                    href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-white hover:text-[#f44b05]"
+                  <Link
+                    href="/login"
+                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-white hover:text-(--accent) "
                   >
                     {t("login")}
-                  </a>
+                  </Link>
 
                   <AccentButton href="/search">{t("startSearch")}</AccentButton>
                 </div>

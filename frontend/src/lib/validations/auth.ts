@@ -1,15 +1,18 @@
 export type RegisterFormData = {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   confirmPassword: string;
+  phone: string;
 };
 
 export type RegisterValidationErrorKey =
   | "allFieldsRequired"
-  | "nameTooShort"
-  | "nameTooLong"
+  | "firstNameTooShort"
+  | "lastNameTooShort"
   | "invalidEmail"
+  | "invalidPhone"
   | "passwordTooShort"
   | "passwordsDoNotMatch"
   | "";
@@ -17,29 +20,41 @@ export type RegisterValidationErrorKey =
 export function validateRegisterForm(
   form: RegisterFormData,
 ): RegisterValidationErrorKey {
-  const trimmedName = form.name.trim();
-  const trimmedEmail = form.email.trim();
+  const firstName = form.firstName.trim();
+  const lastName = form.lastName.trim();
+  const email = form.email.trim();
+  const phone = form.phone.trim();
 
   if (
-    !trimmedName ||
-    !trimmedEmail ||
+    !firstName ||
+    !lastName ||
+    !email ||
     !form.password ||
     !form.confirmPassword
   ) {
     return "allFieldsRequired";
   }
 
-  if (trimmedName.length < 2) {
-    return "nameTooShort";
+  if (firstName.length < 2) {
+    return "firstNameTooShort";
   }
 
-  if (trimmedName.length > 80) {
-    return "nameTooLong";
+  if (lastName.length < 2) {
+    return "lastNameTooShort";
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(trimmedEmail)) {
+  if (!emailRegex.test(email)) {
     return "invalidEmail";
+  }
+
+  if (phone) {
+    const phoneRegex = /^[+\d\s\-()]+$/;
+    const digitsOnly = phone.replace(/\D/g, "");
+
+    if (!phoneRegex.test(phone) || digitsOnly.length < 7) {
+      return "invalidPhone";
+    }
   }
 
   if (form.password.length < 6) {

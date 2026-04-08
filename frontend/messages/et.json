@@ -93,21 +93,33 @@
     "title": "Loo oma konto",
     "description": "Registreeru, et kasutada platvormi ja leida töökodasid kiiremini.",
     "fields": {
-      "name": {
-        "label": "Täisnimi",
-        "placeholder": "Sisesta oma täisnimi"
+      "firstName": {
+        "label": "Eesnimi",
+        "placeholder": "Sisesta oma eesnimi"
+      },
+      "lastName": {
+        "label": "Perekonnanimi",
+        "placeholder": "Sisesta oma perekonnanimi"
       },
       "email": {
         "label": "E-post",
         "placeholder": "Sisesta oma e-post"
       },
+      "phone": {
+        "label": "Telefon",
+        "placeholder": "Sisesta oma telefoninumber (valikuline)"
+      },
       "password": {
         "label": "Parool",
-        "placeholder": "Loo parool"
+        "placeholder": "Loo parool",
+        "show": "Näita parooli",
+        "hide": "Peida parool"
       },
       "confirmPassword": {
         "label": "Kinnita parool",
-        "placeholder": "Sisesta parool uuesti"
+        "placeholder": "Sisesta parool uuesti",
+        "show": "Näita parooli kinnitust",
+        "hide": "Peida parooli kinnitus"
       }
     },
     "actions": {
@@ -122,13 +134,14 @@
       "login": "Logi sisse"
     },
     "errors": {
-      "allFieldsRequired": "Palun täida kõik väljad.",
+      "allFieldsRequired": "Palun täida kõik kohustuslikud väljad.",
+      "firstNameTooShort": "Eesnimi peab olema vähemalt 2 tähemärki pikk.",
+      "lastNameTooShort": "Perekonnanimi peab olema vähemalt 2 tähemärki pikk.",
       "invalidEmail": "Palun sisesta korrektne e-posti aadress.",
+      "invalidPhone": "Palun sisesta korrektne telefoninumber.",
       "passwordTooShort": "Parool peab olema vähemalt 6 tähemärki pikk.",
       "passwordsDoNotMatch": "Paroolid ei kattu.",
-      "generic": "Midagi läks valesti. Palun proovi uuesti.",
-      "nameTooShort": "Täisnimi peab olema vähemalt 2 tähemärki pikk.",
-      "nameTooLong": "Täisnimi ei tohi olla pikem kui 80 tähemärki."
+      "generic": "Midagi läks valesti. Palun proovi uuesti."
     }
   }
 }

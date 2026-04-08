@@ -64,7 +64,7 @@
 
 export default function Footer() {
   return (
-    <footer className="bg-black border-t border-white/10">
+    <footer className="bg-black border-t border-white/40">
       <div className="mx-auto max-w-7xl px-6 py-5 md:flex md:items-center md:justify-between lg:px-8">
         {/* <div className="flex justify-center gap-x-6 md:order-2">
           {navigation.map((item) => (
