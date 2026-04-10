@@ -82,15 +82,25 @@ class ShopOfferControllerTest {
   void update_validRequest_returns200() throws Exception {
     ShopOfferResponse updated =
         new ShopOfferResponse(
-            1L, 10L, 2L, new BigDecimal("200.00"), "new breakdown", "OEM",
-            null, null, null, "pending", LocalDateTime.now());
+            1L,
+            10L,
+            2L,
+            new BigDecimal("200.00"),
+            "new breakdown",
+            "OEM",
+            null,
+            null,
+            null,
+            "pending",
+            LocalDateTime.now());
     when(shopOfferService.update(eq(1L), any())).thenReturn(updated);
 
     mockMvc
         .perform(
             put("/api/v1/offers/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"shopId":2,"priceEstimate":200.00,"breakdown":"new breakdown"}
                     """))
         .andExpect(status().isOk())
@@ -125,7 +135,16 @@ class ShopOfferControllerTest {
   void reject_returns200() throws Exception {
     ShopOfferResponse rejected =
         new ShopOfferResponse(
-            1L, 10L, 2L, new BigDecimal("100.00"), null, null, null, null, null, "rejected",
+            1L,
+            10L,
+            2L,
+            new BigDecimal("100.00"),
+            null,
+            null,
+            null,
+            null,
+            null,
+            "rejected",
             LocalDateTime.now());
     when(shopOfferService.reject(1L)).thenReturn(rejected);
 
@@ -141,7 +160,8 @@ class ShopOfferControllerTest {
         .perform(
             put("/api/v1/offers/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"priceEstimate":200.00}
                     """))
         .andExpect(status().isBadRequest());

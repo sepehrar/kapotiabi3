@@ -43,10 +43,7 @@ class JwtAuthenticationFilterTest {
     assertThat(SecurityContextHolder.getContext().getAuthentication()).isNotNull();
     assertThat(SecurityContextHolder.getContext().getAuthentication().getName()).isEqualTo("1");
     assertThat(
-            SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities()
-                .stream()
+            SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .map(a -> a.getAuthority())
                 .toList())
         .containsExactly("ROLE_CAR_OWNER");

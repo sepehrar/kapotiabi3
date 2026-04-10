@@ -71,9 +71,7 @@ class JobRequestControllerTest {
 
   @Test
   void getByUser_noParam_returns400() throws Exception {
-    mockMvc
-        .perform(get("/api/v1/job-requests"))
-        .andExpect(status().isBadRequest());
+    mockMvc.perform(get("/api/v1/job-requests")).andExpect(status().isBadRequest());
   }
 
   @Test
@@ -102,9 +100,7 @@ class JobRequestControllerTest {
     when(jobRequestService.getById(99L))
         .thenThrow(new NotFoundException("Job request not found: 99"));
 
-    mockMvc
-        .perform(get("/api/v1/job-requests/99"))
-        .andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/v1/job-requests/99")).andExpect(status().isNotFound());
   }
 
   @Test
@@ -115,7 +111,8 @@ class JobRequestControllerTest {
         .perform(
             post("/api/v1/job-requests")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"userId":5,"carId":3,"description":"Oil change"}
                     """))
         .andExpect(status().isCreated())
@@ -128,7 +125,8 @@ class JobRequestControllerTest {
         .perform(
             post("/api/v1/job-requests")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"userId":5,"carId":3}
                     """))
         .andExpect(status().isBadRequest());
@@ -138,15 +136,27 @@ class JobRequestControllerTest {
   void update_validRequest_returns200() throws Exception {
     JobRequestResponse updated =
         new JobRequestResponse(
-            1L, 5L, 3L, "Brake check", true, "OEM", "city", "Tartu", null, null, "pending",
-            null, LocalDateTime.now());
+            1L,
+            5L,
+            3L,
+            "Brake check",
+            true,
+            "OEM",
+            "city",
+            "Tartu",
+            null,
+            null,
+            "pending",
+            null,
+            LocalDateTime.now());
     when(jobRequestService.update(eq(1L), any())).thenReturn(updated);
 
     mockMvc
         .perform(
             put("/api/v1/job-requests/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"userId":5,"carId":3,"description":"Brake check"}
                     """))
         .andExpect(status().isOk())
@@ -157,8 +167,19 @@ class JobRequestControllerTest {
   void cancel_returns200() throws Exception {
     JobRequestResponse cancelled =
         new JobRequestResponse(
-            1L, 5L, 3L, "Oil change", false, "OEM", "city", "Tallinn", "Harju", null, "cancelled",
-            null, LocalDateTime.now());
+            1L,
+            5L,
+            3L,
+            "Oil change",
+            false,
+            "OEM",
+            "city",
+            "Tallinn",
+            "Harju",
+            null,
+            "cancelled",
+            null,
+            LocalDateTime.now());
     when(jobRequestService.cancel(1L)).thenReturn(cancelled);
 
     mockMvc
@@ -171,7 +192,16 @@ class JobRequestControllerTest {
   void getOffers_returns200() throws Exception {
     ShopOfferResponse offer =
         new ShopOfferResponse(
-            1L, 1L, 2L, new BigDecimal("100.00"), null, null, null, null, null, "pending",
+            1L,
+            1L,
+            2L,
+            new BigDecimal("100.00"),
+            null,
+            null,
+            null,
+            null,
+            null,
+            "pending",
             LocalDateTime.now());
     when(shopOfferService.getByJobRequest(1L)).thenReturn(List.of(offer));
 
@@ -185,7 +215,16 @@ class JobRequestControllerTest {
   void createOffer_validRequest_returns201() throws Exception {
     ShopOfferResponse offer =
         new ShopOfferResponse(
-            1L, 1L, 2L, new BigDecimal("100.00"), null, "OEM", null, null, null, "pending",
+            1L,
+            1L,
+            2L,
+            new BigDecimal("100.00"),
+            null,
+            "OEM",
+            null,
+            null,
+            null,
+            "pending",
             LocalDateTime.now());
     when(shopOfferService.create(eq(1L), any())).thenReturn(offer);
 
@@ -193,7 +232,8 @@ class JobRequestControllerTest {
         .perform(
             post("/api/v1/job-requests/1/offers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"shopId":2,"priceEstimate":100.00}
                     """))
         .andExpect(status().isCreated())

@@ -123,8 +123,7 @@ class JobRequestServiceTest {
 
   @Test
   void getAvailable_noFilter() {
-    when(jobRequestRepository.findByStatus("pending"))
-        .thenReturn(List.of(buildRequest("pending")));
+    when(jobRequestRepository.findByStatus("pending")).thenReturn(List.of(buildRequest("pending")));
 
     List<JobRequestResponse> result = jobRequestService.getAvailable(null, null);
 

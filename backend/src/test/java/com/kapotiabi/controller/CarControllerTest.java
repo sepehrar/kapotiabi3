@@ -34,14 +34,7 @@ class CarControllerTest {
 
   private static final CarResponse CAR =
       new CarResponse(
-          1L,
-          10L,
-          "ABC123",
-          "Toyota",
-          "Corolla",
-          2020,
-          "1.6 petrol",
-          LocalDateTime.now());
+          1L, 10L, "ABC123", "Toyota", "Corolla", 2020, "1.6 petrol", LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
@@ -63,9 +56,7 @@ class CarControllerTest {
 
   @Test
   void getByOwner_noOwnerIdParam_returns400() throws Exception {
-    mockMvc
-        .perform(get("/api/v1/cars"))
-        .andExpect(status().isBadRequest());
+    mockMvc.perform(get("/api/v1/cars")).andExpect(status().isBadRequest());
   }
 
   @Test
@@ -97,7 +88,8 @@ class CarControllerTest {
         .perform(
             post("/api/v1/cars")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"ownerId":10,"plateNumber":"ABC123","make":"Toyota","model":"Corolla","year":2020,"engine":"1.6 petrol"}
                     """))
         .andExpect(status().isCreated())
@@ -110,7 +102,8 @@ class CarControllerTest {
         .perform(
             post("/api/v1/cars")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"ownerId":10,"make":"Toyota","model":"Corolla"}
                     """))
         .andExpect(status().isBadRequest());
@@ -122,7 +115,8 @@ class CarControllerTest {
         .perform(
             post("/api/v1/cars")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"plateNumber":"ABC123","make":"Toyota"}
                     """))
         .andExpect(status().isBadRequest());
@@ -131,14 +125,16 @@ class CarControllerTest {
   @Test
   void update_validRequest_returns200() throws Exception {
     CarResponse updated =
-        new CarResponse(1L, 10L, "XYZ789", "Honda", "Civic", 2021, "1.5 turbo", LocalDateTime.now());
+        new CarResponse(
+            1L, 10L, "XYZ789", "Honda", "Civic", 2021, "1.5 turbo", LocalDateTime.now());
     when(carService.update(eq(1L), any())).thenReturn(updated);
 
     mockMvc
         .perform(
             put("/api/v1/cars/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"ownerId":10,"plateNumber":"XYZ789","make":"Honda","model":"Civic","year":2021,"engine":"1.5 turbo"}
                     """))
         .andExpect(status().isOk())
@@ -147,9 +143,7 @@ class CarControllerTest {
 
   @Test
   void delete_returns204() throws Exception {
-    mockMvc
-        .perform(delete("/api/v1/cars/1"))
-        .andExpect(status().isNoContent());
+    mockMvc.perform(delete("/api/v1/cars/1")).andExpect(status().isNoContent());
 
     verify(carService).delete(1L);
   }

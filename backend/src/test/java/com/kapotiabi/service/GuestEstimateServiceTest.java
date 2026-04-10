@@ -77,8 +77,7 @@ class GuestEstimateServiceTest {
     when(repairShopRepository.findByStatusAndCity("active", "Tallinn"))
         .thenReturn(List.of(buildShop(1L)));
     when(categoryRepository.findByShopIdIn(List.of(1L)))
-        .thenReturn(
-            List.of(buildCategory(1L, new BigDecimal("30.00"), new BigDecimal("60.00"))));
+        .thenReturn(List.of(buildCategory(1L, new BigDecimal("30.00"), new BigDecimal("60.00"))));
     when(resultRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
     when(resultRepository.findByGuestEstimateId(1L)).thenReturn(List.of());
 
@@ -123,20 +122,11 @@ class GuestEstimateServiceTest {
   @Test
   void create_shopsWithCategories_computesOverallPriceRange() {
     GuestEstimateEntity estimate = buildEstimate(1L);
-    // First save returns estimate without price range, second includes it
-    GuestEstimateEntity estimateWithPrices =
-        GuestEstimateEntity.builder()
-            .id(1L)
-            .plateNumber("ABC123")
-            .description("Oil change")
-            .city("Tallinn")
-            .priceFrom(new BigDecimal("20.00"))
-            .priceTo(new BigDecimal("80.00"))
-            .createdAt(LocalDateTime.now())
-            .build();
+    // First save gives the estimate an ID; second save receives the entity with computed prices
+    // set by the service — return the argument so the response reflects what was actually computed.
     when(guestEstimateRepository.save(any()))
         .thenReturn(estimate)
-        .thenReturn(estimateWithPrices);
+        .thenAnswer(inv -> inv.getArgument(0));
     when(repairShopRepository.findByStatusAndCity("active", "Tallinn"))
         .thenReturn(List.of(buildShop(1L), buildShop(2L)));
     when(categoryRepository.findByShopIdIn(List.of(1L, 2L)))
@@ -150,12 +140,12 @@ class GuestEstimateServiceTest {
     GuestEstimateRequest req = new GuestEstimateRequest("Oil change", "ABC123", "Tallinn", null);
     GuestEstimateResponse response = guestEstimateService.create(req);
 
-    assertThat(response).isNotNull();
+    // Verify the service computed the correct overall min/max across both shops:
+    // shop1 priceFrom=20, priceTo=60; shop2 priceFrom=30, priceTo=80 → overall 20–80
     assertThat(response.priceFrom()).isEqualByComparingTo("20.00");
     assertThat(response.priceTo()).isEqualByComparingTo("80.00");
     // Two result saves - one per shop
-    verify(resultRepository, times(2))
-        .save(any(GuestEstimateResultEntity.class));
+    verify(resultRepository, times(2)).save(any(GuestEstimateResultEntity.class));
   }
 
   @Test
@@ -182,8 +172,7 @@ class GuestEstimateServiceTest {
     when(repairShopRepository.findByStatusAndCity("active", "Tallinn"))
         .thenReturn(List.of(buildShop(1L)));
     when(categoryRepository.findByShopIdIn(List.of(1L)))
-        .thenReturn(
-            List.of(buildCategory(1L, new BigDecimal("30.00"), new BigDecimal("60.00"))));
+        .thenReturn(List.of(buildCategory(1L, new BigDecimal("30.00"), new BigDecimal("60.00"))));
     when(resultRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
     GuestEstimateResultEntity result =

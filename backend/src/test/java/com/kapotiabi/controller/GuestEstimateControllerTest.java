@@ -59,7 +59,8 @@ class GuestEstimateControllerTest {
         .perform(
             post("/api/v1/guest-estimates")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"description":"Oil change","plateNumber":"ABC123","city":"Tallinn"}
                     """))
         .andExpect(status().isCreated())
@@ -73,7 +74,8 @@ class GuestEstimateControllerTest {
         .perform(
             post("/api/v1/guest-estimates")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"plateNumber":"ABC123","city":"Tallinn"}
                     """))
         .andExpect(status().isBadRequest());
