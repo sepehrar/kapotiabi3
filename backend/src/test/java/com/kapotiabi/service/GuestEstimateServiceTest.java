@@ -150,6 +150,8 @@ class GuestEstimateServiceTest {
     GuestEstimateResponse response = guestEstimateService.create(req);
 
     assertThat(response).isNotNull();
+    assertThat(response.priceFrom()).isEqualByComparingTo("20.00");
+    assertThat(response.priceTo()).isEqualByComparingTo("80.00");
     // Two result saves - one per shop
     verify(resultRepository, org.mockito.Mockito.times(2)).save(any(GuestEstimateResultEntity.class));
   }
