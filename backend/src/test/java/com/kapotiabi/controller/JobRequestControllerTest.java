@@ -37,8 +37,19 @@ class JobRequestControllerTest {
 
   private static final JobRequestResponse JOB_REQUEST =
       new JobRequestResponse(
-          1L, 5L, 3L, "Oil change", false, "OEM", "city", "Tallinn", "Harju", null, "pending",
-          null, LocalDateTime.now());
+          1L,
+          5L,
+          3L,
+          "Oil change",
+          false,
+          "OEM",
+          "city",
+          "Tallinn",
+          "Harju",
+          null,
+          "pending",
+          null,
+          LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
