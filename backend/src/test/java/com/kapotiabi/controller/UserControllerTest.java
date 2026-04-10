@@ -32,7 +32,14 @@ class UserControllerTest {
   private MockMvc mockMvc;
 
   private static final UserResponse USER_RESPONSE =
-      new UserResponse(1L, "user@test.ee", "car_owner", "Mari", "Mets", "555-1234", LocalDateTime.now());
+      new UserResponse(
+          1L,
+          "user@test.ee",
+          "car_owner",
+          "Mari",
+          "Mets",
+          "555-1234",
+          LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
@@ -67,7 +74,14 @@ class UserControllerTest {
   @Test
   void update_validRequest_returns200() throws Exception {
     UserResponse updated =
-        new UserResponse(1L, "user@test.ee", "car_owner", "Jane", "Smith", "555-9999", LocalDateTime.now());
+        new UserResponse(
+            1L,
+            "user@test.ee",
+            "car_owner",
+            "Jane",
+            "Smith",
+            "555-9999",
+            LocalDateTime.now());
     when(userService.update(eq(1L), any())).thenReturn(updated);
 
     mockMvc
