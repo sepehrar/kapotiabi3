@@ -167,9 +167,9 @@ A file was named with a version that was skipped. Rename it to fill the gap, or 
 Only do this on your **local** machine — never on staging or production:
 
 ```bash
-# Drop and re-create the database, then restart the backend
-psql -U kapotiabi -c "DROP DATABASE kapotiabi;"
-psql -U kapotiabi -c "CREATE DATABASE kapotiabi;"
+# Connect to a maintenance DB to drop/recreate kapotiabi, then restart backend
+psql -U kapotiabi -d postgres -c "DROP DATABASE IF EXISTS kapotiabi;"
+psql -U kapotiabi -d postgres -c "CREATE DATABASE kapotiabi;"
 cd backend
 ./mvnw spring-boot:run   # Flyway re-applies all migrations from V1
 ```
