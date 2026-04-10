@@ -37,8 +37,18 @@ class RepairShopControllerTest {
 
   private static final RepairShopResponse SHOP =
       new RepairShopResponse(
-          1L, 5L, "Test Garage", "123 Main St", "Tallinn", "Harju", "555-0000",
-          "shop@test.ee", null, null, "active", LocalDateTime.now());
+          1L,
+          5L,
+          "Test Garage",
+          "123 Main St",
+          "Tallinn",
+          "Harju",
+          "555-0000",
+          "shop@test.ee",
+          null,
+          null,
+          "active",
+          LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
