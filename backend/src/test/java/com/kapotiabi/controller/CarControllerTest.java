@@ -33,7 +33,15 @@ class CarControllerTest {
   private MockMvc mockMvc;
 
   private static final CarResponse CAR =
-      new CarResponse(1L, 10L, "ABC123", "Toyota", "Corolla", 2020, "1.6 petrol", LocalDateTime.now());
+      new CarResponse(
+          1L,
+          10L,
+          "ABC123",
+          "Toyota",
+          "Corolla",
+          2020,
+          "1.6 petrol",
+          LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
