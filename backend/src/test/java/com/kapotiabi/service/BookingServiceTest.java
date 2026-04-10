@@ -161,4 +161,24 @@ class BookingServiceTest {
     assertThat(result).hasSize(1);
     assertThat(result.get(0).userId()).isEqualTo(5L);
   }
+
+  @Test
+  void getByShop() {
+    when(bookingRepository.findByShopId(3L)).thenReturn(List.of(buildBooking("confirmed")));
+
+    List<BookingResponse> result = bookingService.getByShop(3L);
+
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).shopId()).isEqualTo(3L);
+  }
+
+  @Test
+  void createFromOffer_offerNotFound_throwsNotFoundException() {
+    when(bookingRepository.findByOfferId(99L)).thenReturn(Optional.empty());
+    when(shopOfferRepository.findById(99L)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> bookingService.createFromOffer(99L))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("99");
+  }
 }

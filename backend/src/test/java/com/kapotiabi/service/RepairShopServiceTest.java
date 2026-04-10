@@ -167,4 +167,70 @@ class RepairShopServiceTest {
 
     verify(categoryRepository).deleteById(10L);
   }
+
+  @Test
+  void getAll_byCounty() {
+    when(repairShopRepository.findByCounty("Harju")).thenReturn(List.of(buildShop()));
+
+    List<RepairShopResponse> result = repairShopService.getAll(null, "Harju");
+
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).county()).isEqualTo("Harju");
+  }
+
+  @Test
+  void getAll_noFilter() {
+    when(repairShopRepository.findAll()).thenReturn(List.of(buildShop()));
+
+    List<RepairShopResponse> result = repairShopService.getAll(null, null);
+
+    assertThat(result).hasSize(1);
+  }
+
+  @Test
+  void getCategories() {
+    when(categoryRepository.findByShopId(1L)).thenReturn(List.of(buildCategory()));
+
+    List<ShopServiceCategoryResponse> result = repairShopService.getCategories(1L);
+
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).category()).isEqualTo("oil_change");
+  }
+
+  @Test
+  void getReviews() {
+    when(reviewRepository.findByShopId(1L)).thenReturn(List.of());
+
+    var result = repairShopService.getReviews(1L);
+
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  void updateCategory_wrongShop_throwsNotFoundException() {
+    when(repairShopRepository.findById(1L)).thenReturn(Optional.of(buildShop()));
+    ShopServiceCategoryEntity category = buildCategory();
+    category.setShopId(99L); // belongs to a different shop
+    when(categoryRepository.findById(10L)).thenReturn(Optional.of(category));
+
+    ShopServiceCategoryRequest req =
+        new ShopServiceCategoryRequest(
+            "oil_change", new BigDecimal("30.00"), new BigDecimal("60.00"), "OEM");
+
+    assertThatThrownBy(() -> repairShopService.updateCategory(1L, 10L, req))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("10");
+  }
+
+  @Test
+  void deleteCategory_wrongShop_throwsNotFoundException() {
+    when(repairShopRepository.findById(1L)).thenReturn(Optional.of(buildShop()));
+    ShopServiceCategoryEntity category = buildCategory();
+    category.setShopId(99L); // belongs to a different shop
+    when(categoryRepository.findById(10L)).thenReturn(Optional.of(category));
+
+    assertThatThrownBy(() -> repairShopService.deleteCategory(1L, 10L))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("10");
+  }
 }

@@ -74,4 +74,14 @@ class UserServiceTest {
     assertThat(response.lastName()).isEqualTo("Smith");
     assertThat(response.phone()).isEqualTo("555-9999");
   }
+
+  @Test
+  void update_notFound() {
+    when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+    UpdateUserRequest req = new UpdateUserRequest("Jane", "Smith", "555-9999");
+    assertThatThrownBy(() -> userService.update(99L, req))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("99");
+  }
 }

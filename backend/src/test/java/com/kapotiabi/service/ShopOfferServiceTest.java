@@ -133,6 +133,33 @@ class ShopOfferServiceTest {
   }
 
   @Test
+  void update() {
+    ShopOfferEntity offer = buildOffer("pending");
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
+    when(shopOfferRepository.save(any(ShopOfferEntity.class)))
+        .thenAnswer(inv -> inv.getArgument(0));
+
+    ShopOfferRequest req =
+        new ShopOfferRequest(2L, new BigDecimal("200.00"), "new breakdown", "OEM", null, null);
+    ShopOfferResponse response = shopOfferService.update(1L, req);
+
+    assertThat(response.priceEstimate()).isEqualByComparingTo(new BigDecimal("200.00"));
+    assertThat(response.breakdown()).isEqualTo("new breakdown");
+  }
+
+  @Test
+  void create_jobRequestNotFound_throwsNotFoundException() {
+    when(jobRequestRepository.findById(99L)).thenReturn(Optional.empty());
+
+    ShopOfferRequest req =
+        new ShopOfferRequest(2L, new BigDecimal("100.00"), null, null, null, null);
+
+    assertThatThrownBy(() -> shopOfferService.create(99L, req))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("99");
+  }
+
+  @Test
   void getById_notFound() {
     when(shopOfferRepository.findById(99L)).thenReturn(Optional.empty());
 
