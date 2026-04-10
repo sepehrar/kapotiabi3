@@ -16,7 +16,7 @@ CREATE TABLE cars (
     plate_number VARCHAR NOT NULL,
     make         VARCHAR,
     model        VARCHAR,
-    manufacture_year INTEGER,
+    year         INTEGER,
     engine       VARCHAR,
     created_at   TIMESTAMP DEFAULT NOW()
 );
