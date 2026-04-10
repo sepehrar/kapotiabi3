@@ -36,7 +36,8 @@ class BookingControllerTest {
   private MockMvc mockMvc;
 
   private static final BookingResponse BOOKING =
-      new BookingResponse(1L, 2L, 10L, 5L, 3L, null, false, null, "awaiting_shop", LocalDateTime.now());
+      new BookingResponse(
+          1L, 2L, 10L, 5L, 3L, null, false, null, "awaiting_shop", LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
