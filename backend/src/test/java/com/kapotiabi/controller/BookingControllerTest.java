@@ -37,7 +37,16 @@ class BookingControllerTest {
 
   private static final BookingResponse BOOKING =
       new BookingResponse(
-          1L, 2L, 10L, 5L, 3L, null, false, null, "awaiting_shop", LocalDateTime.now());
+          1L,
+          2L,
+          10L,
+          5L,
+          3L,
+          null,
+          false,
+          null,
+          "awaiting_shop",
+          LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
