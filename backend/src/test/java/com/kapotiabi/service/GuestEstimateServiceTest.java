@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -153,7 +154,8 @@ class GuestEstimateServiceTest {
     assertThat(response.priceFrom()).isEqualByComparingTo("20.00");
     assertThat(response.priceTo()).isEqualByComparingTo("80.00");
     // Two result saves - one per shop
-    verify(resultRepository, org.mockito.Mockito.times(2)).save(any(GuestEstimateResultEntity.class));
+    verify(resultRepository, times(2))
+        .save(any(GuestEstimateResultEntity.class));
   }
 
   @Test
