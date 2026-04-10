@@ -32,7 +32,10 @@ public class CarEntity {
 
   private String make;
   private String model;
+
+  @Column(name = "manufacture_year")
   private Integer year;
+
   private String engine;
 
   @Column(name = "created_at", updatable = false)

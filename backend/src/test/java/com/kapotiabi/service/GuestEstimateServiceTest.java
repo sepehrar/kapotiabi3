@@ -76,8 +76,7 @@ class GuestEstimateServiceTest {
     when(repairShopRepository.findByStatusAndCity("active", "Tallinn"))
         .thenReturn(List.of(buildShop(1L)));
     when(categoryRepository.findByShopIdIn(List.of(1L)))
-        .thenReturn(
-            List.of(buildCategory(1L, new BigDecimal("30.00"), new BigDecimal("60.00"))));
+        .thenReturn(List.of(buildCategory(1L, new BigDecimal("30.00"), new BigDecimal("60.00"))));
     when(resultRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
     when(resultRepository.findByGuestEstimateId(1L)).thenReturn(List.of());
 
@@ -133,9 +132,7 @@ class GuestEstimateServiceTest {
             .priceTo(new BigDecimal("80.00"))
             .createdAt(LocalDateTime.now())
             .build();
-    when(guestEstimateRepository.save(any()))
-        .thenReturn(estimate)
-        .thenReturn(estimateWithPrices);
+    when(guestEstimateRepository.save(any())).thenReturn(estimate).thenReturn(estimateWithPrices);
     when(repairShopRepository.findByStatusAndCity("active", "Tallinn"))
         .thenReturn(List.of(buildShop(1L), buildShop(2L)));
     when(categoryRepository.findByShopIdIn(List.of(1L, 2L)))
@@ -151,7 +148,8 @@ class GuestEstimateServiceTest {
 
     assertThat(response).isNotNull();
     // Two result saves - one per shop
-    verify(resultRepository, org.mockito.Mockito.times(2)).save(any(GuestEstimateResultEntity.class));
+    verify(resultRepository, org.mockito.Mockito.times(2))
+        .save(any(GuestEstimateResultEntity.class));
   }
 
   @Test
@@ -178,8 +176,7 @@ class GuestEstimateServiceTest {
     when(repairShopRepository.findByStatusAndCity("active", "Tallinn"))
         .thenReturn(List.of(buildShop(1L)));
     when(categoryRepository.findByShopIdIn(List.of(1L)))
-        .thenReturn(
-            List.of(buildCategory(1L, new BigDecimal("30.00"), new BigDecimal("60.00"))));
+        .thenReturn(List.of(buildCategory(1L, new BigDecimal("30.00"), new BigDecimal("60.00"))));
     when(resultRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
     GuestEstimateResultEntity result =

@@ -37,8 +37,18 @@ class RepairShopControllerTest {
 
   private static final RepairShopResponse SHOP =
       new RepairShopResponse(
-          1L, 5L, "Test Garage", "123 Main St", "Tallinn", "Harju", "555-0000",
-          "shop@test.ee", null, null, "active", LocalDateTime.now());
+          1L,
+          5L,
+          "Test Garage",
+          "123 Main St",
+          "Tallinn",
+          "Harju",
+          "555-0000",
+          "shop@test.ee",
+          null,
+          null,
+          "active",
+          LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
@@ -84,9 +94,7 @@ class RepairShopControllerTest {
     when(repairShopService.getById(99L))
         .thenThrow(new NotFoundException("Repair shop not found: 99"));
 
-    mockMvc
-        .perform(get("/api/v1/shops/99"))
-        .andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/v1/shops/99")).andExpect(status().isNotFound());
   }
 
   @Test
@@ -97,7 +105,8 @@ class RepairShopControllerTest {
         .perform(
             post("/api/v1/shops")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"ownerId":5,"name":"Test Garage","city":"Tallinn","status":"active"}
                     """))
         .andExpect(status().isCreated())
@@ -110,7 +119,8 @@ class RepairShopControllerTest {
         .perform(
             post("/api/v1/shops")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"ownerId":5,"city":"Tallinn","status":"active"}
                     """))
         .andExpect(status().isBadRequest());
@@ -120,7 +130,17 @@ class RepairShopControllerTest {
   void update_returns200() throws Exception {
     RepairShopResponse updated =
         new RepairShopResponse(
-            1L, 5L, "Updated Garage", null, "Tartu", null, null, null, null, null, "active",
+            1L,
+            5L,
+            "Updated Garage",
+            null,
+            "Tartu",
+            null,
+            null,
+            null,
+            null,
+            null,
+            "active",
             LocalDateTime.now());
     when(repairShopService.update(eq(1L), any())).thenReturn(updated);
 
@@ -128,7 +148,8 @@ class RepairShopControllerTest {
         .perform(
             put("/api/v1/shops/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"ownerId":5,"name":"Updated Garage","city":"Tartu","status":"active"}
                     """))
         .andExpect(status().isOk())
@@ -139,7 +160,12 @@ class RepairShopControllerTest {
   void getCategories_returns200() throws Exception {
     ShopServiceCategoryResponse category =
         new ShopServiceCategoryResponse(
-            10L, 1L, "oil_change", new BigDecimal("30.00"), new BigDecimal("60.00"), "OEM",
+            10L,
+            1L,
+            "oil_change",
+            new BigDecimal("30.00"),
+            new BigDecimal("60.00"),
+            "OEM",
             LocalDateTime.now());
     when(repairShopService.getCategories(1L)).thenReturn(List.of(category));
 
@@ -153,7 +179,12 @@ class RepairShopControllerTest {
   void addCategory_returns201() throws Exception {
     ShopServiceCategoryResponse category =
         new ShopServiceCategoryResponse(
-            10L, 1L, "tire_change", new BigDecimal("50.00"), new BigDecimal("100.00"), "OEM",
+            10L,
+            1L,
+            "tire_change",
+            new BigDecimal("50.00"),
+            new BigDecimal("100.00"),
+            "OEM",
             LocalDateTime.now());
     when(repairShopService.addCategory(eq(1L), any())).thenReturn(category);
 
@@ -161,7 +192,8 @@ class RepairShopControllerTest {
         .perform(
             post("/api/v1/shops/1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"category":"tire_change","priceFrom":50.00,"priceTo":100.00,"partsTier":"OEM"}
                     """))
         .andExpect(status().isCreated())
@@ -172,7 +204,12 @@ class RepairShopControllerTest {
   void updateCategory_returns200() throws Exception {
     ShopServiceCategoryResponse updated =
         new ShopServiceCategoryResponse(
-            10L, 1L, "oil_change", new BigDecimal("35.00"), new BigDecimal("70.00"), "OEM",
+            10L,
+            1L,
+            "oil_change",
+            new BigDecimal("35.00"),
+            new BigDecimal("70.00"),
+            "OEM",
             LocalDateTime.now());
     when(repairShopService.updateCategory(eq(1L), eq(10L), any())).thenReturn(updated);
 
@@ -180,7 +217,8 @@ class RepairShopControllerTest {
         .perform(
             put("/api/v1/shops/1/categories/10")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"category":"oil_change","priceFrom":35.00,"priceTo":70.00,"partsTier":"OEM"}
                     """))
         .andExpect(status().isOk())
@@ -189,17 +227,14 @@ class RepairShopControllerTest {
 
   @Test
   void deleteCategory_returns204() throws Exception {
-    mockMvc
-        .perform(delete("/api/v1/shops/1/categories/10"))
-        .andExpect(status().isNoContent());
+    mockMvc.perform(delete("/api/v1/shops/1/categories/10")).andExpect(status().isNoContent());
 
     verify(repairShopService).deleteCategory(1L, 10L);
   }
 
   @Test
   void getReviews_returns200() throws Exception {
-    ReviewResponse review =
-        new ReviewResponse(100L, 1L, 5L, 1L, 4, "Good", LocalDateTime.now());
+    ReviewResponse review = new ReviewResponse(100L, 1L, 5L, 1L, 4, "Good", LocalDateTime.now());
     when(repairShopService.getReviews(1L)).thenReturn(List.of(review));
 
     mockMvc

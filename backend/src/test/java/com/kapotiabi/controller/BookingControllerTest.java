@@ -36,7 +36,8 @@ class BookingControllerTest {
   private MockMvc mockMvc;
 
   private static final BookingResponse BOOKING =
-      new BookingResponse(1L, 2L, 10L, 5L, 3L, null, false, null, "awaiting_shop", LocalDateTime.now());
+      new BookingResponse(
+          1L, 2L, 10L, 5L, 3L, null, false, null, "awaiting_shop", LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
@@ -68,9 +69,7 @@ class BookingControllerTest {
 
   @Test
   void getBookings_noParam_returns400() throws Exception {
-    mockMvc
-        .perform(get("/api/v1/bookings"))
-        .andExpect(status().isBadRequest());
+    mockMvc.perform(get("/api/v1/bookings")).andExpect(status().isBadRequest());
   }
 
   @Test
@@ -88,15 +87,14 @@ class BookingControllerTest {
   void getById_notFound_returns404() throws Exception {
     when(bookingService.getById(99L)).thenThrow(new NotFoundException("Booking not found: 99"));
 
-    mockMvc
-        .perform(get("/api/v1/bookings/99"))
-        .andExpect(status().isNotFound());
+    mockMvc.perform(get("/api/v1/bookings/99")).andExpect(status().isNotFound());
   }
 
   @Test
   void confirm_returns200() throws Exception {
     BookingResponse confirmed =
-        new BookingResponse(1L, 2L, 10L, 5L, 3L, null, true, LocalDateTime.now(), "confirmed", LocalDateTime.now());
+        new BookingResponse(
+            1L, 2L, 10L, 5L, 3L, null, true, LocalDateTime.now(), "confirmed", LocalDateTime.now());
     when(bookingService.confirm(1L)).thenReturn(confirmed);
 
     mockMvc
@@ -109,7 +107,8 @@ class BookingControllerTest {
   @Test
   void complete_returns200() throws Exception {
     BookingResponse completed =
-        new BookingResponse(1L, 2L, 10L, 5L, 3L, null, true, null, "completed", LocalDateTime.now());
+        new BookingResponse(
+            1L, 2L, 10L, 5L, 3L, null, true, null, "completed", LocalDateTime.now());
     when(bookingService.complete(1L)).thenReturn(completed);
 
     mockMvc
@@ -121,7 +120,8 @@ class BookingControllerTest {
   @Test
   void cancel_returns200() throws Exception {
     BookingResponse cancelled =
-        new BookingResponse(1L, 2L, 10L, 5L, 3L, null, false, null, "cancelled", LocalDateTime.now());
+        new BookingResponse(
+            1L, 2L, 10L, 5L, 3L, null, false, null, "cancelled", LocalDateTime.now());
     when(bookingService.cancel(1L)).thenReturn(cancelled);
 
     mockMvc
@@ -134,13 +134,12 @@ class BookingControllerTest {
   void schedule_returns200() throws Exception {
     LocalDateTime scheduled = LocalDateTime.of(2026, 5, 1, 10, 0);
     BookingResponse scheduledBooking =
-        new BookingResponse(1L, 2L, 10L, 5L, 3L, scheduled, false, null, "confirmed", LocalDateTime.now());
+        new BookingResponse(
+            1L, 2L, 10L, 5L, 3L, scheduled, false, null, "confirmed", LocalDateTime.now());
     when(bookingService.schedule(eq(1L), any())).thenReturn(scheduledBooking);
 
     mockMvc
-        .perform(
-            post("/api/v1/bookings/1/schedule")
-                .param("scheduledAt", "2026-05-01T10:00:00"))
+        .perform(post("/api/v1/bookings/1/schedule").param("scheduledAt", "2026-05-01T10:00:00"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.scheduledAt").exists());
   }
@@ -155,7 +154,8 @@ class BookingControllerTest {
         .perform(
             post("/api/v1/bookings/1/review")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"rating":5,"comment":"Great service!"}
                     """))
         .andExpect(status().isOk())
@@ -168,7 +168,8 @@ class BookingControllerTest {
         .perform(
             post("/api/v1/bookings/1/review")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("""
+                .content(
+                    """
                     {"rating":6,"comment":"Too high"}
                     """))
         .andExpect(status().isBadRequest());
@@ -176,8 +177,7 @@ class BookingControllerTest {
 
   @Test
   void getReview_returns200() throws Exception {
-    ReviewResponse review =
-        new ReviewResponse(100L, 1L, 5L, 3L, 4, "Good", LocalDateTime.now());
+    ReviewResponse review = new ReviewResponse(100L, 1L, 5L, 3L, 4, "Good", LocalDateTime.now());
     when(reviewService.getByBooking(1L)).thenReturn(review);
 
     mockMvc
