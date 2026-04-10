@@ -107,6 +107,31 @@ class JobRequestServiceTest {
   }
 
   @Test
+  void update() {
+    JobRequestEntity entity = buildRequest("pending");
+    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(entity));
+    when(jobRequestRepository.save(any(JobRequestEntity.class)))
+        .thenAnswer(inv -> inv.getArgument(0));
+
+    JobRequestRequest req =
+        new JobRequestRequest(5L, 3L, "Brake check", true, "OEM", "city", "Tartu", null, null);
+    JobRequestResponse response = jobRequestService.update(1L, req);
+
+    assertThat(response.description()).isEqualTo("Brake check");
+    assertThat(response.city()).isEqualTo("Tartu");
+  }
+
+  @Test
+  void getAvailable_noFilter() {
+    when(jobRequestRepository.findByStatus("pending"))
+        .thenReturn(List.of(buildRequest("pending")));
+
+    List<JobRequestResponse> result = jobRequestService.getAvailable(null, null);
+
+    assertThat(result).hasSize(1);
+  }
+
+  @Test
   void getById_notFound() {
     when(jobRequestRepository.findById(99L)).thenReturn(Optional.empty());
 
