@@ -146,7 +146,7 @@ If you need to change something that was already migrated, write a new migration
 
 ## Tests
 
-Tests use an **in-memory H2 database** with `ddl-auto: create-drop`, so Flyway is **disabled** in the test profile (`backend/src/test/resources/application.yaml`). You do not need to create migration files for tests — JPA auto-generates the schema from entity classes at test startup.
+Tests use an **in-memory H2 database** with `ddl-auto: create-drop`, so Flyway is **disabled** in the test configuration (`backend/src/test/resources/application.yaml`). You do not need to create migration files for tests — JPA auto-generates the schema from entity classes at test startup.
 
 When you add a new entity, tests will pick it up automatically without any migration file.
 
@@ -174,11 +174,11 @@ cd backend
 ./mvnw spring-boot:run   # Flyway re-applies all migrations from V1
 ```
 
-Or with Docker Compose:
+Or with Docker Compose (`docker compose` / `docker-compose`):
 
 ```bash
-docker compose down -v   # -v removes named volumes including postgres_data
-docker compose up
+docker-compose down -v   # -v removes named volumes including postgres_data
+docker-compose up
 ```
 
 ---
