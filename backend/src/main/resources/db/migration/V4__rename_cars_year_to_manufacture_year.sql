@@ -1,1 +1,1 @@
-ALTER TABLE cars RENAME COLUMN year TO manufacture_year;
+ALTER TABLE cars RENAME COLUMN "year" TO manufacture_year;
