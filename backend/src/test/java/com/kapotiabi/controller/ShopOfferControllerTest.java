@@ -36,8 +36,17 @@ class ShopOfferControllerTest {
 
   private static final ShopOfferResponse OFFER =
       new ShopOfferResponse(
-          1L, 10L, 2L, new BigDecimal("100.00"), "breakdown", "OEM",
-          new BigDecimal("2.0"), null, null, "pending", LocalDateTime.now());
+          1L,
+          10L,
+          2L,
+          new BigDecimal("100.00"),
+          "breakdown",
+          "OEM",
+          new BigDecimal("2.0"),
+          null,
+          null,
+          "pending",
+          LocalDateTime.now());
 
   @BeforeEach
   void setUp() {
