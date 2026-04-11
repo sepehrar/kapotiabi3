@@ -9,6 +9,8 @@ import SearchResultsToolbar from "./SearchResultsToolbar";
 import SearchResultsPanel from "./SearchResultsPanel";
 import SearchEmptyState from "./SearchEmptyState";
 import SearchLoadingState from "./SearchLoadingState";
+import SearchCompareBar from "./SearchCompareBar";
+import SearchCompareDialog from "./SearchCompareDialog";
 import {
   MAX_SEARCH_CHAT_QUESTIONS,
   createEmptySearchFilters,
@@ -28,7 +30,14 @@ import type { SearchResult } from "./SearchResultCard";
 
 type SearchPhase = "collecting" | "searching" | "results" | "locked";
 
-type SearchResultSeed = SearchResult & {
+type SearchResultSeed = {
+  id: number;
+  name: string;
+  price: string;
+  distance: string;
+  rating: string;
+  reviews: number;
+  updatedAt: string;
   city: string;
   priceValue: number;
   distanceValue: number;
@@ -139,13 +148,6 @@ const SEARCH_RESULT_CATALOG: SearchResultSeed[] = [
   },
 ];
 
-function partsQualityLabel(
-  partsQuality: PartsQuality,
-  t: ReturnType<typeof useTranslations>,
-) {
-  return t(`partsQuality.${partsQuality}`);
-}
-
 function normalizeValue(value: string | null | undefined) {
   return value?.trim().toLowerCase() ?? "";
 }
@@ -223,7 +225,7 @@ function buildSearchQueryLabel(
   return parts.join(locale === "et" ? ", " : " ");
 }
 
-function sortResults(results: SearchResultSeed[], sortBy: SortOption) {
+function sortResults(results: SearchResult[], sortBy: SortOption) {
   return [...results].sort((left, right) => {
     if (sortBy === "price") {
       return left.priceValue - right.priceValue;
@@ -235,79 +237,6 @@ function sortResults(results: SearchResultSeed[], sortBy: SortOption) {
 
     return right.ratingValue - left.ratingValue;
   });
-}
-
-function deriveVisibleResults(
-  filters: SearchFilters,
-  locationHint: string | null,
-  sortBy: SortOption,
-) {
-  const city = normalizeValue(filters.city);
-  const make = normalizeValue(filters.vehicleMake);
-  const model = normalizeValue(filters.vehicleModel);
-  const serviceTokens = tokenizeServiceQuery(filters.serviceQuery);
-  const normalizedLocationHint = normalizeValue(locationHint);
-
-  const matchedResults = SEARCH_RESULT_CATALOG.map((result) => {
-    let score = 0;
-
-    if (city && normalizeValue(result.city) === city) {
-      score += 5;
-    }
-
-    const serviceMatches = countKeywordMatches(serviceTokens, result.serviceKeywords);
-    score += serviceMatches * 2;
-
-    if (serviceTokens.length && serviceMatches === 0) {
-      score -= 4;
-    }
-
-    if (
-      make &&
-      result.makeKeywords.some((keyword) => normalizeValue(keyword) === make)
-    ) {
-      score += 2;
-    }
-
-    if (
-      model &&
-      result.modelKeywords.some((keyword) =>
-        normalizeValue(model).includes(normalizeValue(keyword)) ||
-        normalizeValue(keyword).includes(model),
-      )
-    ) {
-      score += 2;
-    }
-
-    if (
-      normalizedLocationHint &&
-      result.areaKeywords.some((keyword) =>
-        normalizedLocationHint.includes(normalizeValue(keyword)) ||
-        normalizeValue(keyword).includes(normalizedLocationHint),
-      )
-    ) {
-      score += 3;
-    }
-
-    if (
-      filters.partsQuality &&
-      result.partsQualities.includes(filters.partsQuality)
-    ) {
-      score += 1;
-    }
-
-    return { result, score };
-  })
-    .filter(({ score, result }) => {
-      if (city && normalizeValue(result.city) !== city) {
-        return false;
-      }
-
-      return score >= 5;
-    })
-    .map(({ result }) => result);
-
-  return sortResults(matchedResults, sortBy).slice(0, 3);
 }
 
 function buildFilterPills(
@@ -338,28 +267,262 @@ function buildFilterPills(
   }
 
   if (filters.partsQuality) {
-    pills.push(partsQualityLabel(filters.partsQuality, t));
+    pills.push(t(`partsQuality.${filters.partsQuality}`));
   }
 
   if (filters.radiusKm) {
     pills.push(
-      locale === "et" ? `${filters.radiusKm} km raadius` : `${filters.radiusKm} km radius`,
+      locale === "et"
+        ? `${filters.radiusKm} km raadius`
+        : `${filters.radiusKm} km radius`,
     );
   }
 
   return pills;
 }
 
+function buildResultCardData(
+  result: SearchResultSeed,
+  filters: SearchFilters,
+  locationHint: string | null,
+  locale: Locale,
+  cardT: ReturnType<typeof useTranslations>,
+  chatT: ReturnType<typeof useTranslations>,
+): SearchResult {
+  const vehicleLabel = [filters.vehicleMake, filters.vehicleModel]
+    .filter(Boolean)
+    .join(" ");
+  const serviceLabel =
+    filters.serviceQuery ?? cardT("serviceFitFallbackService");
+  const normalizedLocationHint = normalizeValue(locationHint);
+  const areaMatch = normalizedLocationHint
+    ? locationHint &&
+      result.areaKeywords.some((keyword) => {
+        const normalizedKeyword = normalizeValue(keyword);
+
+        return (
+          normalizedLocationHint.includes(normalizedKeyword) ||
+          normalizedKeyword.includes(normalizedLocationHint)
+        );
+      })
+      ? locationHint
+      : null
+    : null;
+  const partsLabel =
+    filters.partsQuality != null
+      ? chatT(`partsQuality.${filters.partsQuality}`)
+      : null;
+
+  const matchReasons = [
+    filters.serviceQuery
+      ? cardT("matchReasonService", {
+          service: filters.serviceQuery,
+        })
+      : null,
+    filters.city
+      ? cardT("matchReasonCity", {
+          city: filters.city,
+        })
+      : null,
+    vehicleLabel
+      ? cardT("matchReasonVehicle", {
+          vehicle: vehicleLabel,
+        })
+      : null,
+    areaMatch
+      ? cardT("matchReasonArea", {
+          area: areaMatch,
+        })
+      : null,
+    partsLabel &&
+    filters.partsQuality &&
+    result.partsQualities.includes(filters.partsQuality)
+      ? cardT("matchReasonParts", {
+          parts: partsLabel,
+        })
+      : null,
+    result.distanceValue <= 3
+      ? cardT("matchReasonDistance", {
+          distance: result.distance,
+        })
+      : null,
+  ].filter((value): value is string => Boolean(value));
+
+  const bestFor = areaMatch
+    ? cardT("bestForArea", {
+        area: areaMatch,
+      })
+    : result.distanceValue <= 3
+      ? cardT("bestForClosest")
+      : result.priceValue <= 85
+        ? cardT("bestForBudget")
+        : result.ratingValue >= 4.7
+          ? cardT("bestForTrust")
+          : cardT("bestForBalanced");
+
+  const tradeoff =
+    result.priceValue >= 105
+      ? cardT("tradeoffPrice")
+      : result.distanceValue >= 6
+        ? cardT("tradeoffDistance")
+        : result.reviews < 100
+          ? cardT("tradeoffReviews")
+          : cardT("tradeoffFreshness");
+
+  const trustNote =
+    result.ratingValue >= 4.7
+      ? cardT("trustNoteHigh", {
+          rating: result.rating,
+          reviews: result.reviews,
+          updatedAt: result.updatedAt,
+        })
+      : cardT("trustNoteSolid", {
+          rating: result.rating,
+          reviews: result.reviews,
+          updatedAt: result.updatedAt,
+        });
+
+  const nextStep = areaMatch
+    ? cardT("nextStepArea", {
+        area: areaMatch,
+      })
+    : filters.radiusKm
+      ? cardT("nextStepRadius", {
+          radius: filters.radiusKm,
+        })
+      : cardT("nextStepCompare");
+
+  return {
+    id: result.id,
+    name: result.name,
+    price: result.price,
+    distance: result.distance,
+    rating: result.rating,
+    reviews: result.reviews,
+    updatedAt: result.updatedAt,
+    priceValue: result.priceValue,
+    distanceValue: result.distanceValue,
+    ratingValue: result.ratingValue,
+    serviceFit: vehicleLabel
+      ? cardT("serviceFitVehicle", {
+          service: serviceLabel,
+          vehicle: vehicleLabel,
+        })
+      : cardT("serviceFit", {
+          service: serviceLabel,
+        }),
+    areaMatch,
+    matchReasons: matchReasons.slice(0, 3),
+    bestFor,
+    tradeoff,
+    trustNote,
+    nextStep,
+  };
+}
+
+function deriveVisibleResults(
+  filters: SearchFilters,
+  locationHint: string | null,
+  sortBy: SortOption,
+  locale: Locale,
+  cardT: ReturnType<typeof useTranslations>,
+  chatT: ReturnType<typeof useTranslations>,
+) {
+  const city = normalizeValue(filters.city);
+  const make = normalizeValue(filters.vehicleMake);
+  const model = normalizeValue(filters.vehicleModel);
+  const serviceTokens = tokenizeServiceQuery(filters.serviceQuery);
+  const normalizedLocationHint = normalizeValue(locationHint);
+
+  const matchedResults = SEARCH_RESULT_CATALOG.map((result) => {
+    let score = 0;
+
+    if (city && normalizeValue(result.city) === city) {
+      score += 5;
+    }
+
+    const serviceMatches = countKeywordMatches(
+      serviceTokens,
+      result.serviceKeywords,
+    );
+    score += serviceMatches * 2;
+
+    if (serviceTokens.length && serviceMatches === 0) {
+      score -= 4;
+    }
+
+    if (
+      make &&
+      result.makeKeywords.some((keyword) => normalizeValue(keyword) === make)
+    ) {
+      score += 2;
+    }
+
+    if (
+      model &&
+      result.modelKeywords.some((keyword) => {
+        const normalizedKeyword = normalizeValue(keyword);
+
+        return (
+          normalizeValue(model).includes(normalizedKeyword) ||
+          normalizedKeyword.includes(model)
+        );
+      })
+    ) {
+      score += 2;
+    }
+
+    if (
+      normalizedLocationHint &&
+      result.areaKeywords.some((keyword) => {
+        const normalizedKeyword = normalizeValue(keyword);
+
+        return (
+          normalizedLocationHint.includes(normalizedKeyword) ||
+          normalizedKeyword.includes(normalizedLocationHint)
+        );
+      })
+    ) {
+      score += 3;
+    }
+
+    if (
+      filters.partsQuality &&
+      result.partsQualities.includes(filters.partsQuality)
+    ) {
+      score += 1;
+    }
+
+    return { result, score };
+  })
+    .filter(({ score, result }) => {
+      if (city && normalizeValue(result.city) !== city) {
+        return false;
+      }
+
+      return score >= 5;
+    })
+    .map(({ result }) =>
+      buildResultCardData(result, filters, locationHint, locale, cardT, chatT),
+    );
+
+  return sortResults(matchedResults, sortBy).slice(0, 3);
+}
+
 export default function SearchPageView() {
   const locale = useLocale() as Locale;
   const t = useTranslations("searchPage");
   const searchChatT = useTranslations("searchChat");
+  const searchResultT = useTranslations("searchResultCard");
   const [searchPhase, setSearchPhase] = useState<SearchPhase>("collecting");
   const [searchQueryLabel, setSearchQueryLabel] = useState<string | null>(null);
   const [visibleResults, setVisibleResults] = useState<SearchResult[]>([]);
   const [guestLimitReached, setGuestLimitReached] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("price");
   const [locationHint, setLocationHint] = useState<string | null>(null);
+  const [expandedResultId, setExpandedResultId] = useState<number | null>(null);
+  const [comparedResultIds, setComparedResultIds] = useState<number[]>([]);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>(() => [
     createInitialAssistantMessage(locale),
   ]);
@@ -372,6 +535,9 @@ export default function SearchPageView() {
   const lastSearchKeyRef = useRef<string>("");
   const questionsUsed = getQuestionsUsed(messages);
   const filterPills = buildFilterPills(filters, locale, searchChatT);
+  const comparedResults = visibleResults.filter((result) =>
+    comparedResultIds.includes(result.id),
+  );
   const examples = [
     t("examples.exampleOne"),
     t("examples.exampleTwo"),
@@ -391,12 +557,19 @@ export default function SearchPageView() {
 
   function setLockedPhaseIfNeeded(shouldLock: boolean) {
     if (shouldLock) {
-      setSearchPhase((currentPhase) =>
-        currentPhase === "results" || currentPhase === "searching"
-          ? "locked"
-          : "locked",
-      );
+      setSearchPhase("locked");
     }
+  }
+
+  function reconcileResultSelections(results: SearchResult[]) {
+    const visibleIds = new Set(results.map((result) => result.id));
+
+    setComparedResultIds((currentIds) =>
+      currentIds.filter((id) => visibleIds.has(id)),
+    );
+    setExpandedResultId((currentId) =>
+      currentId && visibleIds.has(currentId) ? currentId : null,
+    );
   }
 
   function scheduleSearch(
@@ -440,10 +613,18 @@ export default function SearchPageView() {
     );
 
     searchTimeoutRef.current = setTimeout(() => {
-      const nextResults = deriveVisibleResults(nextFilters, nextLocationHint, sortBy);
+      const nextResults = deriveVisibleResults(
+        nextFilters,
+        nextLocationHint,
+        sortBy,
+        locale,
+        searchResultT,
+        searchChatT,
+      );
       const nextPhase = shouldLockAfterSearch ? "locked" : "results";
 
       setVisibleResults(nextResults);
+      reconcileResultSelections(nextResults);
       setSearchPhase(nextPhase);
       appendAssistantMessage(
         nextResults.length
@@ -496,6 +677,24 @@ export default function SearchPageView() {
     return null;
   }
 
+  function handleToggleDetails(id: number) {
+    setExpandedResultId((currentId) => (currentId === id ? null : id));
+  }
+
+  function handleToggleCompare(id: number) {
+    setComparedResultIds((currentIds) => {
+      if (currentIds.includes(id)) {
+        return currentIds.filter((currentId) => currentId !== id);
+      }
+
+      if (currentIds.length >= 3) {
+        return currentIds;
+      }
+
+      return [...currentIds, id];
+    });
+  }
+
   useEffect(() => {
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
@@ -511,14 +710,33 @@ export default function SearchPageView() {
     setGuestLimitReached(false);
     setSortBy("price");
     setLocationHint(null);
+    setExpandedResultId(null);
+    setComparedResultIds([]);
+    setIsCompareOpen(false);
     lastSearchKeyRef.current = "";
   }, [locale]);
 
   useEffect(() => {
     if (searchPhase === "results" || searchPhase === "locked") {
-      setVisibleResults(deriveVisibleResults(filters, locationHint, sortBy));
+      const nextResults = deriveVisibleResults(
+        filters,
+        locationHint,
+        sortBy,
+        locale,
+        searchResultT,
+        searchChatT,
+      );
+
+      setVisibleResults(nextResults);
+      reconcileResultSelections(nextResults);
     }
-  }, [filters, locationHint, searchPhase, sortBy]);
+  }, [filters, locationHint, locale, searchPhase, searchChatT, searchResultT, sortBy]);
+
+  useEffect(() => {
+    if (comparedResultIds.length < 2 && isCompareOpen) {
+      setIsCompareOpen(false);
+    }
+  }, [comparedResultIds.length, isCompareOpen]);
 
   useEffect(() => {
     return () => {
@@ -587,7 +805,6 @@ export default function SearchPageView() {
 
       setFilters(payload.filters);
       setStatus(payload.status);
-
       appendAssistantMessage(payload.assistantMessage);
 
       if (hasRequiredFilters(payload.filters)) {
@@ -610,65 +827,89 @@ export default function SearchPageView() {
   }
 
   return (
-    <section className="bg-black">
-      <div className="mx-auto w-full max-w-7xl px-6 py-8 sm:px-12 lg:px-8 lg:py-10">
-        <div className="flex flex-col gap-10 lg:flex-row">
-          <div className="flex max-w-xl flex-col gap-12">
-            <SearchHeader />
-            <SearchSummary
-              title={t("summaryTitle")}
-              filters={filterPills}
-              emptyState={t("summaryEmpty")}
-            />
+    <>
+      <section
+        className={`bg-black ${comparedResults.length >= 2 ? "pb-28" : ""}`}
+      >
+        <div className="mx-auto w-full max-w-7xl px-6 py-8 sm:px-12 lg:px-8 lg:py-10">
+          <div className="flex flex-col gap-10 lg:flex-row">
+            <div className="flex max-w-xl flex-col gap-12">
+              <SearchHeader />
+              <SearchSummary
+                title={t("summaryTitle")}
+                filters={filterPills}
+                emptyState={t("summaryEmpty")}
+              />
+            </div>
+
+            <div className="w-full">
+              <SearchChatPanel
+                messages={messages}
+                questionsUsed={questionsUsed}
+                maxQuestions={MAX_SEARCH_CHAT_QUESTIONS}
+                status={status}
+                isPending={isPending}
+                guestLimitReached={guestLimitReached}
+                locale={locale}
+                onSendMessage={handleSendMessage}
+              />
+            </div>
           </div>
 
-          <div className="w-full">
-            <SearchChatPanel
-              messages={messages}
-              questionsUsed={questionsUsed}
-              maxQuestions={MAX_SEARCH_CHAT_QUESTIONS}
-              status={status}
-              isPending={isPending}
-              guestLimitReached={guestLimitReached}
-              locale={locale}
-              onSendMessage={handleSendMessage}
+          <div className="mt-10 space-y-6">
+            <SearchResultsToolbar
+              countLabel={getResultsCountLabel()}
+              summary={getResultsSummary()}
+              note={searchPhase === "locked" ? t("lockedDescription") : null}
+              showSort={searchPhase === "results" || searchPhase === "locked"}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
             />
+
+            {searchPhase === "collecting" ? (
+              <SearchEmptyState
+                title={t("resultsEmptyTitle")}
+                description={t("resultsEmptyDescription")}
+                examples={examples}
+              />
+            ) : searchPhase === "searching" ? (
+              <SearchLoadingState
+                title={t("searchingTitle")}
+                description={t("searchingDescription", {
+                  query: searchQueryLabel ?? t("queryFallback"),
+                })}
+              />
+            ) : visibleResults.length ? (
+              <SearchResultsPanel
+                results={visibleResults}
+                expandedResultId={expandedResultId}
+                comparedResultIds={comparedResultIds}
+                onToggleDetails={handleToggleDetails}
+                onToggleCompare={handleToggleCompare}
+              />
+            ) : (
+              <SearchEmptyState
+                title={t("noMatchesTitle")}
+                description={t("noMatchesDescription")}
+              />
+            )}
           </div>
         </div>
+      </section>
 
-        <div className="mt-10 space-y-6">
-          <SearchResultsToolbar
-            countLabel={getResultsCountLabel()}
-            summary={getResultsSummary()}
-            note={searchPhase === "locked" ? t("lockedDescription") : null}
-            showSort={searchPhase === "results" || searchPhase === "locked"}
-            sortBy={sortBy}
-            onSortChange={setSortBy}
-          />
+      <SearchCompareBar
+        results={comparedResults}
+        onRemove={handleToggleCompare}
+        onClear={() => setComparedResultIds([])}
+        onOpen={() => setIsCompareOpen(true)}
+      />
 
-          {searchPhase === "collecting" ? (
-            <SearchEmptyState
-              title={t("resultsEmptyTitle")}
-              description={t("resultsEmptyDescription")}
-              examples={examples}
-            />
-          ) : searchPhase === "searching" ? (
-            <SearchLoadingState
-              title={t("searchingTitle")}
-              description={t("searchingDescription", {
-                query: searchQueryLabel ?? t("queryFallback"),
-              })}
-            />
-          ) : visibleResults.length ? (
-            <SearchResultsPanel results={visibleResults} />
-          ) : (
-            <SearchEmptyState
-              title={t("noMatchesTitle")}
-              description={t("noMatchesDescription")}
-            />
-          )}
-        </div>
-      </div>
-    </section>
+      <SearchCompareDialog
+        open={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
+        results={comparedResults}
+        queryLabel={searchQueryLabel}
+      />
+    </>
   );
 }
