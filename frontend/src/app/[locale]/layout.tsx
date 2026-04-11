@@ -7,8 +7,6 @@ import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import "../globals.css";
 
-import Footer from "@/components/ui/Footer";
-
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
@@ -41,10 +39,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={`${montserrat.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-screen flex flex-col">
         <NextIntlClientProvider messages={messages}>
-          <main>{children}</main>
-          <Footer />
+          <div className="flex-1 flex flex-col">{children}</div>\
         </NextIntlClientProvider>
       </body>
     </html>

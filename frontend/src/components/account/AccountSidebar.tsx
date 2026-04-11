@@ -20,6 +20,7 @@ import {
   BellIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 
 const navigation = [
   { key: "dashboard", href: "/account", icon: HomeIcon },
@@ -51,7 +52,7 @@ type SidebarContentProps = {
 function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
   return (
     <>
-      <div className="relative flex h-16 shrink-0 items-center">
+      <div className="relative flex h-16 shrink-0 items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex size-10 items-center justify-center rounded-2xl bg-(--accent) text-(--accent-foreground) font-bold shadow">
             C
@@ -63,6 +64,10 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
             <p className="text-base font-semibold text-white">{t("title")}</p>
           </div>
         </div>
+      </div>
+      <div className="ml-4">
+        {" "}
+        <LocaleSwitcher />
       </div>
 
       <nav className="relative flex flex-1 flex-col">
@@ -82,7 +87,7 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
                         active
                           ? "bg-(--accent) text-(--accent-foreground)"
                           : "text-white/70 hover:bg-white/5 hover:text-white",
-                        "group flex items-center gap-x-3 rounded-2xl px-3 py-3 text-sm font-semibold transition",
+                        "group flex items-center gap-x-3 rounded-2xl px-3 py-3 text-sm transition",
                       )}
                     >
                       <item.icon
@@ -104,22 +109,22 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
 
           <li className="mt-auto">
             <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
-              <p className="text-sm font-semibold text-white">
+              <p className="text-base font-semibold text-white">
                 {t("card.title")}
               </p>
-              <p className="mt-2 text-sm leading-6 text-white/60">
+              <p className="mt-2 text-base leading-6 text-white/60">
                 {t("card.description")}
               </p>
 
               <Link
                 href="/search"
-                className="mt-4 inline-flex rounded-full bg-(--accent) px-4 py-2 text-sm font-semibold text-(--accent-foreground) transition hover:bg-(--accent-hover)"
+                className="mt-4 inline-flex rounded-full bg-(--accent) px-4 py-2 text-base  text-(--accent-foreground) transition hover:bg-(--accent-hover)"
               >
                 {t("card.button")}
               </Link>
             </div>
           </li>
-
+          {/* 
           <li className="-mx-2">
             <Link
               href="/account/profile"
@@ -138,7 +143,7 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
                 </p>
               </div>
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </>
@@ -159,7 +164,7 @@ export default function AccountSidebar() {
       >
         <DialogBackdrop
           transition
-          className="fixed inset-0 bg-black/70 transition-opacity duration-300 ease-linear data-closed:opacity-0"
+          className="fixed inset-0  transition-opacity duration-300 ease-linear data-closed:opacity-0"
         />
 
         <div className="fixed inset-0 flex">
@@ -180,7 +185,7 @@ export default function AccountSidebar() {
               </div>
             </TransitionChild>
 
-            <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-white/10 bg-gray-950 px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
+            <div className="relative flex grow flex-col gap-y-2 overflow-y-auto border-r border-white/10  px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
               <SidebarContent
                 pathname={pathname}
                 t={t}
@@ -191,7 +196,7 @@ export default function AccountSidebar() {
         </div>
       </Dialog>
 
-      <div className="sticky top-0 z-40 flex items-center gap-x-6 border-b border-black/10 bg-white px-4 py-4 sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center gap-x-4 border-b border-black/10 bg-white px-4 py-4 sm:px-6 lg:hidden">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
@@ -201,20 +206,22 @@ export default function AccountSidebar() {
           <Bars3Icon aria-hidden="true" className="size-6" />
         </button>
 
-        <div className="flex-1 text-sm font-semibold text-black">
+        <div className="flex-1 text-sm font-semibold text-white">
           {t("title")}
         </div>
 
-        <Link href="/account/profile" className="relative">
+        <LocaleSwitcher />
+
+        {/* <Link href="/account/profile" className="relative">
           <span className="sr-only">{t("profile")}</span>
           <div className="flex size-8 items-center justify-center rounded-full bg-black/10 text-xs font-bold text-black ring-1 ring-inset ring-black/10">
             TC
           </div>
-        </Link>
+        </Link> */}
       </div>
 
       <aside className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
-        <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-white/10 bg-gray-950 px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
+        <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-white/10 bg-black px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
           <SidebarContent pathname={pathname} t={t} />
         </div>
       </aside>

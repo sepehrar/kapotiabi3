@@ -1,3 +1,5 @@
+import AccountOverviewView from "@/components/account/AccountOverviewView";
+
 export default function AccountPage() {
-  return <div className="text-lg text-black">Account dashboard</div>;
+  return <AccountOverviewView />;
 }

@@ -237,5 +237,147 @@
       "description": "Mine tagasi otsingusse, võrdle rohkem teenindusi ja salvesta parim valik hilisemaks.",
       "button": "Ava otsing"
     }
+  },
+  "accountProfile": {
+    "title": "Profiil",
+    "description": "Halda oma isiklikke andmeid ja otsingueelistusi.",
+    "sections": {
+      "personalInfo": "Isiklikud andmed",
+      "preferences": "Otsingueelistused",
+      "security": "Turvalisus"
+    },
+    "fields": {
+      "fullName": "Täisnimi",
+      "email": "E-post",
+      "phone": "Telefoninumber",
+      "city": "Eelistatud linn",
+      "radius": "Eelistatud raadius",
+      "partsQuality": "Eelistatud varuosade kvaliteet"
+    },
+    "placeholders": {
+      "fullName": "Sisesta oma täisnimi",
+      "email": "Sisesta oma e-post",
+      "phone": "Sisesta oma telefoninumber",
+      "city": "Sisesta oma linn"
+    },
+    "security": {
+      "password": "Parool",
+      "passwordDescription": "Uuenda oma parooli, et hoida konto turvalisena."
+    },
+    "actions": {
+      "save": "Salvesta muudatused",
+      "changePassword": "Muuda parooli"
+    },
+    "saveDescription": "Salvesta uuendatud profiiliandmed ja eelistused."
+  },
+  "accountNotifications": {
+    "title": "Teavitused",
+    "description": "Vali, milliseid uuendusi soovid CarFixilt saada.",
+    "items": {
+      "priceUpdates": {
+        "title": "Hinnauuendused",
+        "description": "Saa teavitus, kui salvestatud teenuse või autoteeninduse hind muutub."
+      },
+      "savedServices": {
+        "title": "Salvestatud teenused",
+        "description": "Saa uuendusi teenuste ja autoteeninduste kohta, mille oled salvestanud."
+      },
+      "searchAlerts": {
+        "title": "Otsinguteavitused",
+        "description": "Saa teavitus, kui sinu otsingule ilmuvad uued sobivad teenused."
+      },
+      "accountUpdates": {
+        "title": "Konto uuendused",
+        "description": "Saa olulisi konto, turvalisuse ja toote uuendusi."
+      }
+    },
+    "delivery": {
+      "title": "Teavituste kanalid",
+      "description": "Vali, kuidas soovid teavitusi saada.",
+      "email": "E-posti teavitused",
+      "browser": "Brauseri teavitused",
+      "browserDescription": "Saa teavitused otse oma brauserisse."
+    },
+    "actions": {
+      "save": "Salvesta eelistused"
+    }
+  },
+  "accountSearches": {
+    "title": "Hiljutised otsingud",
+    "description": "Vaata oma hiljutisi otsinguid ja jätka kiiresti sealt, kus pooleli jäid.",
+    "meta": {
+      "results": "sobivat teenust",
+      "updated": "Uuendatud"
+    },
+    "actions": {
+      "repeat": "Korda otsingut",
+      "remove": "Eemalda"
+    }
+  },
+  "accountSaved": {
+    "title": "Salvestatud teenused",
+    "description": "Hoia alles autoteenindused ja teenused, mille juurde soovid hiljem tagasi tulla.",
+    "meta": {
+      "price": "Hind",
+      "distance": "Kaugus",
+      "rating": "Google'i hinnang",
+      "reviews": "arvustust",
+      "priceStatus": "Hinna staatus"
+    },
+    "actions": {
+      "view": "Vaata detaile",
+      "compare": "Võrdle",
+      "remove": "Eemalda"
+    }
+  },
+  "accountCompare": {
+    "title": "Võrdle teenuseid",
+    "description": "Võrdle salvestatud autoteenindusi kõrvuti ja vali oma vajadustele sobivaim variant.",
+    "rows": {
+      "service": "Teenindus",
+      "price": "Hind",
+      "distance": "Kaugus",
+      "rating": "Google'i hinnang",
+      "reviews": "arvustust",
+      "partsQuality": "Varuosade kvaliteet",
+      "priceStatus": "Hinna staatus",
+      "actions": "Toimingud"
+    },
+    "actions": {
+      "view": "Vaata detaile",
+      "remove": "Eemalda"
+    }
+  },
+  "accountOverview": {
+    "title": "Ülevaade",
+    "description": "Näe oma salvestatud teenuseid, hiljutisi otsinguid ja konto tegevusi ühes kohas.",
+    "stats": {
+      "saved": "Salvestatud teenused",
+      "compare": "Võrdluses",
+      "searches": "Hiljutised otsingud",
+      "alerts": "Aktiivsed teavitused"
+    },
+    "recentSearches": {
+      "title": "Hiljutised otsingud",
+      "description": "Jätka sealt, kus pooleli jäid, ja ava oma viimased otsingud uuesti.",
+      "results": "sobivat teenust",
+      "repeat": "Korda otsingut"
+    },
+    "savedServices": {
+      "title": "Salvestatud teenused",
+      "description": "Sinu viimati salvestatud autoteenindused ja pakkumised.",
+      "price": "Hind",
+      "distance": "Kaugus",
+      "rating": "Hinnang"
+    },
+    "quickActions": {
+      "title": "Kiirtoimingud",
+      "description": "Alusta uut otsingut või jätka salvestatud valikute võrdlemist.",
+      "newSearch": "Alusta uut otsingut",
+      "openCompare": "Ava võrdlus"
+    },
+    "actions": {
+      "viewAll": "Vaata kõiki"
+    }
   }
 }

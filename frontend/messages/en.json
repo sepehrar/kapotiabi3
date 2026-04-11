@@ -237,5 +237,147 @@
       "description": "Go back to search, compare more repair shops, and save the best option for later.",
       "button": "Open search"
     }
+  },
+  "accountProfile": {
+    "title": "Profile",
+    "description": "Manage your personal details and search preferences.",
+    "sections": {
+      "personalInfo": "Personal information",
+      "preferences": "Search preferences",
+      "security": "Security"
+    },
+    "fields": {
+      "fullName": "Full name",
+      "email": "Email",
+      "phone": "Phone number",
+      "city": "Preferred city",
+      "radius": "Preferred radius",
+      "partsQuality": "Preferred parts quality"
+    },
+    "placeholders": {
+      "fullName": "Enter your full name",
+      "email": "Enter your email",
+      "phone": "Enter your phone number",
+      "city": "Enter your city"
+    },
+    "security": {
+      "password": "Password",
+      "passwordDescription": "Update your password to keep your account secure."
+    },
+    "actions": {
+      "save": "Save changes",
+      "changePassword": "Change password"
+    },
+    "saveDescription": "Save your updated profile details and preferences."
+  },
+  "accountNotifications": {
+    "title": "Notifications",
+    "description": "Choose which updates you want to receive from CarFix.",
+    "items": {
+      "priceUpdates": {
+        "title": "Price updates",
+        "description": "Get notified when a saved service or repair shop changes its price."
+      },
+      "savedServices": {
+        "title": "Saved services",
+        "description": "Get updates about services and repair shops you saved."
+      },
+      "searchAlerts": {
+        "title": "Search alerts",
+        "description": "Get notified when new matching services appear for your searches."
+      },
+      "accountUpdates": {
+        "title": "Account updates",
+        "description": "Receive important account, security, and product-related updates."
+      }
+    },
+    "delivery": {
+      "title": "Delivery channels",
+      "description": "Choose how you would like to receive notifications.",
+      "email": "Email notifications",
+      "browser": "Browser notifications",
+      "browserDescription": "Receive notifications directly in your browser."
+    },
+    "actions": {
+      "save": "Save preferences"
+    }
+  },
+  "accountSearches": {
+    "title": "Recent searches",
+    "description": "Review your recent searches and quickly continue where you left off.",
+    "meta": {
+      "results": "matching services",
+      "updated": "Updated"
+    },
+    "actions": {
+      "repeat": "Repeat search",
+      "remove": "Remove"
+    }
+  },
+  "accountSaved": {
+    "title": "Saved services",
+    "description": "Keep track of repair shops and services you want to come back to later.",
+    "meta": {
+      "price": "Price",
+      "distance": "Distance",
+      "rating": "Google rating",
+      "reviews": "reviews",
+      "priceStatus": "Price status"
+    },
+    "actions": {
+      "view": "View details",
+      "compare": "Compare",
+      "remove": "Remove"
+    }
+  },
+  "accountCompare": {
+    "title": "Compare services",
+    "description": "Compare saved repair shops side by side and choose the best option for your needs.",
+    "rows": {
+      "service": "Service",
+      "price": "Price",
+      "distance": "Distance",
+      "rating": "Google rating",
+      "reviews": "reviews",
+      "partsQuality": "Parts quality",
+      "priceStatus": "Price status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View details",
+      "remove": "Remove"
+    }
+  },
+  "accountOverview": {
+    "title": "Overview",
+    "description": "See your saved services, recent searches, and quick account activity in one place.",
+    "stats": {
+      "saved": "Saved services",
+      "compare": "In compare",
+      "searches": "Recent searches",
+      "alerts": "Active alerts"
+    },
+    "recentSearches": {
+      "title": "Recent searches",
+      "description": "Pick up where you left off and continue your latest searches.",
+      "results": "matching services",
+      "repeat": "Repeat search"
+    },
+    "savedServices": {
+      "title": "Saved services",
+      "description": "Your most recent saved repair shops and offers.",
+      "price": "Price",
+      "distance": "Distance",
+      "rating": "Rating"
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "description": "Start a new search or continue comparing saved options.",
+      "newSearch": "Start new search",
+      "openCompare": "Open compare"
+    },
+    "actions": {
+      "viewAll": "View all"
+    }
   }
 }
