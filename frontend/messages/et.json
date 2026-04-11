@@ -215,7 +215,26 @@
   },
   "searchPage": {
     "summaryTitle": "Praegune otsing:",
-    "summaryEmpty": "Lisa mõned detailid ja otsingu filtrid ilmuvad siia."
+    "summaryEmpty": "Lisa mõned detailid ja otsingu filtrid ilmuvad siia.",
+    "resultsEmptyTitle": "Otsing pole veel alanud",
+    "resultsEmptyDescription": "Kirjelda, mida su auto vajab, ja hakkame sobivaid teenindusi otsima.",
+    "searchingTitle": "Otsin praegu",
+    "searchingDescription": "Otsin päringule {query} vastavaid variante.",
+    "resultsSummary": "Näitan hetkel päringule {query} sobivaid valikuid.",
+    "resultsCount": "{count} valikut leitud",
+    "lockedDescription": "Praegused tulemused jäävad nähtavaks. Loo konto, et seda otsingut edasi täpsustada.",
+    "noMatchesTitle": "Sobivaid demo-tulemusi veel ei ole",
+    "noMatchesDescription": "Proovi teist piirkonda, raadiust või teenuse sõnastust, et demo-tulemusi täpsustada.",
+    "queryFallback": "sinu otsing",
+    "searchStartedMessage": "Alustan otsingut päringule {query}.",
+    "searchUpdatedMessage": "Uuendan tulemusi päringule {query}.",
+    "resultsFoundMessage": "Leidsin allpool {count} valikut. Soovi korral täpsusta piirkonda, raadiust või varuosade eelistust.",
+    "resultsEmptyMessage": "Sobivaid demo-tulemusi ma veel ei leidnud. Proovi teist piirkonda, raadiust või teenuse sõnastust.",
+    "examples": {
+      "exampleOne": "Õlivahetus Tallinnas",
+      "exampleTwo": "Piduriremont Tartus",
+      "exampleThree": "Kliimahooldus Audi A4-le"
+    }
   },
   "searchChat": {
     "title": "Otsinguvestlus",
@@ -225,6 +244,14 @@
     "send": "Saada",
     "sending": "Saadan...",
     "questionsLeft": "Küsimusi järel:",
+    "limitBadge": "Külalise limiit täis",
+    "lockedTitle": "Jätkamiseks loo konto",
+    "lockedDescription": "Praegused tulemused jäävad nähtavaks, kuid otsingu edasiseks täpsustamiseks on vaja kontot.",
+    "createAccount": "Loo konto",
+    "login": "Logi sisse",
+    "stillSearching": "Kontrollin veel päringule {query} sobivaid variante.",
+    "resultsStatus": "Leidsin päringule {query} {count} valikut. Saad neid allpool võrrelda.",
+    "resultsStatusNone": "Päringule {query} ei ole mul veel sobivaid demo-tulemusi.",
     "partsQuality": {
       "budget": "Soodsad varuosad",
       "oem_equivalent": "OEM-võrdväärsed varuosad",
@@ -233,7 +260,6 @@
     }
   },
   "searchResultsToolbar": {
-    "matchingServicesSuffix": "sobivat teenust",
     "sortBy": "Sorteeri",
     "options": {
       "price": "Hind",

@@ -194,7 +194,7 @@ export async function POST(request: Request) {
 
   const filters = ensureSearchFilters(body.filters);
 
-  if (body.questionsUsed >= body.maxQuestions) {
+  if (body.questionsUsed > body.maxQuestions) {
     const status = coerceChatStatus(
       "limit_reached",
       filters,

@@ -203,7 +203,7 @@ export function coerceChatStatus(
   questionsUsed: number,
   maxQuestions: number,
 ): ChatStatus {
-  if (questionsUsed >= maxQuestions) {
+  if (questionsUsed > maxQuestions) {
     return "limit_reached";
   }
 

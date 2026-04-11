@@ -215,7 +215,26 @@
   },
   "searchPage": {
     "summaryTitle": "Current search:",
-    "summaryEmpty": "Add a few details and your search filters will appear here."
+    "summaryEmpty": "Add a few details and your search filters will appear here.",
+    "resultsEmptyTitle": "No search yet",
+    "resultsEmptyDescription": "Describe what your car needs and we will start looking for matching repair shops.",
+    "searchingTitle": "Searching now",
+    "searchingDescription": "Looking for {query}.",
+    "resultsSummary": "Showing current options for {query}.",
+    "resultsCount": "{count} options found",
+    "lockedDescription": "Current results stay visible. Create an account to keep refining this search.",
+    "noMatchesTitle": "No matching demo results yet",
+    "noMatchesDescription": "Try another area, search radius, or service wording to refine the demo results.",
+    "queryFallback": "your search",
+    "searchStartedMessage": "I’m starting the search for {query}.",
+    "searchUpdatedMessage": "I’m updating the results for {query}.",
+    "resultsFoundMessage": "I found {count} options below. You can refine by area, radius, or parts quality.",
+    "resultsEmptyMessage": "I could not find matching demo results yet. Try another area, radius, or service wording.",
+    "examples": {
+      "exampleOne": "Oil change in Tallinn",
+      "exampleTwo": "Brake repair in Tartu",
+      "exampleThree": "A/C service for Audi A4"
+    }
   },
   "searchChat": {
     "title": "Search chat",
@@ -225,6 +244,14 @@
     "send": "Send",
     "sending": "Sending...",
     "questionsLeft": "Questions left:",
+    "limitBadge": "Guest limit reached",
+    "lockedTitle": "Create an account to continue",
+    "lockedDescription": "Your current results stay visible, but more chat refinements require an account.",
+    "createAccount": "Create account",
+    "login": "Log in",
+    "stillSearching": "I’m still checking options for {query}.",
+    "resultsStatus": "I found {count} options for {query}. You can compare them below.",
+    "resultsStatusNone": "I do not have matching demo results yet for {query}.",
     "partsQuality": {
       "budget": "Budget parts",
       "oem_equivalent": "OEM-equivalent parts",
@@ -233,7 +260,6 @@
     }
   },
   "searchResultsToolbar": {
-    "matchingServicesSuffix": "matching services",
     "sortBy": "Sort by",
     "options": {
       "price": "Price",

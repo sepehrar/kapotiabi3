@@ -1,4 +1,4 @@
-type SearchResult = {
+export type SearchResult = {
   id: number;
   name: string;
   price: string;

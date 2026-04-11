@@ -1,15 +1,6 @@
 import SearchResultCard from "./SearchResultCard";
 import SearchEmptyState from "./SearchEmptyState";
-
-type SearchResult = {
-  id: number;
-  name: string;
-  price: string;
-  distance: string;
-  rating: string;
-  reviews: number;
-  updatedAt: string;
-};
+import type { SearchResult } from "./SearchResultCard";
 
 type SearchResultsPanelProps = {
   results: SearchResult[];
@@ -19,7 +10,12 @@ export default function SearchResultsPanel({
   results,
 }: SearchResultsPanelProps) {
   if (!results.length) {
-    return <SearchEmptyState />;
+    return (
+      <SearchEmptyState
+        title="No results yet"
+        description="Describe what your car needs to see matching repair shops."
+      />
+    );
   }
 
   return (
