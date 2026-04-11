@@ -1,28 +1,49 @@
-import GuestCounter from "./GuestCounter";
+"use client";
 
-export type Message = {
-  id: number;
-  role: "assistant" | "user";
-  text: string;
-};
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import GuestCounter from "./GuestCounter";
+import type { ChatMessage, ChatStatus } from "@/lib/search-chat";
 
 type SearchChatPanelProps = {
-  messages: Message[];
+  messages: ChatMessage[];
   questionsUsed: number;
   maxQuestions: number;
+  status: ChatStatus;
+  isPending: boolean;
+  onSendMessage: (message: string) => Promise<void>;
 };
 
 export default function SearchChatPanel({
   messages,
   questionsUsed,
   maxQuestions,
+  status,
+  isPending,
+  onSendMessage,
 }: SearchChatPanelProps) {
+  const t = useTranslations("searchChat");
+  const [draft, setDraft] = useState("");
+  const isDisabled =
+    isPending || status === "limit_reached" || questionsUsed >= maxQuestions;
+
+  async function handleSubmit() {
+    const value = draft.trim();
+
+    if (!value || isDisabled) {
+      return;
+    }
+
+    setDraft("");
+    await onSendMessage(value);
+  }
+
   return (
     <aside className="rounded-3xl border border-black/10 bg-[#f8f8f8] p-5 sm:p-6">
       <div>
-        <h2 className="text-xl font-semibold text-black">Search chat</h2>
+        <h2 className="text-xl font-semibold text-black">{t("title")}</h2>
         <p className="mt-2 text-sm leading-6 text-black/70">
-          Answer one short question at a time.
+          {t("description")}
         </p>
       </div>
 
@@ -43,25 +64,40 @@ export default function SearchChatPanel({
 
       <div className="mt-6">
         <label htmlFor="search-message" className="sr-only">
-          Type your answer
+          {t("inputLabel")}
         </label>
 
         <div className="rounded-2xl bg-white p-3 ring-1 ring-black/5">
           <textarea
             id="search-message"
             rows={3}
-            placeholder="Type your answer..."
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                void handleSubmit();
+              }
+            }}
+            placeholder={t("inputPlaceholder")}
+            disabled={isDisabled}
             className="w-full resize-none border-0 bg-transparent text-sm text-black placeholder:text-black/40 focus:outline-none"
           />
 
           <div className="mt-3 flex items-center justify-between gap-3">
-            <GuestCounter used={questionsUsed} max={maxQuestions} />
+            <GuestCounter
+              used={questionsUsed}
+              max={maxQuestions}
+              label={t("questionsLeft")}
+            />
 
             <button
               type="button"
-              className="rounded-full bg-(--accent) px-5 py-2 text-sm font-medium text-white transition hover:bg-(--accent-hover) ring-(--accent)  ring-1 ring-inset"
+              onClick={() => void handleSubmit()}
+              disabled={isDisabled}
+              className="rounded-full bg-(--accent) px-5 py-2 text-sm font-medium text-white transition hover:bg-(--accent-hover) ring-(--accent) ring-1 ring-inset disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Send
+              {isPending ? t("sending") : t("send")}
             </button>
           </div>
         </div>

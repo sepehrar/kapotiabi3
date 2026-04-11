@@ -209,6 +209,29 @@
     "description": "Compare prices, location, and trusted reviews in one place. Create an account to save shops, compare options, and get updates.",
     "button": "Create account"
   },
+  "searchHeader": {
+    "title": "Start your search",
+    "description": "Describe what your car needs and your city. We will ask a few short questions and show matching repair shops."
+  },
+  "searchPage": {
+    "summaryTitle": "Current search:",
+    "summaryEmpty": "Add a few details and your search filters will appear here."
+  },
+  "searchChat": {
+    "title": "Search chat",
+    "description": "Answer one short question at a time.",
+    "inputLabel": "Type your answer",
+    "inputPlaceholder": "Type your answer...",
+    "send": "Send",
+    "sending": "Sending...",
+    "questionsLeft": "Questions left:",
+    "partsQuality": {
+      "budget": "Budget parts",
+      "oem_equivalent": "OEM-equivalent parts",
+      "oem": "OEM parts",
+      "not_sure": "Not sure"
+    }
+  },
   "searchResultsToolbar": {
     "matchingServicesSuffix": "matching services",
     "sortBy": "Sort by",

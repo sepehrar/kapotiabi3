@@ -1,46 +1,25 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import SearchHeader from "./SearchHeader";
-import SearchChatPanel, { type Message } from "./SearchChatPanel";
+import SearchChatPanel from "./SearchChatPanel";
 import SearchSummary from "./SearchSummary";
 import SearchResultsToolbar from "./SearchResultsToolbar";
 import SearchResultsPanel from "./SearchResultsPanel";
-
-const mockMessages: Message[] = [
-  {
-    id: 1,
-    role: "assistant",
-    text: "What does your car need?",
-  },
-  {
-    id: 2,
-    role: "user",
-    text: "Oil change in Tallinn",
-  },
-  {
-    id: 3,
-    role: "assistant",
-    text: "What car do you have?",
-  },
-  {
-    id: 4,
-    role: "user",
-    text: "BMW 320d 2018",
-  },
-  {
-    id: 5,
-    role: "assistant",
-    text: "Which parts quality do you prefer?",
-  },
-];
-
-const mockFilters = [
-  "Oil change",
-  "Tallinn",
-  "BMW",
-  "320d",
-  "2018",
-  "OEM-equivalent",
-  "10 km",
-];
+import {
+  MAX_SEARCH_CHAT_QUESTIONS,
+  createEmptySearchFilters,
+  createInitialAssistantMessage,
+  getFallbackAssistantMessage,
+  getQuestionsUsed,
+  type ChatMessage,
+  type ChatResponseBody,
+  type ChatStatus,
+  type PartsQuality,
+  type SearchFilters,
+} from "@/lib/search-chat";
+import type { Locale } from "@/lib/locale";
 
 const mockResults = [
   {
@@ -72,21 +51,160 @@ const mockResults = [
   },
 ];
 
+function partsQualityLabel(
+  partsQuality: PartsQuality,
+  t: ReturnType<typeof useTranslations>,
+) {
+  return t(`partsQuality.${partsQuality}`);
+}
+
+function buildFilterPills(
+  filters: SearchFilters,
+  locale: Locale,
+  t: ReturnType<typeof useTranslations>,
+) {
+  const pills: string[] = [];
+
+  if (filters.serviceQuery) {
+    pills.push(filters.serviceQuery);
+  }
+
+  if (filters.city) {
+    pills.push(filters.city);
+  }
+
+  if (filters.vehicleMake) {
+    pills.push(filters.vehicleMake);
+  }
+
+  if (filters.vehicleModel) {
+    pills.push(filters.vehicleModel);
+  }
+
+  if (filters.vehicleYear) {
+    pills.push(String(filters.vehicleYear));
+  }
+
+  if (filters.partsQuality) {
+    pills.push(partsQualityLabel(filters.partsQuality, t));
+  }
+
+  if (filters.radiusKm) {
+    pills.push(
+      locale === "et" ? `${filters.radiusKm} km raadius` : `${filters.radiusKm} km radius`,
+    );
+  }
+
+  return pills;
+}
+
 export default function SearchPageView() {
+  const locale = useLocale() as Locale;
+  const t = useTranslations("searchPage");
+  const searchChatT = useTranslations("searchChat");
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [
+    createInitialAssistantMessage(locale),
+  ]);
+  const [filters, setFilters] = useState<SearchFilters>(() =>
+    createEmptySearchFilters(),
+  );
+  const [status, setStatus] = useState<ChatStatus>("needs_more_info");
+  const [isPending, setIsPending] = useState(false);
+  const questionsUsed = getQuestionsUsed(messages);
+  const filterPills = buildFilterPills(filters, locale, searchChatT);
+
+  useEffect(() => {
+    setMessages([createInitialAssistantMessage(locale)]);
+    setFilters(createEmptySearchFilters());
+    setStatus("needs_more_info");
+    setIsPending(false);
+  }, [locale]);
+
+  async function handleSendMessage(text: string) {
+    if (isPending || status === "limit_reached") {
+      return;
+    }
+
+    const userMessage: ChatMessage = {
+      id: Date.now(),
+      role: "user",
+      text,
+    };
+    const nextMessages = [...messages, userMessage];
+    const nextQuestionsUsed = questionsUsed + 1;
+
+    setMessages(nextMessages);
+    setIsPending(true);
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          locale,
+          messages: nextMessages.map(({ role, text: messageText }) => ({
+            role,
+            text: messageText,
+          })),
+          questionsUsed: nextQuestionsUsed,
+          maxQuestions: MAX_SEARCH_CHAT_QUESTIONS,
+          filters,
+        }),
+      });
+
+      const payload = (await response.json()) as ChatResponseBody;
+
+      if (!response.ok || !payload.assistantMessage) {
+        throw new Error("Chat request failed.");
+      }
+
+      setFilters(payload.filters);
+      setStatus(payload.status);
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          text: payload.assistantMessage,
+        },
+      ]);
+    } catch {
+      setMessages((currentMessages) => [
+        ...currentMessages,
+        {
+          id: Date.now() + 1,
+          role: "assistant",
+          text: getFallbackAssistantMessage(locale),
+        },
+      ]);
+    } finally {
+      setIsPending(false);
+    }
+  }
+
   return (
     <section className="bg-black">
       <div className="mx-auto w-full max-w-7xl px-6 py-8 sm:px-12 lg:px-8 lg:py-10">
         <div className="flex flex-col gap-10 lg:flex-row">
           <div className="flex max-w-xl flex-col gap-12">
             <SearchHeader />
-            <SearchSummary filters={mockFilters} />
+            <SearchSummary
+              title={t("summaryTitle")}
+              filters={filterPills}
+              emptyState={t("summaryEmpty")}
+            />
           </div>
 
           <div className="w-full">
             <SearchChatPanel
-              messages={mockMessages}
-              questionsUsed={2}
-              maxQuestions={5}
+              messages={messages}
+              questionsUsed={questionsUsed}
+              maxQuestions={MAX_SEARCH_CHAT_QUESTIONS}
+              status={status}
+              isPending={isPending}
+              onSendMessage={handleSendMessage}
             />
           </div>
         </div>

@@ -1,10 +1,15 @@
+"use client";
+
 import SectionTitle from "../ui/SectionTitle";
+import { useTranslations } from "next-intl";
 
 export default function SearchHeader() {
+  const t = useTranslations("searchHeader");
+
   return (
     <SectionTitle
-      title="Start your search"
-      description="Describe what your car needs and your city. We will ask a few short questions and show matching repair shops."
+      title={t("title")}
+      description={t("description")}
     />
   );
 }

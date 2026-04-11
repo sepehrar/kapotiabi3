@@ -209,6 +209,29 @@
     "description": "Võrdle hindu, asukohta ja usaldusväärseid arvustusi ühes kohas. Loo konto, et salvestada teenindusi, võrrelda valikuid ja saada uuendusi.",
     "button": "Loo konto"
   },
+  "searchHeader": {
+    "title": "Alusta otsingut",
+    "description": "Kirjelda, mida sinu auto vajab ja mis linnas sa otsid. Küsimused aitavad näidata sobivaid teenindusi."
+  },
+  "searchPage": {
+    "summaryTitle": "Praegune otsing:",
+    "summaryEmpty": "Lisa mõned detailid ja otsingu filtrid ilmuvad siia."
+  },
+  "searchChat": {
+    "title": "Otsinguvestlus",
+    "description": "Vasta ühele lühikesele küsimusele korraga.",
+    "inputLabel": "Kirjuta oma vastus",
+    "inputPlaceholder": "Kirjuta oma vastus...",
+    "send": "Saada",
+    "sending": "Saadan...",
+    "questionsLeft": "Küsimusi järel:",
+    "partsQuality": {
+      "budget": "Soodsad varuosad",
+      "oem_equivalent": "OEM-võrdväärsed varuosad",
+      "oem": "OEM varuosad",
+      "not_sure": "Ei ole kindel"
+    }
+  },
   "searchResultsToolbar": {
     "matchingServicesSuffix": "sobivat teenust",
     "sortBy": "Sorteeri",
