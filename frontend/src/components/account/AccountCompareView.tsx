@@ -37,7 +37,7 @@ export default function AccountCompareView() {
   const t = useTranslations("accountCompare");
 
   return (
-    <div className="mx-auto w-full max-w-7xl">
+    <div className="mx-auto w-full max-w-5xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-white">
           {t("title")}
@@ -49,7 +49,7 @@ export default function AccountCompareView() {
 
       <section className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
         <div className="overflow-x-auto">
-          <div className="min-w-225">
+          <div className="w-full">
             <div className="grid grid-cols-4 gap-4">
               <div className="rounded-2xl bg-black/3 p-4">
                 <p className="text-sm font-semibold text-black">

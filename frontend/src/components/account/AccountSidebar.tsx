@@ -57,7 +57,7 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
           <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
             <span className="sr-only">{t("brand")}</span>
 
-            <span className="text-xl font-bold text-white">CarFix</span>
+            <span className="text-xl font-bold text-white">KapotiAbi</span>
           </Link>
           <div className="bg-(--accent) w-2 h-2 rounded-full"></div>
           <div>

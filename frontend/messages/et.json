@@ -4,7 +4,7 @@
     "startSearch": "Alusta otsingut",
     "openMenu": "Ava peamenüü",
     "closeMenu": "Sulge menüü",
-    "brand": "CarFix",
+    "brand": "KapotiAbi",
     "nav": {
       "findService": "Leia autoteenus",
       "categories": "Kategooriad",
@@ -13,7 +13,7 @@
     }
   },
   "home": {
-    "title": "CarFix",
+    "title": "KapotiAbi",
     "description": "Leia lähedal asuvaid autoteenindusi ning võrdle hindu, hinnanguid ja kaugust ühe lihtsa otsinguga.",
     "subtitle": "Kirjelda, mida sinu auto vajab, vasta mõnele lühikesele küsimusele ning saa sobivad teenused koos selgete hindade ja ajakohase infoga.",
     "button": "Alusta otsingut",
@@ -64,8 +64,8 @@
       "Muu autoremont"
     ]
   },
-  "whyUseCarFix": {
-    "title": "Miks kasutada CarFixi",
+  "whyUseKapotiAbi": {
+    "title": "Miks kasutada KapotiAbi",
     "description": "Lihtsam viis sobiva autoteenuse leidmiseks ilma käsitsi otsimata.",
     "item1Title": "Võrdle ühest kohast",
     "item1Description": "Näe hindu, hinnanguid, kaugust ja teenuse andmeid ilma kümneid lehti avamata.",
@@ -78,7 +78,7 @@
   },
   "forBusinesses": {
     "title": "Autoteenindustele",
-    "description": "Näita oma teenuseid, halda hindu ja jõua rohkemate kohalike klientideni CarFixi kaudu.",
+    "description": "Näita oma teenuseid, halda hindu ja jõua rohkemate kohalike klientideni KapotiAbi kaudu.",
     "button": "Halda oma kuulutust",
     "item1Title": "Halda või loo oma kuulutus",
     "item1Description": "Leia oma ettevõte, kinnita omandiõigus või loo uus kuulutus, kui seda veel ei ole.",
@@ -91,12 +91,12 @@
   },
   "faq": {
     "title": "Korduma kippuvad küsimused",
-    "description": "Kõik, mida pead enne CarFixi kasutamist teadma.",
+    "description": "Kõik, mida pead enne KapotiAbi kasutamist teadma.",
     "item1Question": "Kas otsingu alustamiseks peab konto looma?",
     "item1Answer": "Ei. Saad alustada külalisena ja vaadata sobivaid autoteenindusi kohe.",
     "item2Question": "Kuidas hinnad kuvatakse?",
     "item2Answer": "Kuvame lõpphinna või alghinna, sõltuvalt sellest, milline info on teenuse kohta saadaval.",
-    "item3Question": "Kas CarFixi kaudu saab broneerida?",
+    "item3Question": "Kas KapotiAbi kaudu saab broneerida?",
     "item3Answer": "MVP faasis mitte. Sa võrdled valikuid ja võtad seejärel autoteenindusega ise ühendust.",
     "item4Question": "Mida ma saan võrrelda?",
     "item4Answer": "Saad võrrelda hinda, kaugust, Google’i hinnangut, arvustuste arvu ja kuupäeva, millal hind viimati uuendati.",
@@ -349,7 +349,7 @@
     }
   },
   "accountProfile": {
-    "brand": "CarFix",
+    "brand": "KapotiAbi",
     "title": "Profiil",
     "description": "Halda oma isiklikke andmeid ja otsingueelistusi.",
     "sections": {
@@ -383,7 +383,7 @@
   },
   "accountNotifications": {
     "title": "Teavitused",
-    "description": "Vali, milliseid uuendusi soovid CarFixilt saada.",
+    "description": "Vali, milliseid uuendusi soovid KapotiAbilt saada.",
     "items": {
       "priceUpdates": {
         "title": "Hinnauuendused",

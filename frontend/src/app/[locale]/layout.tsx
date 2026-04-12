@@ -13,9 +13,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "CarFix - Car Repair Service",
+  title: "KapotiAbi - Car Repair Service",
   description:
-    "CarFix is your trusted partner for all your car repair needs. We offer a wide range of services, from routine maintenance to complex repairs, ensuring your vehicle runs smoothly and safely. Our team of experienced mechanics is dedicated to providing high-quality service and customer satisfaction. Whether you need an oil change, brake repair, or engine diagnostics, CarFix has you covered. Visit us today and experience the difference in car care!",
+    "KapotiAbi is your trusted partner for all your car repair needs. We offer a wide range of services, from routine maintenance to complex repairs, ensuring your vehicle runs smoothly and safely. Our team of experienced mechanics is dedicated to providing high-quality service and customer satisfaction. Whether you need an oil change, brake repair, or engine diagnostics, KapotiAbi has you covered. Visit us today and experience the difference in car care!",
 };
 
 export function generateStaticParams() {

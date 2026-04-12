@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 
-export default function WhyUseCarFix() {
-  const t = useTranslations("whyUseCarFix");
+export default function WhyUseKapotiAbi() {
+  const t = useTranslations("whyUseKapotiAbi");
 
   const items = [
     { title: t("item1Title"), description: t("item1Description") },
@@ -11,12 +11,15 @@ export default function WhyUseCarFix() {
   ];
 
   return (
-    <section aria-labelledby="why-use-carfix-heading" className="bg-[#f8f8f8]">
+    <section
+      aria-labelledby="why-use-kapotiabi-heading"
+      className="bg-[#f8f8f8]"
+    >
       <div className="mx-auto w-full max-w-5xl px-6 py-16 sm:px-12 lg:px-16 lg:py-24">
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
           <h2
-            id="why-use-carfix-heading"
+            id="why-use-kapotiabi-heading"
             className="text-3xl font-bold tracking-tight text-black sm:text-4xl text-balance"
           >
             {t("title")}

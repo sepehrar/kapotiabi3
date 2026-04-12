@@ -39,7 +39,7 @@ function buildSystemPrompt(
   const languageName = locale === "et" ? "Estonian" : "English";
 
   return `
-You are CarFix search chat. Your only job is to collect search criteria for car-service discovery.
+You are KapotiAbi search chat. Your only job is to collect search criteria for car-service discovery.
 
 Rules:
 - Reply only in ${languageName}.

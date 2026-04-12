@@ -4,7 +4,7 @@ import Testimonials from "@/components/landing/Testimonials";
 import HowItWorks from "@/components/landing/HowItworks";
 import WhatCompare from "@/components/landing/WhatCompare";
 import PopularCategories from "@/components/landing/PopularCategories";
-import WhyUseCarFix from "@/components/landing/WhyUseCarFix";
+import WhyUseKapotiAbi from "@/components/landing/WhyUseKapotiAbi";
 import ForBusinesses from "@/components/landing/ForBusinesses";
 import FAQ from "@/components/landing/FAQ";
 // import { useTranslations } from "next-intl";
@@ -19,7 +19,7 @@ export default function Home() {
       <HowItWorks />
       <PopularCategories />
       <WhatCompare />
-      <WhyUseCarFix />
+      <WhyUseKapotiAbi />
       <ForBusinesses />
       <FAQ />
       <Testimonials />

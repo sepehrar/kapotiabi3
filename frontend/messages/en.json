@@ -4,7 +4,7 @@
     "startSearch": "Start search",
     "openMenu": "Open main menu",
     "closeMenu": "Close menu",
-    "brand": "CarFix",
+    "brand": "KapotiAbi",
     "nav": {
       "findService": "Find a service",
       "categories": "Categories",
@@ -13,7 +13,7 @@
     }
   },
   "home": {
-    "title": "CarFix",
+    "title": "KapotiAbi",
     "description": "Find nearby repair shops and compare prices, ratings, and distance in one simple search.",
     "subtitle": "Describe what your car needs, answer a few short questions, and get matching services with transparent pricing and up-to-date information.",
     "button": "Start search",
@@ -64,8 +64,8 @@
       "Other car repairs"
     ]
   },
-  "whyUseCarFix": {
-    "title": "Why use CarFix",
+  "whyUseKapotiAbi": {
+    "title": "Why use KapotiAbi",
     "description": "A simpler way to find the right repair shop without searching manually.",
     "item1Title": "Compare in one place",
     "item1Description": "See prices, ratings, distance, and service details without opening dozens of pages.",
@@ -78,7 +78,7 @@
   },
   "forBusinesses": {
     "title": "For repair shops",
-    "description": "Show your services, manage your pricing, and reach more local customers through CarFix.",
+    "description": "Show your services, manage your pricing, and reach more local customers through KapotiAbi.",
     "button": "Claim your listing",
     "item1Title": "Claim or create your listing",
     "item1Description": "Find your business, verify ownership, or create a new listing if it does not exist yet.",
@@ -91,12 +91,12 @@
   },
   "faq": {
     "title": "Frequently asked questions",
-    "description": "Everything you need to know before using CarFix.",
+    "description": "Everything you need to know before using KapotiAbi.",
     "item1Question": "Do I need to sign up to start searching?",
     "item1Answer": "No. You can start as a guest and explore matching repair shops right away.",
     "item2Question": "How are prices shown?",
     "item2Answer": "We show a final price or a starting price, depending on the available information for each service.",
-    "item3Question": "Can I book through CarFix?",
+    "item3Question": "Can I book through KapotiAbi?",
     "item3Answer": "Not in the MVP. You compare options and then contact the repair shop directly.",
     "item4Question": "What can I compare?",
     "item4Answer": "You can compare price, distance, Google rating, review count, and when the price was last updated.",
@@ -329,7 +329,7 @@
     }
   },
   "accountSidebar": {
-    "brand": "CarFix",
+    "brand": "KapotiAbi",
     "label": "Account",
     "title": "My account",
     "openSidebar": "Open sidebar",
@@ -383,7 +383,7 @@
   },
   "accountNotifications": {
     "title": "Notifications",
-    "description": "Choose which updates you want to receive from CarFix.",
+    "description": "Choose which updates you want to receive from KapotiAbi.",
     "items": {
       "priceUpdates": {
         "title": "Price updates",
