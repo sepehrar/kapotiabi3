@@ -1,55 +1,69 @@
+import {
+  ChatBubbleOvalLeftEllipsisIcon,
+  HeartIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { useTranslations } from "next-intl";
+
+const icons = [
+  TrashIcon,
+  PencilSquareIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+  HeartIcon,
+];
+import Image from "next/image";
 
 export default function WhatCompare() {
   const t = useTranslations("whatYouCanCompare");
 
   const items = [
-    {
-      title: t("item1Title"),
-      description: t("item1Description"),
-    },
-    {
-      title: t("item2Title"),
-      description: t("item2Description"),
-    },
-    {
-      title: t("item3Title"),
-      description: t("item3Description"),
-    },
-    {
-      title: t("item4Title"),
-      description: t("item4Description"),
-    },
+    { title: t("item1Title"), description: t("item1Description") },
+    { title: t("item2Title"), description: t("item2Description") },
+    { title: t("item3Title"), description: t("item3Description") },
+    { title: t("item4Title"), description: t("item4Description") },
   ];
 
   return (
-    <section aria-labelledby="what-compare-heading" className="bg-[#f8f8f8]">
-      <div className="mx-auto w-full max-w-screen-2xl px-6 py-16 sm:px-12 lg:px-16 lg:py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2
-            id="what-compare-heading"
-            className="text-3xl font-bold tracking-tight text-black sm:text-4xl"
-          >
-            {t("title")}
-          </h2>
+    <section className="bg-black py-14 ">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="flex flex-row items-start gap-x-16 gap-y-20 justify-between">
+          {/* Left: heading — 2 columns */}
+          <div className="maw-w-80 relative">
+            <Image
+              src="/img/compare.jpg"
+              alt=""
+              width={500}
+              height={700}
+              className="max-w-80 "
+            />{" "}
+            <h2 className="text-2xl tracking-tight text-white sm:text-3xl text-balance font-light absolute top-52 -left-15 z-10 max-w-80">
+              {t("title")}
+            </h2>
+          </div>
 
-          <p className="mt-4 text-base leading-7 text-black/70 sm:text-lg">
-            {t("description")}
-          </p>
-        </div>
-
-        <div className="mx-auto mt-12 grid max-w-5xl gap-6 sm:grid-cols-2">
-          {items.map((item) => (
-            <div
-              key={item.title}
-              className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5"
-            >
-              <h3 className="text-lg font-semibold text-black">{item.title}</h3>
-              <p className="mt-3 text-base leading-7 text-black/70">
-                {item.description}
-              </p>
-            </div>
-          ))}
+          {/* Right: feature grid — 3 columns */}
+          <dl className="col-span-1 grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 ">
+            {items.map((item, i) => {
+              const Icon = icons[i];
+              return (
+                <div key={item.title} className="group max-w-80 ">
+                  <dt className="text-xl font-semibold text-white group-hover:text-(--accent) transition-colors duration-300">
+                    <div className="mb-5 flex size-10 items-center justify-center rounded-lg bg-(--accent-hover)/20 border border-transparent group-hover:border-(--accent) transition-colors duration-300">
+                      <Icon
+                        className="size-5 text-(--accent)"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    {item.title}
+                  </dt>
+                  <dd className="mt-3 text-base leading-7 text-white/70">
+                    {item.description}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
         </div>
       </div>
     </section>

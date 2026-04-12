@@ -27,31 +27,31 @@ export default function FAQ() {
   ];
 
   return (
-    <section aria-labelledby="faq-heading" className="bg-[#f8f8f8]">
-      <div className="mx-auto w-full max-w-screen-2xl px-6 py-16 sm:px-12 lg:px-16 lg:py-24">
-        <div className="mx-auto max-w-3xl text-center">
+    <section aria-labelledby="faq-heading" className="bg-white">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8 flex justify-between gap-12 pt-20 pb-5">
+        <div className="mx-auto text-left pt-6">
           <h2
             id="faq-heading"
-            className="text-3xl font-bold tracking-tight text-black sm:text-4xl"
+            className="text-3xl font-bold tracking-tight text-black sm:text-4xl text-balance"
           >
             {t("title")}
           </h2>
 
-          <p className="mt-4 text-base leading-7 text-black/70 sm:text-lg">
+          <p className="mt-4 text-base leading-7 text-black/70 sm:text-lg text-balance">
             {t("description")}
           </p>
         </div>
 
-        <div className="mx-auto mt-12 max-w-4xl space-y-4">
+        <div className="mx-auto  w-full max-w-3xl space-y-4">
           {items.map((item) => (
             <details
               key={item.question}
-              className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5"
+              className=" p-6 border-b-2 border-gray-200"
             >
-              <summary className="cursor-pointer list-none text-left text-lg font-semibold text-black">
+              <summary className="cursor-pointer list-none text-left text-lg font-semibold text-black hover:text-(--accent) transition-colors -mt-2 text-balance">
                 {item.question}
               </summary>
-              <p className="mt-4 text-base leading-7 text-black/70">
+              <p className="mt-4 text-base leading-7 text-black/70 text-balance">
                 {item.answer}
               </p>
             </details>

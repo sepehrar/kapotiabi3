@@ -39,7 +39,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={`${montserrat.variable} h-full antialiased`}>
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col bg-black">
         <NextIntlClientProvider messages={messages}>
           <div className="flex-1 flex flex-col">{children}</div>\
         </NextIntlClientProvider>

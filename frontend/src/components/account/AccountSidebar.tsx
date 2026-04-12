@@ -52,28 +52,28 @@ type SidebarContentProps = {
 function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
   return (
     <>
-      <div className="relative flex h-16 shrink-0 items-center justify-between">
+      <div className="relative flex h-16 shrink-0 items-center justify-between bg-black">
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-2xl bg-(--accent) text-(--accent-foreground) font-bold shadow">
-            C
-          </div>
+          <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
+            <span className="sr-only">{t("brand")}</span>
+
+            <span className="text-xl font-bold text-white">CarFix</span>
+          </Link>
+          <div className="bg-(--accent) w-2 h-2 rounded-full"></div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40">
-              {t("label")}
-            </p>
-            <p className="text-base font-semibold text-white">{t("title")}</p>
+            <p className="text-xl font-light  text-white">{t("title")}</p>{" "}
           </div>
         </div>
       </div>
+
       <div className="ml-4">
-        {" "}
         <LocaleSwitcher />
       </div>
 
       <nav className="relative flex flex-1 flex-col">
-        <ul role="list" className="flex flex-1 flex-col gap-y-6">
+        <ul role="list" className="flex flex-1 flex-col gap-y-2">
           <li>
-            <ul role="list" className="-mx-2 space-y-1">
+            <ul role="list" className="-mx-2 space-y-0.5">
               {navigation.map((item) => {
                 const active = isActivePath(pathname, item.href);
 
@@ -86,7 +86,7 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
                       className={classNames(
                         active
                           ? "bg-(--accent) text-(--accent-foreground)"
-                          : "text-white/70 hover:bg-white/5 hover:text-white",
+                          : "text-white/70 hover:bg-(--pills-background) hover:text-white",
                         "group flex items-center gap-x-3 rounded-2xl px-3 py-3 text-sm transition",
                       )}
                     >
@@ -96,7 +96,7 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
                           active
                             ? "text-(--accent-foreground)"
                             : "text-white/40 group-hover:text-white",
-                          "size-5 shrink-0 transition",
+                          "size-4 shrink-0 transition",
                         )}
                       />
                       {t(`items.${item.key}`)}
@@ -108,17 +108,17 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
           </li>
 
           <li className="mt-auto">
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+            <div className="rounded-2xl border border-white/10 bg-(--pills-background) p-4">
               <p className="text-base font-semibold text-white">
                 {t("card.title")}
               </p>
-              <p className="mt-2 text-base leading-6 text-white/60">
+              <p className="mt-2 text-sm text-white/70">
                 {t("card.description")}
               </p>
 
               <Link
                 href="/search"
-                className="mt-4 inline-flex rounded-full bg-(--accent) px-4 py-2 text-base  text-(--accent-foreground) transition hover:bg-(--accent-hover)"
+                className="mt-4 inline-flex items-center justify-center rounded-full bg-(--accent) px-4 py-2 text-sm font-semibold text-(--accent-foreground) transition hover:bg-(--accent-hover) ${className} text-nowrap ring-(--accent)  ring-1 ring-inset"
               >
                 {t("card.button")}
               </Link>
@@ -160,11 +160,11 @@ export default function AccountSidebar() {
       <Dialog
         open={sidebarOpen}
         onClose={setSidebarOpen}
-        className="relative z-50 lg:hidden"
+        className="relative z-50 lg:hidden "
       >
         <DialogBackdrop
           transition
-          className="fixed inset-0  transition-opacity duration-300 ease-linear data-closed:opacity-0"
+          className="fixed inset-0 bg-black transition-opacity duration-300 ease-linear data-closed:opacity-0"
         />
 
         <div className="fixed inset-0 flex">

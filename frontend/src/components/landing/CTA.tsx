@@ -10,17 +10,17 @@ export default function CTA() {
       <section aria-labelledby="cta-heading">
         <div className="overflow-hidden pt-32 sm:pt-14">
           <div className="bg-black">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto  max-w-7xl px-6 lg:px-8">
               <div className="relative pb-16 pt-30 sm:pb-24">
                 <div className="max-w-xl">
                   <h2
                     id="cta-heading"
-                    className="text-4xl font-bold tracking-tight text-white text-balance"
+                    className="text-4xl font-light tracking-tight text-white text-balance"
                   >
                     {t("title")}
                   </h2>
 
-                  <p className="mt-6  text-base text-gray-300 max-w-lg text-balance">
+                  <p className="mt-12 text-base text-white/70 max-w-lg text-balance">
                     {t("description")}
                   </p>
 
@@ -41,7 +41,7 @@ export default function CTA() {
                           width={288}
                           height={288}
                           src="/img/cta/01.jpg"
-                          className="size-64 rounded-lg object-cover md:size-72"
+                          className="size-64  object-cover md:size-72"
                         />
                       </div>
 
@@ -51,7 +51,7 @@ export default function CTA() {
                           width={288}
                           height={288}
                           src="/img/cta/02.jpg"
-                          className="size-64 rounded-lg object-cover md:size-72"
+                          className="size-64  object-cover md:size-72"
                         />
                       </div>
                     </div>
@@ -63,7 +63,7 @@ export default function CTA() {
                           width={288}
                           height={288}
                           src="/img/cta/03.jpg"
-                          className="size-64 rounded-lg object-cover md:size-72"
+                          className="size-64 object-cover md:size-72"
                         />
                       </div>
 
@@ -73,7 +73,7 @@ export default function CTA() {
                           width={288}
                           height={288}
                           src="/img/cta/04.jpg"
-                          className="size-64 rounded-lg object-cover md:size-72"
+                          className="size-64  object-cover md:size-72"
                         />
                       </div>
                     </div>

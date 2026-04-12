@@ -239,6 +239,7 @@
     }
   },
   "accountProfile": {
+    "brand": "CarFix",
     "title": "Profiil",
     "description": "Halda oma isiklikke andmeid ja otsingueelistusi.",
     "sections": {

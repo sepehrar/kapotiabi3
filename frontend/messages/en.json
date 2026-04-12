@@ -219,6 +219,7 @@
     }
   },
   "accountSidebar": {
+    "brand": "CarFix",
     "label": "Account",
     "title": "My account",
     "openSidebar": "Open sidebar",

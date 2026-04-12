@@ -37,9 +37,9 @@ export default function HowItWorks() {
           {steps.map((step) => (
             <div
               key={step.number}
-              className=" border-l-2 border-(--accent)/40  text-left "
+              className=" border-l-2 border-(--accent)/40  text-left p-4 transition-all duration-300 hover:-translate-y-0.5   hover:bg-linear-60 from-(--pills-background) to-(--pills-background-hover) rounded-r-3xl"
             >
-              <div className="-mt-3 text-lg font-semibold text-[#f44b05]">
+              <div className="-mt-3 text-lg  font-semibold text-(--accent) p-1">
                 {step.number}
               </div>
               <div className="p-6">

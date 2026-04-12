@@ -13,12 +13,12 @@ export default function Testimonials() {
     <div className="bg-white">
       <section
         aria-labelledby="testimonial-heading"
-        className="relative mx-auto max-w-7xl px-4 pt-20 sm:px-6 lg:px-8"
+        className="relative mx-auto max-w-7xl pt-20 px-6 lg:px-8"
       >
         <div className="mx-auto max-w-2xl lg:max-w-none">
           <h2
             id="testimonial-heading"
-            className="text-2xl font-bold tracking-tight text-gray-900"
+            className="text-2xl font-bold tracking-tight text-black sm:text-4xl text-balance"
           >
             {t("title")}
           </h2>
