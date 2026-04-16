@@ -209,6 +209,84 @@
     "description": "Võrdle hindu, asukohta ja usaldusväärseid arvustusi ühes kohas. Loo konto, et salvestada teenindusi, võrrelda valikuid ja saada uuendusi.",
     "button": "Loo konto"
   },
+  "categoriesPage": {
+    "title": "Autoteenuste kategooriad",
+    "description": "Vali teenuse kategooria, et leida sobivad remondi- ja hooldustööd.",
+    "items": {
+      "roadside-assistance": {
+        "title": "Abi teel",
+        "description": "Pukseerimine, käivitusabi, kütuse toomine, rehvi vahetus ja muu abi teel."
+      },
+      "maintenance-diagnostics": {
+        "title": "Hooldus ja diagnostika",
+        "description": "Õlivahetus, filtrid, vedelikud, kontroll ja tehniline diagnostika."
+      },
+      "auto-electrics": {
+        "title": "Autoelektrik",
+        "description": "Elektrisüsteemi diagnostika, valgustuse remont, alarmid, heli ja generaator."
+      },
+      "bodywork": {
+        "title": "Keretööd",
+        "description": "Värvimine, poleerimine, mõlkide eemaldus, kile paigaldus ja muud keretööd."
+      },
+      "engine": {
+        "title": "Mootor",
+        "description": "Mootori diagnostika, jahutussüsteemi remont, kütusesüsteemi tööd ja turbo remont."
+      },
+      "transmission": {
+        "title": "Käigukast",
+        "description": "Käigukasti diagnostika, remont, sidur ja õlivahetus."
+      },
+      "interior-care": {
+        "title": "Salongihooldus",
+        "description": "Salongi puhastus, polsterdus, istmekatted ja salongi taastamine."
+      },
+      "auto-glass": {
+        "title": "Autoklaasi remont ja vahetus",
+        "description": "Esiklaasi vahetus, täkete parandamine, toonimine ja muud klaasitööd."
+      },
+      "suspension": {
+        "title": "Vedrustus",
+        "description": "Vedrustuse diagnostika, amortisaatorid, liigendid ja veermiku remont."
+      },
+      "steering": {
+        "title": "Roolisüsteem",
+        "description": "Roolisüsteemi diagnostika, roolilatt, sillastend ja detailide vahetus."
+      },
+      "brake-system": {
+        "title": "Pidurisüsteem",
+        "description": "Pidurite diagnostika, klotsid, kettad, pidurivedelik ja sadulate remont."
+      },
+      "exhaust-system": {
+        "title": "Väljalaskesüsteem",
+        "description": "Väljalaskesüsteemi diagnostika, summuti remont, katalüsaator ja keevitustööd."
+      },
+      "tire-service": {
+        "title": "Rehviteenus",
+        "description": "Rehvide vahetus, tasakaalustamine, remont, hooajaline vahetus ja hoiustamine."
+      },
+      "air-conditioning": {
+        "title": "Autokonditsioneeri remont ja hooldus",
+        "description": "Kliimaseadme diagnostika, täitmine, lekke otsimine, puhastus ja kompressori remont."
+      },
+      "lpg-systems": {
+        "title": "Gaasiseadmete paigaldus",
+        "description": "Gaasiseadme paigaldus, diagnostika, seadistamine, hooldus ja remont."
+      },
+      "motorcycle-repair": {
+        "title": "Mototehnika remont",
+        "description": "Mototehnika diagnostika, hooldus, mootori ja veermiku remont."
+      },
+      "car-insurance": {
+        "title": "Autokindlustus",
+        "description": "Kindlustusalane abi, konsultatsioonid ja kahjujuhtumite tugi."
+      },
+      "other-car-repairs": {
+        "title": "Muud autoremonditööd",
+        "description": "Täiendavad remonditeenused, mis ei kuulu teistesse kategooriatesse."
+      }
+    }
+  },
   "searchHeader": {
     "title": "Alusta otsingut",
     "description": "Kirjelda, mida sinu auto vajab ja mis linnas sa otsid. Küsimused aitavad näidata sobivaid teenindusi."
@@ -329,6 +407,7 @@
     }
   },
   "accountSidebar": {
+    "brand": "KapotiAbi",
     "label": "Konto",
     "title": "Minu konto",
     "openSidebar": "Ava külgriba",
@@ -489,6 +568,179 @@
     },
     "actions": {
       "viewAll": "Vaata kõiki"
+    }
+  },
+  "businessSidebar": {
+    "brand": "KapotiAbi",
+    "title": "Minu töökoda",
+    "openSidebar": "Ava külgriba",
+    "closeSidebar": "Sulge külgriba",
+    "items": {
+      "dashboard": "Ülevaade",
+      "leads": "Päringud",
+      "listing": "Listing",
+      "pricing": "Hinnad",
+      "subscription": "Tellimus",
+      "profile": "Profiil"
+    },
+    "card": {
+      "title": "Täienda oma listingut",
+      "description": "Uuenda teenuseid, hindu ja profiili, et kliendid leiaksid su kiiremini.",
+      "button": "Muuda listingut"
+    }
+  },
+  "businessDashboard": {
+    "eyebrow": "Ülevaade",
+    "title": "Tere tulemast tagasi",
+    "description": "Jälgi oma töökoja tulemusi, vaata uusi päringuid ja hoia oma listing ajakohasena.",
+    "period": "Viimased 30 päeva",
+    "stats": {
+      "views": "Vaatamised",
+      "leads": "Päringud",
+      "calls": "Kõned",
+      "websiteClicks": "Veebilehe klikid"
+    },
+    "recentLeads": {
+      "title": "Hiljutised päringud",
+      "description": "Viimased klientide päringud, mis vastavad sinu teenustele."
+    },
+    "listingStatus": {
+      "title": "Listingu staatus",
+      "description": "Sinu avaliku lehe nähtavus ja ajakohasus.",
+      "status": "Staatus",
+      "services": "Teenused",
+      "lastUpdated": "Viimati uuendatud",
+      "active": "Aktiivne",
+      "listed": "{count} lisatud",
+      "daysAgo": "{count} päeva tagasi"
+    },
+    "subscription": {
+      "title": "Tellimus",
+      "description": "Halda paketti ja nähtavust.",
+      "currentPlan": "Praegune pakett",
+      "renewsOn": "Uueneb {date}"
+    },
+    "leadStatuses": {
+      "new": "Uus",
+      "viewed": "Vaadatud",
+      "responded": "Vastatud"
+    }
+  },
+  "businessLeads": {
+    "eyebrow": "Päringud",
+    "title": "Saabuvad päringud",
+    "description": "Vaata viimaseid kliendipäringuid, mis vastavad sinu teenustele ja asukohale.",
+    "period": "Viimased 30 päeva",
+    "filters": {
+      "allServices": "Kõik teenused",
+      "allStatuses": "Kõik staatused",
+      "allLocations": "Kõik asukohad"
+    },
+    "statuses": {
+      "new": "Uus",
+      "viewed": "Vaadatud",
+      "responded": "Vastatud"
+    },
+    "openDetails": "Ava detailid"
+  },
+  "businessListing": {
+    "eyebrow": "Listing",
+    "title": "Sinu listing",
+    "description": "Halda, kuidas sinu töökoda klientidele kuvatakse, sh teenused, profiiliandmed ja avalik nähtavus.",
+    "editButton": "Muuda listingut",
+    "services": {
+      "title": "Teenused",
+      "description": "Teenused, mis on praegu sinu avalikul listingul nähtavad.",
+      "edit": "Muuda"
+    },
+    "status": {
+      "title": "Listingu staatus",
+      "description": "Sinu avaliku lehe praegune nähtavus ja ajakohasus.",
+      "visibility": "Nähtavus",
+      "active": "Aktiivne",
+      "services": "Teenused",
+      "lastUpdated": "Viimati uuendatud"
+    },
+    "profile": {
+      "title": "Ettevõtte profiil",
+      "description": "Põhilised kontaktandmed, mida kliendid näevad.",
+      "address": "Aadress",
+      "phone": "Telefon",
+      "hours": "Lahtiolekuajad"
+    }
+  },
+  "businessPricing": {
+    "eyebrow": "Hinnad",
+    "title": "Hindade ülevaade",
+    "description": "Hoia oma teenuste hinnad ajakohased, et kliendid saaksid sinu töökoda täpselt võrrelda.",
+    "updateButton": "Uuenda hindu",
+    "stats": {
+      "totalServices": "Teenuseid kokku",
+      "lastUpdate": "Viimane uuendus",
+      "visibility": "Nähtavus"
+    },
+    "status": {
+      "active": "Aktiivne"
+    },
+    "table": {
+      "title": "Teenuste hinnad",
+      "description": "Hinnad, mis on praegu sinu avalikul listingul nähtavad.",
+      "updated": "Uuendatud",
+      "edit": "Muuda"
+    }
+  },
+  "businessSubscription": {
+    "eyebrow": "Tellimus",
+    "title": "Tellimuse paketid",
+    "description": "Vali oma töökojale sobiv pakett ning halda arveldust, nähtavust ja ligipääsu.",
+    "manageBilling": "Halda arveldust",
+    "current": "Praegune",
+    "currentPlan": "Praegune pakett",
+    "choosePlan": "Vali pakett",
+    "summary": {
+      "currentPlan": "Praegune pakett",
+      "billingCycle": "Arveldustsükkel",
+      "renewalDate": "Uuenemise kuupäev",
+      "monthly": "Igakuine"
+    }
+  },
+  "businessProfile": {
+    "eyebrow": "Profiil",
+    "title": "Ettevõtte profiil",
+    "description": "Halda oma avalikku ettevõtte infot, kontaktandmeid ja lahtiolekuaegu.",
+    "editButton": "Muuda profiili",
+    "businessInfo": {
+      "title": "Ettevõtte info",
+      "description": "Põhiandmed, mida kliendid sinu avalikul listingul näevad.",
+      "businessName": "Ettevõtte nimi",
+      "phone": "Telefon",
+      "address": "Aadress",
+      "email": "E-post",
+      "website": "Veebileht"
+    },
+    "hours": {
+      "title": "Lahtiolekuajad",
+      "description": "Anna klientidele teada, millal sinu töökoda on avatud.",
+      "closed": "Suletud"
+    },
+    "days": {
+      "monFri": "E–R",
+      "sat": "Laupäev",
+      "sun": "Pühapäev"
+    },
+    "owner": {
+      "title": "Konto omanik",
+      "description": "Peamine kontakt selle ettevõtte konto haldamiseks.",
+      "name": "Nimi",
+      "role": "Roll",
+      "shopOwner": "Töökoja omanik"
+    },
+    "visibility": {
+      "title": "Nähtavus",
+      "description": "Sinu avaliku ettevõtte lehe praegune staatus.",
+      "status": "Staatus",
+      "active": "Aktiivne",
+      "lastUpdated": "Viimati uuendatud"
     }
   }
 }

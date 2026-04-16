@@ -16,7 +16,7 @@ export default function Header() {
 
   const navigation = [
     { name: t("nav.findService"), href: "#" },
-    { name: t("nav.categories"), href: "#" },
+    { name: t("nav.categories"), href: "/categories" },
     { name: t("nav.howItWorks"), href: "#" },
     { name: t("nav.forBusinesses"), href: "#" },
   ];

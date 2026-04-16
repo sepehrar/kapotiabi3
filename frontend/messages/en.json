@@ -209,6 +209,84 @@
     "description": "Compare prices, location, and trusted reviews in one place. Create an account to save shops, compare options, and get updates.",
     "button": "Create account"
   },
+  "categoriesPage": {
+    "title": "Car service categories",
+    "description": "Choose a service category to find suitable repair and maintenance services.",
+    "items": {
+      "roadside-assistance": {
+        "title": "Roadside assistance",
+        "description": "Towing, jump start, fuel delivery, wheel change, and other roadside help."
+      },
+      "maintenance-diagnostics": {
+        "title": "Maintenance and diagnostics",
+        "description": "Oil changes, filters, fluids, inspections, and technical diagnostics."
+      },
+      "auto-electrics": {
+        "title": "Auto electrics",
+        "description": "Electrical diagnostics, lighting repair, alarms, audio systems, and generator work."
+      },
+      "bodywork": {
+        "title": "Bodywork",
+        "description": "Painting, polishing, dent repair, wrapping, and other body services."
+      },
+      "engine": {
+        "title": "Engine",
+        "description": "Engine diagnostics, cooling system repair, fuel system work, and turbo repair."
+      },
+      "transmission": {
+        "title": "Transmission",
+        "description": "Transmission diagnostics, gearbox repair, clutch work, and fluid replacement."
+      },
+      "interior-care": {
+        "title": "Interior care",
+        "description": "Interior cleaning, upholstery, seat covers, and cabin restoration."
+      },
+      "auto-glass": {
+        "title": "Auto glass repair and replacement",
+        "description": "Windshield replacement, chip repair, tinting, and other glass services."
+      },
+      "suspension": {
+        "title": "Suspension",
+        "description": "Suspension diagnostics, shock absorbers, joints, and undercarriage repair."
+      },
+      "steering": {
+        "title": "Steering system",
+        "description": "Steering diagnostics, rack repair, wheel alignment, and component replacement."
+      },
+      "brake-system": {
+        "title": "Brake system",
+        "description": "Brake diagnostics, pads, discs, brake fluid service, and caliper repair."
+      },
+      "exhaust-system": {
+        "title": "Exhaust system",
+        "description": "Exhaust diagnostics, muffler repair, catalytic converter work, and welding."
+      },
+      "tire-service": {
+        "title": "Tire service",
+        "description": "Tire replacement, balancing, repairs, seasonal changes, and storage."
+      },
+      "air-conditioning": {
+        "title": "Car air conditioning repair and maintenance",
+        "description": "A/C diagnostics, refill, leak detection, cleaning, and compressor repair."
+      },
+      "lpg-systems": {
+        "title": "LPG system installation",
+        "description": "LPG installation, diagnostics, tuning, maintenance, and repairs."
+      },
+      "motorcycle-repair": {
+        "title": "Motorcycle repair",
+        "description": "Motorcycle diagnostics, maintenance, engine repair, and chassis work."
+      },
+      "car-insurance": {
+        "title": "Car insurance",
+        "description": "Insurance support, consultations, and assistance with claims."
+      },
+      "other-car-repairs": {
+        "title": "Other car repairs",
+        "description": "Additional repair services that do not fit into other categories."
+      }
+    }
+  },
   "searchHeader": {
     "title": "Start your search",
     "description": "Describe what your car needs and your city. We will ask a few short questions and show matching repair shops."
@@ -489,6 +567,179 @@
     },
     "actions": {
       "viewAll": "View all"
+    }
+  },
+  "businessSidebar": {
+    "brand": "KapotiAbi",
+    "title": "My Business",
+    "openSidebar": "Open sidebar",
+    "closeSidebar": "Close sidebar",
+    "items": {
+      "dashboard": "Dashboard",
+      "leads": "Leads",
+      "listing": "Listing",
+      "pricing": "Pricing",
+      "subscription": "Subscription",
+      "profile": "Profile"
+    },
+    "card": {
+      "title": "Improve your listing",
+      "description": "Update your services, pricing, and profile so customers can find you faster.",
+      "button": "Edit listing"
+    }
+  },
+  "businessDashboard": {
+    "eyebrow": "Dashboard",
+    "title": "Welcome back",
+    "description": "Track your shop performance, review incoming leads, and keep your listing up to date.",
+    "period": "Last 30 days",
+    "stats": {
+      "views": "Views",
+      "leads": "Leads",
+      "calls": "Calls",
+      "websiteClicks": "Website clicks"
+    },
+    "recentLeads": {
+      "title": "Recent leads",
+      "description": "Latest customer requests matched to your services."
+    },
+    "listingStatus": {
+      "title": "Listing status",
+      "description": "Your public page visibility and freshness.",
+      "status": "Status",
+      "services": "Services",
+      "lastUpdated": "Last updated",
+      "active": "Active",
+      "listed": "{count} listed",
+      "daysAgo": "{count} days ago"
+    },
+    "subscription": {
+      "title": "Subscription",
+      "description": "Manage plan access and visibility.",
+      "currentPlan": "Current plan",
+      "renewsOn": "Renews on {date}"
+    },
+    "leadStatuses": {
+      "new": "New",
+      "viewed": "Viewed",
+      "responded": "Responded"
+    }
+  },
+  "businessLeads": {
+    "eyebrow": "Leads",
+    "title": "Incoming leads",
+    "description": "Review the latest customer requests matched to your services and location.",
+    "period": "Last 30 days",
+    "filters": {
+      "allServices": "All services",
+      "allStatuses": "All statuses",
+      "allLocations": "All locations"
+    },
+    "statuses": {
+      "new": "New",
+      "viewed": "Viewed",
+      "responded": "Responded"
+    },
+    "openDetails": "Open details"
+  },
+  "businessListing": {
+    "eyebrow": "Listing",
+    "title": "Your listing",
+    "description": "Manage how your shop appears to customers, including services, profile details, and public visibility.",
+    "editButton": "Edit listing",
+    "services": {
+      "title": "Services",
+      "description": "Services currently shown on your public listing.",
+      "edit": "Edit"
+    },
+    "status": {
+      "title": "Listing status",
+      "description": "Current visibility and freshness of your public page.",
+      "visibility": "Visibility",
+      "active": "Active",
+      "services": "Services",
+      "lastUpdated": "Last updated"
+    },
+    "profile": {
+      "title": "Business profile",
+      "description": "Basic contact details shown to customers.",
+      "address": "Address",
+      "phone": "Phone",
+      "hours": "Working hours"
+    }
+  },
+  "businessPricing": {
+    "eyebrow": "Pricing",
+    "title": "Pricing overview",
+    "description": "Keep your service pricing up to date so customers can compare your shop accurately.",
+    "updateButton": "Update pricing",
+    "stats": {
+      "totalServices": "Total services",
+      "lastUpdate": "Last update",
+      "visibility": "Visibility"
+    },
+    "status": {
+      "active": "Active"
+    },
+    "table": {
+      "title": "Service pricing",
+      "description": "Current prices shown on your public listing.",
+      "updated": "Updated",
+      "edit": "Edit"
+    }
+  },
+  "businessSubscription": {
+    "eyebrow": "Subscription",
+    "title": "Subscription plans",
+    "description": "Choose the plan that fits your shop and manage billing, visibility, and access.",
+    "manageBilling": "Manage billing",
+    "current": "Current",
+    "currentPlan": "Current plan",
+    "choosePlan": "Choose plan",
+    "summary": {
+      "currentPlan": "Current plan",
+      "billingCycle": "Billing cycle",
+      "renewalDate": "Renewal date",
+      "monthly": "Monthly"
+    }
+  },
+  "businessProfile": {
+    "eyebrow": "Profile",
+    "title": "Business profile",
+    "description": "Manage your public business information, contact details, and opening hours.",
+    "editButton": "Edit profile",
+    "businessInfo": {
+      "title": "Business information",
+      "description": "Basic details shown to customers on your public listing.",
+      "businessName": "Business name",
+      "phone": "Phone",
+      "address": "Address",
+      "email": "Email",
+      "website": "Website"
+    },
+    "hours": {
+      "title": "Opening hours",
+      "description": "Let customers know when your shop is available.",
+      "closed": "Closed"
+    },
+    "days": {
+      "monFri": "Mon–Fri",
+      "sat": "Saturday",
+      "sun": "Sunday"
+    },
+    "owner": {
+      "title": "Account owner",
+      "description": "Primary contact for managing this business account.",
+      "name": "Name",
+      "role": "Role",
+      "shopOwner": "Shop owner"
+    },
+    "visibility": {
+      "title": "Visibility",
+      "description": "Current status of your public business page.",
+      "status": "Status",
+      "active": "Active",
+      "lastUpdated": "Last updated"
     }
   }
 }
