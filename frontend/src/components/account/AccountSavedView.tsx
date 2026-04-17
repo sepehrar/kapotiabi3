@@ -43,7 +43,7 @@ export default function AccountSavedView() {
   return (
     <div className="mx-auto w-full max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-white">
+        <h1 className="text-2xl font-light tracking-tight text-white text-balance sm:text-3xl">
           {t("title")}
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60 sm:text-base">

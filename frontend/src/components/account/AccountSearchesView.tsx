@@ -30,52 +30,53 @@ export default function AccountSearchesView() {
 
   return (
     <div className="mx-auto w-full max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-white">
+      {/* title */}
+      <div className="pt-4">
+        <h1 className="text-2xl font-light tracking-tight text-white text-balance sm:text-3xl">
           {t("title")}
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60 sm:text-base">
+        <p className="mt-6 max-w-xl text-lg leading-8 text-white/50 text-balance">
           {t("description")}
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="mt-12 space-y-4">
         {searches.map((search) => (
           <section
             key={search.id}
-            className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8"
+            className="w-full rounded-2xl border border-white/10 bg-(--pills-background) p-6 flex flex-row gap-3 items-start justify-between"
           >
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-              <div className="min-w-0">
-                <h2 className="text-xl font-semibold text-black">
+            <div className="flex  gap-5 flex-row items-center justify-between w-full">
+              <div className="">
+                <h2 className="text-xl font-semibold text-white">
                   {search.title}
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-black/60">
+                <p className="mt-2 text-lg leading-6 text-white/60">
                   {search.subtitle}
                 </p>
 
-                <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-black/50">
+                <div className="mt-6 flex flex-wrap items-center gap-3 text-base text-white/50">
                   <span>
                     {search.results} {t("meta.results")}
                   </span>
-                  <span className="text-black/20">•</span>
+                  <span className="text-white/20">•</span>
                   <span>
                     {t("meta.updated")} {search.updatedAt}
                   </span>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-row gap-3">
                 <Link
                   href="/search"
-                  className="inline-flex items-center justify-center rounded-full bg-(--accent) px-5 py-2.5 text-sm font-semibold text-(--accent-foreground) transition hover:bg-(--accent-hover)"
+                  className="inline-flex shrink-0 items-center justify-center rounded-full bg-(--accent) px-5 py-3 text-sm font-semibold text-(--accent-foreground) ring-1 ring-inset ring-(--accent) transition hover:bg-(--accent-hover)"
                 >
                   {t("actions.repeat")}
                 </Link>
 
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center rounded-full border border-black/10 px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
+                  className="shrink-0 rounded-full bg-(--pills-background) px-5 py-3 text-sm shadow ring-1 ring-inset ring-white/10 transition-colors duration-300 hover:bg-(--accent)/40 hover:ring-(--accent)"
                 >
                   {t("actions.remove")}
                 </button>

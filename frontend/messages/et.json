@@ -287,6 +287,23 @@
       }
     }
   },
+  "categoryDetailsPage": {
+    "ctaTitle": "Kas vajad seda teenust?",
+    "ctaDescription": "Alusta otsingut, et võrrelda sobivaid teenusepakkujaid, hindu ja võimalusi vastavalt oma autole ja asukohale.",
+    "searchButton": "Alusta otsingut",
+    "businessButton": "Pakku seda teenust",
+    "relatedTitle": "Seotud teenusepakkujad",
+    "subcategoriesTitle": "Saadaolevad teenused",
+
+    "notashop": "See teenus pole veel ühtegi teenindust lisatud. Proovi mõnda muud teenust või kategooriat."
+  },
+  "serviceDetailsPage": {
+    "description": "Võrdle teenusepakkujaid teenusele {service}, vaata erinevaid võimalusi ja vali oma autole ning asukohale sobivaim lahendus.",
+    "searchButton": "Alusta otsingut",
+    "businessButton": "Pakku seda teenust",
+    "relatedTitle": "Seotud teenusepakkujad",
+    "notashop": "See teenus pole veel ühtegi teenindust lisatud. Proovi mõnda muud teenust või kategooriat."
+  },
   "searchHeader": {
     "title": "Alusta otsingut",
     "description": "Kirjelda, mida sinu auto vajab ja mis linnas sa otsid. Küsimused aitavad näidata sobivaid teenindusi."

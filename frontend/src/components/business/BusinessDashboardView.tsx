@@ -45,10 +45,10 @@ export default function BusinessDashboardView() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm text-white/60">{t("eyebrow")}</p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+            <h1 className="mt-4 text-2xl font-light tracking-tight text-white text-balance sm:text-3xl">
               {t("title")}
             </h1>
-            <p className="mt-3 max-w-2xl text-sm text-white/70">
+            <p className="mt-6 max-w-xl text-lg leading-8 text-white/50 text-balance">
               {t("description")}
             </p>
           </div>

@@ -287,6 +287,23 @@
       }
     }
   },
+  "categoryDetailsPage": {
+    "ctaTitle": "Need this service?",
+    "ctaDescription": "Start your search to compare available providers, pricing, and options for your car and location.",
+    "searchButton": "Start search",
+    "businessButton": "Become a specialist",
+    "relatedTitle": "Related shops",
+    "subcategoriesTitle": "Available services",
+
+    "notashop": " Related service providers and comparison results for this service can appear here in the next step."
+  },
+  "serviceDetailsPage": {
+    "description": "Compare providers for {service}, explore your options, and choose the most suitable service for your car and location.",
+    "searchButton": "Start search",
+    "businessButton": "Become a specialist",
+    "relatedTitle": "Related shops",
+    "notashop": " Related service providers and comparison results for this service can appear here in the next step."
+  },
   "searchHeader": {
     "title": "Start your search",
     "description": "Describe what your car needs and your city. We will ask a few short questions and show matching repair shops."

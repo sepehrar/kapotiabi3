@@ -52,7 +52,7 @@ type SidebarContentProps = {
 function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
   return (
     <>
-      <div className="relative flex h-16 shrink-0 items-center justify-between bg-black">
+      <div className="relative flex h-16 shrink-0 items-center justify-between ">
         <div className="flex items-center gap-3">
           <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
             <span className="sr-only">{t("brand")}</span>
@@ -62,7 +62,7 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
           <div className="h-2 w-2 rounded-full bg-(--accent)" />
 
           <div>
-            <p className="text-xl font-light text-white">{t("title")}</p>
+            <p className="text-base font-light text-white">{t("title")}</p>
           </div>
         </div>
       </div>

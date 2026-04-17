@@ -52,7 +52,7 @@ type SidebarContentProps = {
 function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
   return (
     <>
-      <div className="relative flex h-16 shrink-0 items-center justify-between bg-black">
+      <div className="relative flex h-16 shrink-0 items-center justify-between ">
         <div className="flex items-center gap-3">
           <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
             <span className="sr-only">{t("brand")}</span>
@@ -61,7 +61,9 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
           </Link>
           <div className="bg-(--accent) w-2 h-2 rounded-full"></div>
           <div>
-            <p className="text-xl font-light  text-white">{t("title")}</p>{" "}
+            <p className="text-base font-light  text-white">
+              {t("title")}
+            </p>{" "}
           </div>
         </div>
       </div>
@@ -107,18 +109,18 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
             </ul>
           </li>
 
-          <li className="mt-auto">
-            <div className="rounded-2xl border border-white/10 bg-(--pills-background) p-4">
-              <p className="text-base font-semibold text-white">
+          <li className="mt-auto mb-4">
+            <div className="text-center">
+              <p className="text-base font-semibold text-white mb-4">
                 {t("card.title")}
               </p>
-              <p className="mt-2 text-sm text-white/70">
+              <p className="mb-4 text-sm leading-6 text-white/60 text-balance w-50">
                 {t("card.description")}
               </p>
 
               <Link
                 href="/search"
-                className="mt-4 inline-flex items-center justify-center rounded-full bg-(--accent) px-4 py-2 text-sm font-semibold text-(--accent-foreground) transition hover:bg-(--accent-hover) ${className} text-nowrap ring-(--accent)  ring-1 ring-inset"
+                className="shrink-0 rounded-full bg-(--pills-background) px-5 py-3 text-sm shadow ring-1 ring-inset ring-white/10 transition-colors duration-300 hover:bg-(--accent)/40 hover:ring-(--accent)"
               >
                 {t("card.button")}
               </Link>

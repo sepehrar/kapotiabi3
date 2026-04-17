@@ -31,13 +31,7 @@ export default function Header() {
           <div className="flex lg:flex-1">
             <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
               <span className="sr-only">{t("brand")}</span>
-              {/* <Image
-                alt={`${t("brand")} logo`}
-                width={32}
-                height={32}
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                className="h-8 w-8"
-              /> */}
+
               <span className="text-xl font-bold text-white">{t("brand")}</span>
             </Link>
           </div>
@@ -87,13 +81,7 @@ export default function Header() {
             <div className="flex items-center justify-between">
               <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
                 <span className="sr-only">{t("brand")}</span>
-                {/* <Image
-                  alt={`${t("brand")} logo`}
-                  width={32}
-                  height={32}
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                  className="h-8 w-8"
-                /> */}
+
                 <span className="text-2xl font-bold text-white">
                   {t("brand")}
                 </span>
