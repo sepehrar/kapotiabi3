@@ -36,11 +36,13 @@ function classNames(...classes: string[]) {
 }
 
 function isActivePath(pathname: string, href: string) {
-  if (href === "/business/dashboard") {
-    return pathname.endsWith("/business/dashboard");
+  const normalizedPath = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "");
+
+  if (href === "/business") {
+    return normalizedPath === "/business";
   }
 
-  return pathname.includes(href);
+  return normalizedPath === href || normalizedPath.startsWith(`${href}/`);
 }
 
 type SidebarContentProps = {

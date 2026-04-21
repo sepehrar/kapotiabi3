@@ -76,7 +76,7 @@ export default function RegisterForm() {
           email: form.email.trim(),
           password: form.password,
           phone: form.phone.trim(),
-          role: "car_owner",
+          role: "CAR_OWNER",
         }),
       });
 
