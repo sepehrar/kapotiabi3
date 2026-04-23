@@ -2,7 +2,6 @@ package com.kapotiabi.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
 import lombok.*;
 
 @Getter
@@ -18,8 +17,9 @@ public class RepairShopEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "owner_id", nullable = false)
-  private Long ownerId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "owner_id", nullable = false)
+  private UserEntity owner;
 
   @Column(nullable = false)
   private String name;

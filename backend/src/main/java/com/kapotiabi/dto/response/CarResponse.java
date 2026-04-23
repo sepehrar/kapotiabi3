@@ -15,7 +15,7 @@ public record CarResponse(
   public static CarResponse from(CarEntity e) {
     return new CarResponse(
         e.getId(),
-        e.getOwnerId(),
+        e.getOwner().getId(),
         e.getPlateNumber(),
         e.getMake(),
         e.getModel(),

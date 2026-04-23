@@ -5,10 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.kapotiabi.dto.response.BookingResponse;
-import com.kapotiabi.entity.BookingEntity;
-import com.kapotiabi.entity.JobRequestEntity;
-import com.kapotiabi.entity.ShopOfferEntity;
+import com.kapotiabi.entity.*;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.BookingRepository;
 import com.kapotiabi.repository.JobRequestRepository;
@@ -37,10 +34,10 @@ class BookingServiceTest {
   private BookingEntity buildBooking(String status) {
     return BookingEntity.builder()
         .id(1L)
-        .offerId(2L)
-        .jobRequestId(10L)
-        .userId(5L)
-        .shopId(3L)
+        .offer(ShopOfferEntity.builder().id(2L).build())
+        .jobRequest(JobRequestEntity.builder().id(10L).build())
+        .user(UserEntity.builder().id(5L).build())
+        .shop(RepairShopEntity.builder().id(3L).build())
         .confirmedByShop(false)
         .status(status)
         .createdAt(LocalDateTime.now())
@@ -51,8 +48,8 @@ class BookingServiceTest {
   private ShopOfferEntity buildOffer() {
     return ShopOfferEntity.builder()
         .id(2L)
-        .jobRequestId(10L)
-        .shopId(3L)
+        .jobRequest(buildJobRequest())
+        .shop(RepairShopEntity.builder().id(3L).build())
         .priceEstimate(new BigDecimal("100.00"))
         .status("pending")
         .createdAt(LocalDateTime.now())
@@ -62,8 +59,8 @@ class BookingServiceTest {
   private JobRequestEntity buildJobRequest() {
     return JobRequestEntity.builder()
         .id(10L)
-        .userId(5L)
-        .carId(7L)
+        .user(UserEntity.builder().id(5L).build())
+        .car(CarEntity.builder().id(7L).build())
         .description("Oil change")
         .status("offers_received")
         .createdAt(LocalDateTime.now())
@@ -75,15 +72,14 @@ class BookingServiceTest {
   void createFromOffer_success() {
     when(bookingRepository.findByOfferId(2L)).thenReturn(Optional.empty());
     when(shopOfferRepository.findById(2L)).thenReturn(Optional.of(buildOffer()));
-    when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest()));
     when(shopOfferRepository.save(any(ShopOfferEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
     when(jobRequestRepository.save(any(JobRequestEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
-    BookingEntity saved = buildBooking("awaiting_shop");
+    var saved = buildBooking("awaiting_shop");
     when(bookingRepository.save(any(BookingEntity.class))).thenReturn(saved);
 
-    BookingResponse response = bookingService.createFromOffer(2L);
+    var response = bookingService.createFromOffer(2L);
 
     assertThat(response.offerId()).isEqualTo(2L);
     assertThat(response.status()).isEqualTo("awaiting_shop");
@@ -101,11 +97,11 @@ class BookingServiceTest {
 
   @Test
   void confirm() {
-    BookingEntity booking = buildBooking("awaiting_shop");
+    var booking = buildBooking("awaiting_shop");
     when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
     when(bookingRepository.save(any(BookingEntity.class))).thenAnswer(inv -> inv.getArgument(0));
 
-    BookingResponse response = bookingService.confirm(1L);
+    var response = bookingService.confirm(1L);
 
     assertThat(response.status()).isEqualTo("confirmed");
     assertThat(response.confirmedByShop()).isTrue();
@@ -113,34 +109,34 @@ class BookingServiceTest {
 
   @Test
   void schedule() {
-    BookingEntity booking = buildBooking("confirmed");
+    var booking = buildBooking("confirmed");
     when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
     when(bookingRepository.save(any(BookingEntity.class))).thenAnswer(inv -> inv.getArgument(0));
 
-    LocalDateTime scheduled = LocalDateTime.of(2026, 4, 12, 10, 0);
-    BookingResponse response = bookingService.schedule(1L, scheduled);
+    var scheduled = LocalDateTime.of(2026, 4, 12, 10, 0);
+    var response = bookingService.schedule(1L, scheduled);
 
     assertThat(response.scheduledAt()).isEqualTo(scheduled);
   }
 
   @Test
   void complete() {
-    BookingEntity booking = buildBooking("confirmed");
+    var booking = buildBooking("confirmed");
     when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
     when(bookingRepository.save(any(BookingEntity.class))).thenAnswer(inv -> inv.getArgument(0));
 
-    BookingResponse response = bookingService.complete(1L);
+    var response = bookingService.complete(1L);
 
     assertThat(response.status()).isEqualTo("completed");
   }
 
   @Test
   void cancel() {
-    BookingEntity booking = buildBooking("confirmed");
+    var booking = buildBooking("confirmed");
     when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
     when(bookingRepository.save(any(BookingEntity.class))).thenAnswer(inv -> inv.getArgument(0));
 
-    BookingResponse response = bookingService.cancel(1L);
+    var response = bookingService.cancel(1L);
 
     assertThat(response.status()).isEqualTo("cancelled");
   }
@@ -156,9 +152,9 @@ class BookingServiceTest {
   void getByUser() {
     when(bookingRepository.findByUserId(5L)).thenReturn(List.of(buildBooking("confirmed")));
 
-    List<BookingResponse> result = bookingService.getByUser(5L);
+    var result = bookingService.getByUser(5L);
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).userId()).isEqualTo(5L);
+    assertThat(result.getFirst().userId()).isEqualTo(5L);
   }
 }

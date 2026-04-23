@@ -2,8 +2,6 @@ package com.kapotiabi.service;
 
 import com.kapotiabi.dto.response.BookingResponse;
 import com.kapotiabi.entity.BookingEntity;
-import com.kapotiabi.entity.JobRequestEntity;
-import com.kapotiabi.entity.ShopOfferEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.BookingRepository;
 import com.kapotiabi.repository.JobRequestRepository;
@@ -39,15 +37,11 @@ public class BookingService {
     if (bookingRepository.findByOfferId(offerId).isPresent()) {
       throw new IllegalStateException("Booking already exists for offer: " + offerId);
     }
-    ShopOfferEntity offer =
+    var offer =
         shopOfferRepository
             .findById(offerId)
             .orElseThrow(() -> new NotFoundException("Shop offer not found: " + offerId));
-    JobRequestEntity jobRequest =
-        jobRequestRepository
-            .findById(offer.getJobRequestId())
-            .orElseThrow(
-                () -> new NotFoundException("Job request not found: " + offer.getJobRequestId()));
+    var jobRequest = offer.getJobRequest();
 
     offer.setStatus("accepted");
     shopOfferRepository.save(offer);
@@ -56,13 +50,13 @@ public class BookingService {
     jobRequest.setUpdatedAt(LocalDateTime.now());
     jobRequestRepository.save(jobRequest);
 
-    LocalDateTime now = LocalDateTime.now();
-    BookingEntity booking =
+    var now = LocalDateTime.now();
+    var booking =
         BookingEntity.builder()
-            .offerId(offerId)
-            .jobRequestId(offer.getJobRequestId())
-            .userId(jobRequest.getUserId())
-            .shopId(offer.getShopId())
+            .offer(offer)
+            .jobRequest(jobRequest)
+            .user(jobRequest.getUser())
+            .shop(offer.getShop())
             .confirmedByShop(false)
             .status("awaiting_shop")
             .createdAt(now)
@@ -72,7 +66,7 @@ public class BookingService {
   }
 
   public BookingResponse confirm(Long id) {
-    BookingEntity booking = findOrThrow(id);
+    var booking = findOrThrow(id);
     booking.setConfirmedByShop(true);
     booking.setShopConfirmedAt(LocalDateTime.now());
     booking.setStatus("confirmed");
@@ -81,21 +75,21 @@ public class BookingService {
   }
 
   public BookingResponse schedule(Long id, LocalDateTime scheduledAt) {
-    BookingEntity booking = findOrThrow(id);
+    var booking = findOrThrow(id);
     booking.setScheduledAt(scheduledAt);
     booking.setUpdatedAt(LocalDateTime.now());
     return BookingResponse.from(bookingRepository.save(booking));
   }
 
   public BookingResponse complete(Long id) {
-    BookingEntity booking = findOrThrow(id);
+    var booking = findOrThrow(id);
     booking.setStatus("completed");
     booking.setUpdatedAt(LocalDateTime.now());
     return BookingResponse.from(bookingRepository.save(booking));
   }
 
   public BookingResponse cancel(Long id) {
-    BookingEntity booking = findOrThrow(id);
+    var booking = findOrThrow(id);
     booking.setStatus("cancelled");
     booking.setUpdatedAt(LocalDateTime.now());
     return BookingResponse.from(bookingRepository.save(booking));

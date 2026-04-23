@@ -20,12 +20,12 @@ public record GuestEstimateResponse(
 
   public static GuestEstimateResponse from(
       GuestEstimateEntity e, List<GuestEstimateResultEntity> results) {
-    List<GuestEstimateResultResponse> resultResponses =
+    var resultResponses =
         results.stream()
             .map(
                 r ->
                     new GuestEstimateResultResponse(
-                        r.getShopId(), r.getPriceFrom(), r.getPriceTo()))
+                        r.getShop().getId(), r.getPriceFrom(), r.getPriceTo()))
             .toList();
     return new GuestEstimateResponse(
         e.getId(),

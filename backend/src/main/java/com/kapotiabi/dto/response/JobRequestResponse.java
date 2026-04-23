@@ -20,8 +20,8 @@ public record JobRequestResponse(
   public static JobRequestResponse from(JobRequestEntity e) {
     return new JobRequestResponse(
         e.getId(),
-        e.getUserId(),
-        e.getCarId(),
+        e.getUser().getId(),
+        e.getCar().getId(),
         e.getDescription(),
         e.getAcceptsNonOem(),
         e.getPartsPreference(),

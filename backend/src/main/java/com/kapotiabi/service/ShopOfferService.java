@@ -2,14 +2,13 @@ package com.kapotiabi.service;
 
 import com.kapotiabi.dto.request.ShopOfferRequest;
 import com.kapotiabi.dto.response.ShopOfferResponse;
-import com.kapotiabi.entity.JobRequestEntity;
 import com.kapotiabi.entity.ShopOfferEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.JobRequestRepository;
+import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ShopOfferRepository;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,6 +26,7 @@ public class ShopOfferService {
 
   private final ShopOfferRepository shopOfferRepository;
   private final JobRequestRepository jobRequestRepository;
+  private final RepairShopRepository repairShopRepository;
 
   @Value("${app.upload-dir}")
   private String uploadDir;
@@ -43,15 +43,15 @@ public class ShopOfferService {
 
   @Transactional
   public ShopOfferResponse create(Long jobRequestId, ShopOfferRequest req) {
-    JobRequestEntity jobRequest =
+    var jobRequest =
         jobRequestRepository
             .findById(jobRequestId)
             .orElseThrow(() -> new NotFoundException("Job request not found: " + jobRequestId));
 
-    ShopOfferEntity offer =
+    var offer =
         ShopOfferEntity.builder()
-            .jobRequestId(jobRequestId)
-            .shopId(req.shopId())
+            .jobRequest(jobRequest)
+            .shop(repairShopRepository.getReferenceById(req.shopId()))
             .priceEstimate(req.priceEstimate())
             .breakdown(req.breakdown())
             .partsTier(req.partsTier())
@@ -71,7 +71,7 @@ public class ShopOfferService {
   }
 
   public ShopOfferResponse update(Long id, ShopOfferRequest req) {
-    ShopOfferEntity offer = findOrThrow(id);
+    var offer = findOrThrow(id);
     offer.setPriceEstimate(req.priceEstimate());
     offer.setBreakdown(req.breakdown());
     offer.setPartsTier(req.partsTier());
@@ -81,7 +81,7 @@ public class ShopOfferService {
   }
 
   public ShopOfferResponse reject(Long id) {
-    ShopOfferEntity offer = findOrThrow(id);
+    var offer = findOrThrow(id);
     offer.setStatus("rejected");
     return ShopOfferResponse.from(shopOfferRepository.save(offer));
   }
@@ -90,27 +90,27 @@ public class ShopOfferService {
     if (!"application/pdf".equals(file.getContentType())) {
       throw new IllegalArgumentException("Only PDF files are allowed");
     }
-    ShopOfferEntity offer = findOrThrow(offerId);
-    Path dir = Paths.get(uploadDir, "offers", offerId.toString());
+    var offer = findOrThrow(offerId);
+    var dir = Paths.get(uploadDir, "offers", offerId.toString());
     Files.createDirectories(dir);
 
     if (offer.getPdfUrl() != null) {
       Files.deleteIfExists(Paths.get(uploadDir).resolve(offer.getPdfUrl()));
     }
 
-    Path filePath = dir.resolve(offerId + "_offer.pdf");
+    var filePath = dir.resolve(offerId + "_offer.pdf");
     file.transferTo(filePath.toFile());
     offer.setPdfUrl("offers/" + offerId + "/" + offerId + "_offer.pdf");
     return shopOfferRepository.save(offer);
   }
 
   public Resource downloadPdf(Long offerId) throws IOException {
-    ShopOfferEntity offer = findOrThrow(offerId);
+    var offer = findOrThrow(offerId);
     if (offer.getPdfUrl() == null) {
       throw new NotFoundException("No PDF available for offer: " + offerId);
     }
-    Path path = Paths.get(uploadDir).resolve(offer.getPdfUrl());
-    Resource resource = new UrlResource(path.toUri());
+    var path = Paths.get(uploadDir).resolve(offer.getPdfUrl());
+    var resource = new UrlResource(path.toUri());
     if (!resource.exists()) {
       throw new NotFoundException("PDF file not found for offer: " + offerId);
     }

@@ -6,10 +6,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.kapotiabi.dto.request.JobRequestRequest;
-import com.kapotiabi.dto.response.JobRequestResponse;
+import com.kapotiabi.entity.CarEntity;
 import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.NotFoundException;
+import com.kapotiabi.repository.CarRepository;
 import com.kapotiabi.repository.JobRequestRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,16 +26,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class JobRequestServiceTest {
 
   @Mock private JobRequestRepository jobRequestRepository;
+  @Mock private UserRepository userRepository;
+  @Mock private CarRepository carRepository;
 
   @InjectMocks private JobRequestService jobRequestService;
 
-  private JobRequestEntity buildRequest(String status) {
+  private JobRequestEntity buildRequest() {
     return JobRequestEntity.builder()
         .id(1L)
-        .userId(5L)
-        .carId(3L)
+        .user(UserEntity.builder().id(5L).build())
+        .car(CarEntity.builder().id(3L).build())
         .description("Oil change")
-        .status(status)
+        .status("pending")
         .city("Tallinn")
         .county("Harju")
         .createdAt(LocalDateTime.now())
@@ -42,53 +47,55 @@ class JobRequestServiceTest {
 
   @Test
   void getByUser() {
-    when(jobRequestRepository.findByUserId(5L)).thenReturn(List.of(buildRequest("pending")));
+    when(jobRequestRepository.findByUserId(5L)).thenReturn(List.of(buildRequest()));
 
-    List<JobRequestResponse> result = jobRequestService.getByUser(5L);
+    var result = jobRequestService.getByUser(5L);
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).userId()).isEqualTo(5L);
+    assertThat(result.getFirst().userId()).isEqualTo(5L);
   }
 
   @Test
   void getAvailable_byCity() {
     when(jobRequestRepository.findByStatusAndCity("pending", "Tallinn"))
-        .thenReturn(List.of(buildRequest("pending")));
+        .thenReturn(List.of(buildRequest()));
 
-    List<JobRequestResponse> result = jobRequestService.getAvailable("Tallinn", null);
+    var result = jobRequestService.getAvailable("Tallinn", null);
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).city()).isEqualTo("Tallinn");
+    assertThat(result.getFirst().city()).isEqualTo("Tallinn");
   }
 
   @Test
   void getAvailable_byCounty() {
     when(jobRequestRepository.findByStatusAndCounty("pending", "Harju"))
-        .thenReturn(List.of(buildRequest("pending")));
+        .thenReturn(List.of(buildRequest()));
 
-    List<JobRequestResponse> result = jobRequestService.getAvailable(null, "Harju");
+    var result = jobRequestService.getAvailable(null, "Harju");
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).county()).isEqualTo("Harju");
+    assertThat(result.getFirst().county()).isEqualTo("Harju");
   }
 
   @Test
   void getById() {
-    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest("pending")));
+    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest()));
 
-    JobRequestResponse response = jobRequestService.getById(1L);
+    var response = jobRequestService.getById(1L);
 
     assertThat(response.id()).isEqualTo(1L);
   }
 
   @Test
   void create() {
-    JobRequestRequest req =
+    var req =
         new JobRequestRequest(5L, 3L, "Oil change", false, "OEM", "city", "Tallinn", null, null);
-    JobRequestEntity saved = buildRequest("pending");
+    var saved = buildRequest();
+    when(userRepository.getReferenceById(5L)).thenReturn(UserEntity.builder().id(5L).build());
+    when(carRepository.getReferenceById(3L)).thenReturn(CarEntity.builder().id(3L).build());
     when(jobRequestRepository.save(any(JobRequestEntity.class))).thenReturn(saved);
 
-    JobRequestResponse response = jobRequestService.create(req);
+    var response = jobRequestService.create(req);
 
     assertThat(response.status()).isEqualTo("pending");
     assertThat(response.userId()).isEqualTo(5L);
@@ -96,12 +103,12 @@ class JobRequestServiceTest {
 
   @Test
   void cancel() {
-    JobRequestEntity entity = buildRequest("pending");
+    var entity = buildRequest();
     when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(entity));
     when(jobRequestRepository.save(any(JobRequestEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
 
-    JobRequestResponse response = jobRequestService.cancel(1L);
+    var response = jobRequestService.cancel(1L);
 
     assertThat(response.status()).isEqualTo("cancelled");
   }

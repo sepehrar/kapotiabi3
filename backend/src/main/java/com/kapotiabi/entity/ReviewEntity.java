@@ -1,13 +1,7 @@
 package com.kapotiabi.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
 import lombok.*;
 
 @Getter
@@ -23,14 +17,17 @@ public class ReviewEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "booking_id", nullable = false, unique = true)
-  private Long bookingId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "booking_id", nullable = false, unique = true)
+  private BookingEntity booking;
 
-  @Column(name = "user_id", nullable = false)
-  private Long userId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "user_id", nullable = false)
+  private UserEntity user;
 
-  @Column(name = "shop_id", nullable = false)
-  private Long shopId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "shop_id", nullable = false)
+  private RepairShopEntity shop;
 
   @Column(nullable = false)
   private Integer rating;

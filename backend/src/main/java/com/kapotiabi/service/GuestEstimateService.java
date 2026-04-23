@@ -15,8 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +32,7 @@ public class GuestEstimateService {
 
   @Transactional
   public GuestEstimateResponse create(GuestEstimateRequest req) {
-    GuestEstimateEntity estimate =
+    var estimate =
         GuestEstimateEntity.builder()
             .plateNumber(req.plateNumber())
             .description(req.description())
@@ -55,33 +54,32 @@ public class GuestEstimateService {
     BigDecimal overallMin = null;
     BigDecimal overallMax = null;
 
-    List<Long> shopIds = shops.stream().map(RepairShopEntity::getId).toList();
-    Map<Long, List<ShopServiceCategoryEntity>> categoriesByShop =
+    var shopIds = shops.stream().map(RepairShopEntity::getId).toList();
+    var categoriesByShop =
         categoryRepository.findByShopIdIn(shopIds).stream()
-            .collect(Collectors.groupingBy(ShopServiceCategoryEntity::getShopId));
+            .collect(Collectors.groupingBy(c -> c.getShop().getId()));
 
     for (RepairShopEntity shop : shops) {
-      List<ShopServiceCategoryEntity> categories =
-          categoriesByShop.getOrDefault(shop.getId(), List.of());
+      var categories = categoriesByShop.getOrDefault(shop.getId(), List.of());
       if (categories.isEmpty()) {
         continue;
       }
 
-      Optional<BigDecimal> shopMin =
+      var shopMin =
           categories.stream()
               .map(ShopServiceCategoryEntity::getPriceFrom)
-              .filter(p -> p != null)
+              .filter(Objects::nonNull)
               .min(Comparator.naturalOrder());
-      Optional<BigDecimal> shopMax =
+      var shopMax =
           categories.stream()
               .map(ShopServiceCategoryEntity::getPriceTo)
-              .filter(p -> p != null)
+              .filter(Objects::nonNull)
               .max(Comparator.naturalOrder());
 
-      GuestEstimateResultEntity result =
+      var result =
           GuestEstimateResultEntity.builder()
-              .guestEstimateId(estimate.getId())
-              .shopId(shop.getId())
+              .guestEstimate(estimate)
+              .shop(shop)
               .priceFrom(shopMin.orElse(null))
               .priceTo(shopMax.orElse(null))
               .build();
@@ -104,7 +102,7 @@ public class GuestEstimateService {
   }
 
   public GuestEstimateResponse getById(Long id) {
-    GuestEstimateEntity estimate =
+    var estimate =
         guestEstimateRepository
             .findById(id)
             .orElseThrow(() -> new NotFoundException("Guest estimate not found: " + id));

@@ -14,9 +14,9 @@ public record ReviewResponse(
   public static ReviewResponse from(ReviewEntity e) {
     return new ReviewResponse(
         e.getId(),
-        e.getBookingId(),
-        e.getUserId(),
-        e.getShopId(),
+        e.getBooking().getId(),
+        e.getUser().getId(),
+        e.getShop().getId(),
         e.getRating(),
         e.getComment(),
         e.getCreatedAt());

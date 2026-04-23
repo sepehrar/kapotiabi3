@@ -7,10 +7,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.kapotiabi.dto.request.CarRequest;
-import com.kapotiabi.dto.response.CarResponse;
 import com.kapotiabi.entity.CarEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.CarRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +25,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CarServiceTest {
 
   @Mock private CarRepository carRepository;
+  @Mock private UserRepository userRepository;
 
   @InjectMocks private CarService carService;
 
   private CarEntity buildCar() {
     return CarEntity.builder()
         .id(1L)
-        .ownerId(10L)
+        .owner(UserEntity.builder().id(10L).build())
         .plateNumber("ABC123")
         .make("Toyota")
         .model("Corolla")
@@ -42,21 +44,21 @@ class CarServiceTest {
 
   @Test
   void getByOwner() {
-    CarEntity car = buildCar();
+    var car = buildCar();
     when(carRepository.findByOwnerId(10L)).thenReturn(List.of(car));
 
-    List<CarResponse> result = carService.getByOwner(10L);
+    var result = carService.getByOwner(10L);
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).plateNumber()).isEqualTo("ABC123");
+    assertThat(result.getFirst().plateNumber()).isEqualTo("ABC123");
   }
 
   @Test
   void getById_found() {
-    CarEntity car = buildCar();
+    var car = buildCar();
     when(carRepository.findById(1L)).thenReturn(Optional.of(car));
 
-    CarResponse response = carService.getById(1L);
+    var response = carService.getById(1L);
 
     assertThat(response.id()).isEqualTo(1L);
     assertThat(response.make()).isEqualTo("Toyota");
@@ -73,11 +75,11 @@ class CarServiceTest {
 
   @Test
   void create() {
-    CarRequest req = new CarRequest(10L, "XYZ789", "BMW", "3 Series", 2022, "2.0 diesel");
-    CarEntity saved =
+    var req = new CarRequest(10L, "XYZ789", "BMW", "3 Series", 2022, "2.0 diesel");
+    var saved =
         CarEntity.builder()
             .id(2L)
-            .ownerId(10L)
+            .owner(UserEntity.builder().id(10L).build())
             .plateNumber("XYZ789")
             .make("BMW")
             .model("3 Series")
@@ -85,9 +87,10 @@ class CarServiceTest {
             .engine("2.0 diesel")
             .createdAt(LocalDateTime.now())
             .build();
+    when(userRepository.getReferenceById(10L)).thenReturn(UserEntity.builder().id(10L).build());
     when(carRepository.save(any(CarEntity.class))).thenReturn(saved);
 
-    CarResponse response = carService.create(req);
+    var response = carService.create(req);
 
     assertThat(response.id()).isEqualTo(2L);
     assertThat(response.plateNumber()).isEqualTo("XYZ789");
@@ -95,12 +98,13 @@ class CarServiceTest {
 
   @Test
   void update() {
-    CarEntity car = buildCar();
+    var car = buildCar();
     when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+    when(userRepository.getReferenceById(10L)).thenReturn(UserEntity.builder().id(10L).build());
     when(carRepository.save(any(CarEntity.class))).thenAnswer(inv -> inv.getArgument(0));
 
-    CarRequest req = new CarRequest(10L, "NEW123", "Honda", "Civic", 2021, "1.5 turbo");
-    CarResponse response = carService.update(1L, req);
+    var req = new CarRequest(10L, "NEW123", "Honda", "Civic", 2021, "1.5 turbo");
+    var response = carService.update(1L, req);
 
     assertThat(response.plateNumber()).isEqualTo("NEW123");
     assertThat(response.make()).isEqualTo("Honda");
@@ -108,7 +112,7 @@ class CarServiceTest {
 
   @Test
   void delete() {
-    CarEntity car = buildCar();
+    var car = buildCar();
     when(carRepository.findById(1L)).thenReturn(Optional.of(car));
 
     carService.delete(1L);

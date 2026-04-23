@@ -5,6 +5,7 @@ import com.kapotiabi.dto.response.CarResponse;
 import com.kapotiabi.entity.CarEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.CarRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class CarService {
 
   private final CarRepository carRepository;
+  private final UserRepository userRepository;
 
   public List<CarResponse> getByOwner(Long ownerId) {
     return carRepository.findByOwnerId(ownerId).stream().map(CarResponse::from).toList();
@@ -25,9 +27,9 @@ public class CarService {
   }
 
   public CarResponse create(CarRequest req) {
-    CarEntity car =
+    var car =
         CarEntity.builder()
-            .ownerId(req.ownerId())
+            .owner(userRepository.getReferenceById(req.ownerId()))
             .plateNumber(req.plateNumber())
             .make(req.make())
             .model(req.model())
@@ -39,8 +41,8 @@ public class CarService {
   }
 
   public CarResponse update(Long id, CarRequest req) {
-    CarEntity car = findOrThrow(id);
-    car.setOwnerId(req.ownerId());
+    var car = findOrThrow(id);
+    car.setOwner(userRepository.getReferenceById(req.ownerId()));
     car.setPlateNumber(req.plateNumber());
     car.setMake(req.make());
     car.setModel(req.model());

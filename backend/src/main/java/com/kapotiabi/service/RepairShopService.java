@@ -11,6 +11,7 @@ import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ReviewRepository;
 import com.kapotiabi.repository.ShopServiceCategoryRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class RepairShopService {
   private final RepairShopRepository repairShopRepository;
   private final ShopServiceCategoryRepository categoryRepository;
   private final ReviewRepository reviewRepository;
+  private final UserRepository userRepository;
 
   public List<RepairShopResponse> getAll(String city, String county) {
     List<RepairShopEntity> shops;
@@ -41,10 +43,10 @@ public class RepairShopService {
   }
 
   public RepairShopResponse create(RepairShopRequest req) {
-    LocalDateTime now = LocalDateTime.now();
-    RepairShopEntity shop =
+    var now = LocalDateTime.now();
+    var shop =
         RepairShopEntity.builder()
-            .ownerId(req.ownerId())
+            .owner(userRepository.getReferenceById(req.ownerId()))
             .name(req.name())
             .address(req.address())
             .city(req.city())
@@ -61,8 +63,8 @@ public class RepairShopService {
   }
 
   public RepairShopResponse update(Long id, RepairShopRequest req) {
-    RepairShopEntity shop = findOrThrow(id);
-    shop.setOwnerId(req.ownerId());
+    var shop = findOrThrow(id);
+    shop.setOwner(userRepository.getReferenceById(req.ownerId()));
     shop.setName(req.name());
     shop.setAddress(req.address());
     shop.setCity(req.city());
@@ -83,10 +85,10 @@ public class RepairShopService {
   }
 
   public ShopServiceCategoryResponse addCategory(Long shopId, ShopServiceCategoryRequest req) {
-    findOrThrow(shopId);
-    ShopServiceCategoryEntity category =
+    var shop = findOrThrow(shopId);
+    var category =
         ShopServiceCategoryEntity.builder()
-            .shopId(shopId)
+            .shop(shop)
             .category(req.category())
             .priceFrom(req.priceFrom())
             .priceTo(req.priceTo())
@@ -99,11 +101,11 @@ public class RepairShopService {
   public ShopServiceCategoryResponse updateCategory(
       Long shopId, Long categoryId, ShopServiceCategoryRequest req) {
     findOrThrow(shopId);
-    ShopServiceCategoryEntity category =
+    var category =
         categoryRepository
             .findById(categoryId)
             .orElseThrow(() -> new NotFoundException("Category not found: " + categoryId));
-    if (!shopId.equals(category.getShopId())) {
+    if (!shopId.equals(category.getShop().getId())) {
       throw new NotFoundException("Category not found: " + categoryId);
     }
     category.setCategory(req.category());
@@ -116,11 +118,11 @@ public class RepairShopService {
 
   public void deleteCategory(Long shopId, Long categoryId) {
     findOrThrow(shopId);
-    ShopServiceCategoryEntity category =
+    var category =
         categoryRepository
             .findById(categoryId)
             .orElseThrow(() -> new NotFoundException("Category not found: " + categoryId));
-    if (!shopId.equals(category.getShopId())) {
+    if (!shopId.equals(category.getShop().getId())) {
       throw new NotFoundException("Category not found: " + categoryId);
     }
     categoryRepository.deleteById(categoryId);

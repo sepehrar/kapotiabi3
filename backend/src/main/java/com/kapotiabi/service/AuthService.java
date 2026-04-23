@@ -1,7 +1,6 @@
 package com.kapotiabi.service;
 
 import com.kapotiabi.dto.*;
-import com.kapotiabi.dto.ChangePasswordRequest;
 import com.kapotiabi.entity.PasswordResetTokenEntity;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.UserEntity;
@@ -14,7 +13,6 @@ import com.kapotiabi.repository.PasswordResetTokenRepository;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.UserRepository;
 import com.kapotiabi.security.JwtTokenProvider;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -44,7 +42,7 @@ public class AuthService {
       throw new DuplicateEmailException();
     }
 
-    UserEntity user =
+    var user =
         UserEntity.builder()
             .email(req.getEmail())
             .passwordHash(passwordEncoder.encode(req.getPassword()))
@@ -57,9 +55,9 @@ public class AuthService {
 
     String shopStatus = null;
     if (req.getRole() == UserRole.SHOP_OWNER) {
-      RepairShopEntity shop =
+      var shop =
           RepairShopEntity.builder()
-              .ownerId(user.getId())
+              .owner(user)
               .name(user.getFirstName() + " " + user.getLastName() + "'s Shop")
               .status("draft")
               .build();
@@ -71,7 +69,7 @@ public class AuthService {
   }
 
   public AuthResponse login(LoginRequest req) {
-    UserEntity user =
+    var user =
         userRepository.findByEmail(req.getEmail()).orElseThrow(InvalidCredentialsException::new);
 
     if (!passwordEncoder.matches(req.getPassword(), user.getPasswordHash())) {
@@ -97,9 +95,9 @@ public class AuthService {
         .ifPresent(
             user -> {
               String token = UUID.randomUUID().toString();
-              PasswordResetTokenEntity resetToken =
+              var resetToken =
                   PasswordResetTokenEntity.builder()
-                      .userId(user.getId())
+                      .user(user)
                       .token(token)
                       .expiresAt(LocalDateTime.now().plusHours(1))
                       .used(false)
@@ -112,7 +110,7 @@ public class AuthService {
 
   @Transactional
   public Map<String, String> resetPassword(ResetPasswordRequest req) {
-    PasswordResetTokenEntity resetToken =
+    var resetToken =
         passwordResetTokenRepository
             .findByToken(req.getToken())
             .orElseThrow(() -> new InvalidTokenException("Invalid or unknown reset token"));
@@ -124,10 +122,7 @@ public class AuthService {
       throw new InvalidTokenException("Reset token has expired");
     }
 
-    UserEntity user =
-        userRepository
-            .findById(resetToken.getUserId())
-            .orElseThrow(() -> new InvalidTokenException("User not found"));
+    var user = resetToken.getUser();
 
     user.setPasswordHash(passwordEncoder.encode(req.getNewPassword()));
     userRepository.save(user);
@@ -140,7 +135,7 @@ public class AuthService {
 
   @Transactional
   public void changePassword(Long userId, ChangePasswordRequest req) {
-    UserEntity user =
+    var user =
         userRepository
             .findById(userId)
             .orElseThrow(() -> new NotFoundException("User not found: " + userId));
@@ -155,9 +150,9 @@ public class AuthService {
   }
 
   private AuthResponse buildAuthResponse(UserEntity user, String shopStatus) {
-    String token =
+    var token =
         jwtTokenProvider.generateToken(user.getId(), user.getEmail(), user.getRole().getDbValue());
-    Instant expiresAt = jwtTokenProvider.getExpiry(token);
+    var expiresAt = jwtTokenProvider.getExpiry(token);
     return AuthResponse.builder()
         .token(token)
         .expiresAt(expiresAt)

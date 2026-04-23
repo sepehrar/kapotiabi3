@@ -19,8 +19,8 @@ public record ShopOfferResponse(
   public static ShopOfferResponse from(ShopOfferEntity e) {
     return new ShopOfferResponse(
         e.getId(),
-        e.getJobRequestId(),
-        e.getShopId(),
+        e.getJobRequest().getId(),
+        e.getShop().getId(),
         e.getPriceEstimate(),
         e.getBreakdown(),
         e.getPartsTier(),

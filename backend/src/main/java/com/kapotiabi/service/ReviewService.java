@@ -2,7 +2,6 @@ package com.kapotiabi.service;
 
 import com.kapotiabi.dto.request.ReviewRequest;
 import com.kapotiabi.dto.response.ReviewResponse;
-import com.kapotiabi.entity.BookingEntity;
 import com.kapotiabi.entity.ReviewEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.BookingRepository;
@@ -19,7 +18,7 @@ public class ReviewService {
   private final BookingRepository bookingRepository;
 
   public ReviewResponse submit(Long bookingId, ReviewRequest req) {
-    BookingEntity booking =
+    var booking =
         bookingRepository
             .findById(bookingId)
             .orElseThrow(() -> new NotFoundException("Booking not found: " + bookingId));
@@ -29,11 +28,11 @@ public class ReviewService {
     if (reviewRepository.findByBookingId(bookingId).isPresent()) {
       throw new IllegalStateException("Review already exists for this booking");
     }
-    ReviewEntity review =
+    var review =
         ReviewEntity.builder()
-            .bookingId(bookingId)
-            .userId(booking.getUserId())
-            .shopId(booking.getShopId())
+            .booking(booking)
+            .user(booking.getUser())
+            .shop(booking.getShop())
             .rating(req.rating())
             .comment(req.comment())
             .createdAt(LocalDateTime.now())

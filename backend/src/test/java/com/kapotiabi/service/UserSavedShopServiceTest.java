@@ -6,12 +6,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.kapotiabi.dto.response.PagedResponse;
-import com.kapotiabi.dto.response.SavedShopResponse;
 import com.kapotiabi.entity.RepairShopEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.entity.UserSavedShopEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
+import com.kapotiabi.repository.UserRepository;
 import com.kapotiabi.repository.UserSavedShopRepository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,13 +31,14 @@ class UserSavedShopServiceTest {
 
   @Mock private UserSavedShopRepository savedShopRepository;
   @Mock private RepairShopRepository repairShopRepository;
+  @Mock private UserRepository userRepository;
 
   @InjectMocks private UserSavedShopService userSavedShopService;
 
   private RepairShopEntity buildShop() {
     return RepairShopEntity.builder()
         .id(10L)
-        .ownerId(99L)
+        .owner(UserEntity.builder().id(99L).build())
         .name("AutoExpert Tallinn")
         .city("Tallinn")
         .county("Harju")
@@ -49,8 +50,8 @@ class UserSavedShopServiceTest {
   private UserSavedShopEntity buildSaved() {
     return UserSavedShopEntity.builder()
         .id(1L)
-        .userId(5L)
-        .shopId(10L)
+        .user(UserEntity.builder().id(5L).build())
+        .shop(buildShop())
         .savedAt(LocalDateTime.now())
         .build();
   }
@@ -59,17 +60,15 @@ class UserSavedShopServiceTest {
 
   @Test
   void getSaved_returnsPagedResult() {
-    UserSavedShopEntity saved = buildSaved();
-    RepairShopEntity shop = buildShop();
+    var saved = buildSaved();
     when(savedShopRepository.findByUserId(any(Long.class), any(Pageable.class)))
         .thenReturn(new PageImpl<>(List.of(saved), PageRequest.of(0, 10), 1));
-    when(repairShopRepository.findAllById(List.of(10L))).thenReturn(List.of(shop));
 
-    PagedResponse<SavedShopResponse> result = userSavedShopService.getSaved(5L, 0, 10);
+    var result = userSavedShopService.getSaved(5L, 0, 10);
 
     assertThat(result.content()).hasSize(1);
-    assertThat(result.content().get(0).shopId()).isEqualTo(10L);
-    assertThat(result.content().get(0).name()).isEqualTo("AutoExpert Tallinn");
+    assertThat(result.content().getFirst().shopId()).isEqualTo(10L);
+    assertThat(result.content().getFirst().name()).isEqualTo("AutoExpert Tallinn");
     assertThat(result.totalElements()).isEqualTo(1);
     assertThat(result.totalPages()).isEqualTo(1);
     assertThat(result.page()).isEqualTo(0);
@@ -81,34 +80,23 @@ class UserSavedShopServiceTest {
     when(savedShopRepository.findByUserId(any(Long.class), any(Pageable.class)))
         .thenReturn(new PageImpl<>(List.of(), PageRequest.of(0, 10), 0));
 
-    PagedResponse<SavedShopResponse> result = userSavedShopService.getSaved(5L, 0, 10);
+    var result = userSavedShopService.getSaved(5L, 0, 10);
 
     assertThat(result.content()).isEmpty();
     assertThat(result.totalElements()).isEqualTo(0);
-  }
-
-  @Test
-  void getSaved_shopMissing_throwsNotFoundException() {
-    UserSavedShopEntity saved = buildSaved();
-    when(savedShopRepository.findByUserId(any(Long.class), any(Pageable.class)))
-        .thenReturn(new PageImpl<>(List.of(saved), PageRequest.of(0, 10), 1));
-    when(repairShopRepository.findAllById(List.of(10L))).thenReturn(List.of());
-
-    assertThatThrownBy(() -> userSavedShopService.getSaved(5L, 0, 10))
-        .isInstanceOf(NotFoundException.class)
-        .hasMessageContaining("10");
   }
 
   // ── save ──────────────────────────────────────────────────────────────────
 
   @Test
   void save_success_returnsSavedShopResponse() {
-    RepairShopEntity shop = buildShop();
-    UserSavedShopEntity saved = buildSaved();
+    var shop = buildShop();
+    var saved = buildSaved();
     when(repairShopRepository.findById(10L)).thenReturn(Optional.of(shop));
+    when(userRepository.getReferenceById(5L)).thenReturn(UserEntity.builder().id(5L).build());
     when(savedShopRepository.save(any(UserSavedShopEntity.class))).thenReturn(saved);
 
-    SavedShopResponse response = userSavedShopService.save(5L, 10L);
+    var response = userSavedShopService.save(5L, 10L);
 
     assertThat(response.shopId()).isEqualTo(10L);
     assertThat(response.name()).isEqualTo("AutoExpert Tallinn");
@@ -127,6 +115,7 @@ class UserSavedShopServiceTest {
   @Test
   void save_alreadySaved_propagatesDataIntegrityViolation() {
     when(repairShopRepository.findById(10L)).thenReturn(Optional.of(buildShop()));
+    when(userRepository.getReferenceById(5L)).thenReturn(UserEntity.builder().id(5L).build());
     when(savedShopRepository.save(any(UserSavedShopEntity.class)))
         .thenThrow(new DataIntegrityViolationException("duplicate key"));
 

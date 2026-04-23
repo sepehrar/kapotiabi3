@@ -1,7 +1,8 @@
 package com.kapotiabi.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.kapotiabi.dto.*;
@@ -71,14 +72,14 @@ class AuthServiceTest {
               return u;
             });
 
-    RegisterRequest req = new RegisterRequest();
+    var req = new RegisterRequest();
     req.setEmail("user@test.ee");
     req.setPassword("Test123");
     req.setFirstName("Mari");
     req.setLastName("Mets");
     req.setRole(UserRole.CAR_OWNER);
 
-    AuthResponse response = authService.register(req);
+    var response = authService.register(req);
 
     assertThat(response.getRole()).isEqualTo("car_owner");
     assertThat(response.getShopStatus()).isNull();
@@ -96,27 +97,27 @@ class AuthServiceTest {
               return u;
             });
 
-    RegisterRequest req = new RegisterRequest();
+    var req = new RegisterRequest();
     req.setEmail("shop@test.ee");
     req.setPassword("Test123");
     req.setFirstName("Jaan");
     req.setLastName("Tamm");
     req.setRole(UserRole.SHOP_OWNER);
 
-    AuthResponse response = authService.register(req);
+    var response = authService.register(req);
 
     assertThat(response.getRole()).isEqualTo("shop_owner");
     assertThat(response.getShopStatus()).isEqualTo("draft");
 
-    ArgumentCaptor<RepairShopEntity> shopCaptor = ArgumentCaptor.forClass(RepairShopEntity.class);
+    var shopCaptor = ArgumentCaptor.forClass(RepairShopEntity.class);
     verify(repairShopRepository).save(shopCaptor.capture());
     assertThat(shopCaptor.getValue().getStatus()).isEqualTo("draft");
-    assertThat(shopCaptor.getValue().getOwnerId()).isEqualTo(2L);
+    assertThat(shopCaptor.getValue().getOwner().getId()).isEqualTo(2L);
   }
 
   @Test
   void register_adminRole_throwsIllegalArgument() {
-    RegisterRequest req = new RegisterRequest();
+    var req = new RegisterRequest();
     req.setEmail("admin@test.ee");
     req.setPassword("Test123");
     req.setFirstName("Bad");
@@ -157,7 +158,7 @@ class AuthServiceTest {
               return u;
             });
 
-    RegisterRequest req = new RegisterRequest();
+    var req = new RegisterRequest();
     req.setEmail("user@test.ee");
     req.setPassword("PlainText123");
     req.setFirstName("Mari");
@@ -166,7 +167,7 @@ class AuthServiceTest {
 
     authService.register(req);
 
-    ArgumentCaptor<UserEntity> userCaptor = ArgumentCaptor.forClass(UserEntity.class);
+    var userCaptor = ArgumentCaptor.forClass(UserEntity.class);
     verify(userRepository).save(userCaptor.capture());
     assertThat(userCaptor.getValue().getPasswordHash()).isNotEqualTo("PlainText123");
     assertThat(passwordEncoder.matches("PlainText123", userCaptor.getValue().getPasswordHash()))
@@ -177,8 +178,8 @@ class AuthServiceTest {
 
   @Test
   void login_validCredentials_returnsAuthResponse() {
-    String hash = passwordEncoder.encode("Test123");
-    UserEntity user =
+    var hash = passwordEncoder.encode("Test123");
+    var user =
         UserEntity.builder()
             .id(1L)
             .email("user@test.ee")
@@ -187,11 +188,11 @@ class AuthServiceTest {
             .build();
     when(userRepository.findByEmail("user@test.ee")).thenReturn(Optional.of(user));
 
-    LoginRequest req = new LoginRequest();
+    var req = new LoginRequest();
     req.setEmail("user@test.ee");
     req.setPassword("Test123");
 
-    AuthResponse response = authService.login(req);
+    var response = authService.login(req);
 
     assertThat(response.getToken()).isEqualTo("test.jwt.token");
     assertThat(response.getRole()).isEqualTo("car_owner");
@@ -200,8 +201,8 @@ class AuthServiceTest {
 
   @Test
   void login_adminRole_returnsAuthResponseWithAdminRole() {
-    String hash = passwordEncoder.encode("Admin1234");
-    UserEntity admin =
+    var hash = passwordEncoder.encode("Admin1234");
+    var admin =
         UserEntity.builder()
             .id(1L)
             .email("admin@kapotiabi.ee")
@@ -210,11 +211,11 @@ class AuthServiceTest {
             .build();
     when(userRepository.findByEmail("admin@kapotiabi.ee")).thenReturn(Optional.of(admin));
 
-    LoginRequest req = new LoginRequest();
+    var req = new LoginRequest();
     req.setEmail("admin@kapotiabi.ee");
     req.setPassword("Admin1234");
 
-    AuthResponse response = authService.login(req);
+    var response = authService.login(req);
 
     assertThat(response.getRole()).isEqualTo("admin");
     assertThat(response.getShopStatus()).isNull();
@@ -222,8 +223,8 @@ class AuthServiceTest {
 
   @Test
   void login_shopOwner_includesShopStatus() {
-    String hash = passwordEncoder.encode("Test123");
-    UserEntity user =
+    var hash = passwordEncoder.encode("Test123");
+    var user =
         UserEntity.builder()
             .id(2L)
             .email("shop@test.ee")
@@ -234,19 +235,19 @@ class AuthServiceTest {
     when(repairShopRepository.findByOwnerId(2L))
         .thenReturn(Optional.of(RepairShopEntity.builder().status("draft").build()));
 
-    LoginRequest req = new LoginRequest();
+    var req = new LoginRequest();
     req.setEmail("shop@test.ee");
     req.setPassword("Test123");
 
-    AuthResponse response = authService.login(req);
+    var response = authService.login(req);
 
     assertThat(response.getShopStatus()).isEqualTo("draft");
   }
 
   @Test
   void login_wrongPassword_throwsInvalidCredentials() {
-    String hash = passwordEncoder.encode("Test123");
-    UserEntity user =
+    var hash = passwordEncoder.encode("Test123");
+    var user =
         UserEntity.builder()
             .id(1L)
             .email("user@test.ee")
@@ -255,7 +256,7 @@ class AuthServiceTest {
             .build();
     when(userRepository.findByEmail("user@test.ee")).thenReturn(Optional.of(user));
 
-    LoginRequest req = new LoginRequest();
+    var req = new LoginRequest();
     req.setEmail("user@test.ee");
     req.setPassword("WrongPass");
 
@@ -267,7 +268,7 @@ class AuthServiceTest {
   void login_unknownEmail_throwsInvalidCredentials() {
     when(userRepository.findByEmail("nobody@test.ee")).thenReturn(Optional.empty());
 
-    LoginRequest req = new LoginRequest();
+    var req = new LoginRequest();
     req.setEmail("nobody@test.ee");
     req.setPassword("Test123");
 
@@ -279,18 +280,17 @@ class AuthServiceTest {
 
   @Test
   void forgotPassword_existingEmail_savesToken() {
-    UserEntity user = UserEntity.builder().id(1L).email("user@test.ee").build();
+    var user = UserEntity.builder().id(1L).email("user@test.ee").build();
     when(userRepository.findByEmail("user@test.ee")).thenReturn(Optional.of(user));
 
-    ForgotPasswordRequest req = new ForgotPasswordRequest();
+    var req = new ForgotPasswordRequest();
     req.setEmail("user@test.ee");
 
     authService.forgotPassword(req);
 
-    ArgumentCaptor<PasswordResetTokenEntity> tokenCaptor =
-        ArgumentCaptor.forClass(PasswordResetTokenEntity.class);
+    var tokenCaptor = ArgumentCaptor.forClass(PasswordResetTokenEntity.class);
     verify(passwordResetTokenRepository).save(tokenCaptor.capture());
-    assertThat(tokenCaptor.getValue().getUserId()).isEqualTo(1L);
+    assertThat(tokenCaptor.getValue().getUser().getId()).isEqualTo(1L);
     assertThat(tokenCaptor.getValue().isUsed()).isFalse();
     assertThat(tokenCaptor.getValue().getExpiresAt()).isAfter(LocalDateTime.now());
   }
@@ -299,7 +299,7 @@ class AuthServiceTest {
   void forgotPassword_unknownEmail_noTokenSaved() {
     when(userRepository.findByEmail("nobody@test.ee")).thenReturn(Optional.empty());
 
-    ForgotPasswordRequest req = new ForgotPasswordRequest();
+    var req = new ForgotPasswordRequest();
     req.setEmail("nobody@test.ee");
 
     authService.forgotPassword(req);
@@ -311,25 +311,24 @@ class AuthServiceTest {
 
   @Test
   void resetPassword_validToken_updatesPasswordAndMarksUsed() {
-    UserEntity user =
+    var user =
         UserEntity.builder()
             .id(1L)
             .email("user@test.ee")
             .passwordHash("oldhash")
             .role(UserRole.CAR_OWNER)
             .build();
-    PasswordResetTokenEntity token =
+    var token =
         PasswordResetTokenEntity.builder()
             .id(1L)
-            .userId(1L)
+            .user(user)
             .token("valid-uuid")
             .expiresAt(LocalDateTime.now().plusHours(1))
             .used(false)
             .build();
     when(passwordResetTokenRepository.findByToken("valid-uuid")).thenReturn(Optional.of(token));
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-    ResetPasswordRequest req = new ResetPasswordRequest();
+    var req = new ResetPasswordRequest();
     req.setToken("valid-uuid");
     req.setNewPassword("NewPass456");
 
@@ -341,17 +340,17 @@ class AuthServiceTest {
 
   @Test
   void resetPassword_expiredToken_throwsInvalidToken() {
-    PasswordResetTokenEntity token =
+    var token =
         PasswordResetTokenEntity.builder()
             .id(1L)
-            .userId(1L)
+            .user(UserEntity.builder().id(1L).build())
             .token("expired-uuid")
             .expiresAt(LocalDateTime.now().minusHours(1)) // already expired
             .used(false)
             .build();
     when(passwordResetTokenRepository.findByToken("expired-uuid")).thenReturn(Optional.of(token));
 
-    ResetPasswordRequest req = new ResetPasswordRequest();
+    var req = new ResetPasswordRequest();
     req.setToken("expired-uuid");
     req.setNewPassword("NewPass456");
 
@@ -362,17 +361,17 @@ class AuthServiceTest {
 
   @Test
   void resetPassword_usedToken_throwsInvalidToken() {
-    PasswordResetTokenEntity token =
+    var token =
         PasswordResetTokenEntity.builder()
             .id(1L)
-            .userId(1L)
+            .user(UserEntity.builder().id(1L).build())
             .token("used-uuid")
             .expiresAt(LocalDateTime.now().plusHours(1))
             .used(true) // already used
             .build();
     when(passwordResetTokenRepository.findByToken("used-uuid")).thenReturn(Optional.of(token));
 
-    ResetPasswordRequest req = new ResetPasswordRequest();
+    var req = new ResetPasswordRequest();
     req.setToken("used-uuid");
     req.setNewPassword("NewPass456");
 
@@ -385,8 +384,8 @@ class AuthServiceTest {
 
   @Test
   void changePassword_success_updatesHash() {
-    String oldHash = passwordEncoder.encode("OldPass123");
-    UserEntity user =
+    var oldHash = passwordEncoder.encode("OldPass123");
+    var user =
         UserEntity.builder()
             .id(1L)
             .email("user@test.ee")
@@ -398,15 +397,15 @@ class AuthServiceTest {
 
     authService.changePassword(1L, new ChangePasswordRequest("OldPass123", "NewPass456"));
 
-    ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+    var captor = ArgumentCaptor.forClass(UserEntity.class);
     verify(userRepository).save(captor.capture());
     assertThat(passwordEncoder.matches("NewPass456", captor.getValue().getPasswordHash())).isTrue();
   }
 
   @Test
   void changePassword_wrongCurrentPassword_throwsInvalidCredentials() {
-    String hash = passwordEncoder.encode("CorrectPass");
-    UserEntity user =
+    var hash = passwordEncoder.encode("CorrectPass");
+    var user =
         UserEntity.builder()
             .id(1L)
             .email("user@test.ee")
@@ -440,7 +439,7 @@ class AuthServiceTest {
   void resetPassword_unknownToken_throwsInvalidToken() {
     when(passwordResetTokenRepository.findByToken("unknown-uuid")).thenReturn(Optional.empty());
 
-    ResetPasswordRequest req = new ResetPasswordRequest();
+    var req = new ResetPasswordRequest();
     req.setToken("unknown-uuid");
     req.setNewPassword("NewPass456");
 

@@ -2,7 +2,6 @@ package com.kapotiabi.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
 import lombok.*;
 
 @Getter
@@ -18,8 +17,9 @@ public class PasswordResetTokenEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "user_id", nullable = false)
-  private Long userId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "user_id", nullable = false)
+  private UserEntity user;
 
   @Column(nullable = false, unique = true)
   private String token;

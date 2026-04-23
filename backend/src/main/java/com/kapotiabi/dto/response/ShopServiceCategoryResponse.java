@@ -15,7 +15,7 @@ public record ShopServiceCategoryResponse(
   public static ShopServiceCategoryResponse from(ShopServiceCategoryEntity e) {
     return new ShopServiceCategoryResponse(
         e.getId(),
-        e.getShopId(),
+        e.getShop().getId(),
         e.getCategory(),
         e.getPriceFrom(),
         e.getPriceTo(),

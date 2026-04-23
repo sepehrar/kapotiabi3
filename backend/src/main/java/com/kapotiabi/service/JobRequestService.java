@@ -4,7 +4,9 @@ import com.kapotiabi.dto.request.JobRequestRequest;
 import com.kapotiabi.dto.response.JobRequestResponse;
 import com.kapotiabi.entity.JobRequestEntity;
 import com.kapotiabi.exception.NotFoundException;
+import com.kapotiabi.repository.CarRepository;
 import com.kapotiabi.repository.JobRequestRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 public class JobRequestService {
 
   private final JobRequestRepository jobRequestRepository;
+  private final UserRepository userRepository;
+  private final CarRepository carRepository;
 
   public List<JobRequestResponse> getByUser(Long userId) {
     return jobRequestRepository.findByUserId(userId).stream()
@@ -39,11 +43,11 @@ public class JobRequestService {
   }
 
   public JobRequestResponse create(JobRequestRequest req) {
-    LocalDateTime now = LocalDateTime.now();
-    JobRequestEntity entity =
+    var now = LocalDateTime.now();
+    var entity =
         JobRequestEntity.builder()
-            .userId(req.userId())
-            .carId(req.carId())
+            .user(userRepository.getReferenceById(req.userId()))
+            .car(carRepository.getReferenceById(req.carId()))
             .description(req.description())
             .acceptsNonOem(req.acceptsNonOem())
             .partsPreference(req.partsPreference())
@@ -59,9 +63,9 @@ public class JobRequestService {
   }
 
   public JobRequestResponse update(Long id, JobRequestRequest req) {
-    JobRequestEntity entity = findOrThrow(id);
-    entity.setUserId(req.userId());
-    entity.setCarId(req.carId());
+    var entity = findOrThrow(id);
+    entity.setUser(userRepository.getReferenceById(req.userId()));
+    entity.setCar(carRepository.getReferenceById(req.carId()));
     entity.setDescription(req.description());
     entity.setAcceptsNonOem(req.acceptsNonOem());
     entity.setPartsPreference(req.partsPreference());
@@ -74,7 +78,7 @@ public class JobRequestService {
   }
 
   public JobRequestResponse cancel(Long id) {
-    JobRequestEntity entity = findOrThrow(id);
+    var entity = findOrThrow(id);
     entity.setStatus("cancelled");
     entity.setUpdatedAt(LocalDateTime.now());
     return JobRequestResponse.from(jobRequestRepository.save(entity));
