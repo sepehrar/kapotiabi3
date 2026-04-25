@@ -12,8 +12,9 @@ import com.kapotiabi.repository.JobRequestRepository;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ShopOfferRepository;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +27,18 @@ public class BookingService {
   private final JobRequestRepository jobRequestRepository;
   private final RepairShopRepository repairShopRepository;
 
-  public List<BookingResponse> getByUser(Long userId) {
-    return bookingRepository.findByUserId(userId).stream().map(BookingResponse::from).toList();
+  public Page<BookingResponse> getByUser(Long userId, Pageable pageable) {
+    return bookingRepository.findByUserId(userId, pageable).map(BookingResponse::from);
   }
 
-  public List<BookingResponse> getByShopOwner(Long ownerId) {
+  public Page<BookingResponse> getByShop(Long shopId, Long authUserId, Pageable pageable) {
     RepairShopEntity shop =
         repairShopRepository
-            .findByOwnerId(ownerId)
-            .orElseThrow(() -> new NotFoundException("No shop found for user: " + ownerId));
-    return bookingRepository.findByShopId(shop.getId()).stream()
-        .map(BookingResponse::from)
-        .toList();
+            .findById(shopId)
+            .orElseThrow(() -> new NotFoundException("Shop not found: " + shopId));
+    if (!authUserId.equals(shop.getOwnerId()))
+      throw new ForbiddenException("You don't have access to this shop");
+    return bookingRepository.findByShopId(shopId, pageable).map(BookingResponse::from);
   }
 
   public BookingResponse getById(Long id) {

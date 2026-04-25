@@ -14,6 +14,8 @@ import com.kapotiabi.repository.ShopServiceCategoryRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,16 +26,18 @@ public class RepairShopService {
   private final ShopServiceCategoryRepository categoryRepository;
   private final ReviewRepository reviewRepository;
 
-  public List<RepairShopResponse> getAll(String city, String county) {
-    List<RepairShopEntity> shops;
+  public Page<RepairShopResponse> getAll(String city, String county, Pageable pageable) {
     if (city != null) {
-      shops = repairShopRepository.findByStatusAndCity("active", city);
+      return repairShopRepository
+          .findByStatusAndCity("active", city, pageable)
+          .map(RepairShopResponse::from);
     } else if (county != null) {
-      shops = repairShopRepository.findByStatusAndCounty("active", county);
+      return repairShopRepository
+          .findByStatusAndCounty("active", county, pageable)
+          .map(RepairShopResponse::from);
     } else {
-      shops = repairShopRepository.findByStatus("active");
+      return repairShopRepository.findByStatus("active", pageable).map(RepairShopResponse::from);
     }
-    return shops.stream().map(RepairShopResponse::from).toList();
   }
 
   public List<RepairShopResponse> getAllForAdmin(String status) {

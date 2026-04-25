@@ -2,10 +2,13 @@ package com.kapotiabi.controller;
 
 import com.kapotiabi.dto.request.RepairShopRequest;
 import com.kapotiabi.dto.request.ShopServiceCategoryRequest;
+import com.kapotiabi.dto.response.BookingResponse;
 import com.kapotiabi.dto.response.RepairShopResponse;
 import com.kapotiabi.dto.response.ReviewResponse;
 import com.kapotiabi.dto.response.ShopOfferResponse;
 import com.kapotiabi.dto.response.ShopServiceCategoryResponse;
+import com.kapotiabi.security.SecurityUtils;
+import com.kapotiabi.service.BookingService;
 import com.kapotiabi.service.RepairShopService;
 import com.kapotiabi.service.ShopOfferService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +17,9 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +40,15 @@ public class RepairShopController {
 
   private final RepairShopService repairShopService;
   private final ShopOfferService shopOfferService;
+  private final BookingService bookingService;
 
   @GetMapping
   @Operation(summary = "Get all shops, optionally filtered by city or county")
-  public ResponseEntity<List<RepairShopResponse>> getAll(
-      @RequestParam(required = false) String city, @RequestParam(required = false) String county) {
-    return ResponseEntity.ok(repairShopService.getAll(city, county));
+  public ResponseEntity<Page<RepairShopResponse>> getAll(
+      @RequestParam(required = false) String city,
+      @RequestParam(required = false) String county,
+      @PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(repairShopService.getAll(city, county, pageable));
   }
 
   @PostMapping
@@ -100,6 +109,13 @@ public class RepairShopController {
   public ResponseEntity<Void> deleteCategory(@PathVariable Long id, @PathVariable Long catId) {
     repairShopService.deleteCategory(id, catId);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/{id}/bookings")
+  @Operation(summary = "Get bookings for a shop (shop owner only)")
+  public ResponseEntity<Page<BookingResponse>> getBookings(
+      @PathVariable Long id, @PageableDefault(size = 20) Pageable pageable) {
+    return ResponseEntity.ok(bookingService.getByShop(id, SecurityUtils.getAuthUserId(), pageable));
   }
 
   @GetMapping("/{id}/offers")

@@ -8,6 +8,8 @@ import com.kapotiabi.repository.JobRequestRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,16 +24,18 @@ public class JobRequestService {
         .toList();
   }
 
-  public List<JobRequestResponse> getAvailable(String city, String county) {
-    List<JobRequestEntity> results;
+  public Page<JobRequestResponse> getAvailable(String city, String county, Pageable pageable) {
     if (city != null) {
-      results = jobRequestRepository.findByStatusAndCity("pending", city);
+      return jobRequestRepository
+          .findByStatusAndCity("pending", city, pageable)
+          .map(JobRequestResponse::from);
     } else if (county != null) {
-      results = jobRequestRepository.findByStatusAndCounty("pending", county);
+      return jobRequestRepository
+          .findByStatusAndCounty("pending", county, pageable)
+          .map(JobRequestResponse::from);
     } else {
-      results = jobRequestRepository.findByStatus("pending");
+      return jobRequestRepository.findByStatus("pending", pageable).map(JobRequestResponse::from);
     }
-    return results.stream().map(JobRequestResponse::from).toList();
   }
 
   public JobRequestResponse getById(Long id) {

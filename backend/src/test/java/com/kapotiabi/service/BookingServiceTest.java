@@ -25,6 +25,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class BookingServiceTest {
@@ -256,23 +260,35 @@ class BookingServiceTest {
 
   @Test
   void getByUser() {
-    when(bookingRepository.findByUserId(CAR_OWNER_ID))
-        .thenReturn(List.of(buildBooking("confirmed")));
+    Pageable pageable = PageRequest.of(0, 20);
+    when(bookingRepository.findByUserId(CAR_OWNER_ID, pageable))
+        .thenReturn(new PageImpl<>(List.of(buildBooking("confirmed"))));
 
-    List<BookingResponse> result = bookingService.getByUser(CAR_OWNER_ID);
+    Page<BookingResponse> result = bookingService.getByUser(CAR_OWNER_ID, pageable);
 
-    assertThat(result).hasSize(1);
-    assertThat(result.get(0).userId()).isEqualTo(CAR_OWNER_ID);
+    assertThat(result.getContent()).hasSize(1);
+    assertThat(result.getContent().get(0).userId()).isEqualTo(CAR_OWNER_ID);
   }
 
   @Test
-  void getByShopOwner() {
-    when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
-    when(bookingRepository.findByShopId(SHOP_ID)).thenReturn(List.of(buildBooking("confirmed")));
+  void getByShop() {
+    Pageable pageable = PageRequest.of(0, 20);
+    when(repairShopRepository.findById(SHOP_ID)).thenReturn(Optional.of(buildShop()));
+    when(bookingRepository.findByShopId(SHOP_ID, pageable))
+        .thenReturn(new PageImpl<>(List.of(buildBooking("confirmed"))));
 
-    List<BookingResponse> result = bookingService.getByShopOwner(SHOP_OWNER_ID);
+    Page<BookingResponse> result = bookingService.getByShop(SHOP_ID, SHOP_OWNER_ID, pageable);
 
-    assertThat(result).hasSize(1);
-    assertThat(result.get(0).shopId()).isEqualTo(SHOP_ID);
+    assertThat(result.getContent()).hasSize(1);
+    assertThat(result.getContent().get(0).shopId()).isEqualTo(SHOP_ID);
+  }
+
+  @Test
+  void getByShop_wrongOwner_throwsForbidden() {
+    when(repairShopRepository.findById(SHOP_ID)).thenReturn(Optional.of(buildShop()));
+
+    Pageable pageable = PageRequest.of(0, 20);
+    assertThatThrownBy(() -> bookingService.getByShop(SHOP_ID, 999L, pageable))
+        .isInstanceOf(ForbiddenException.class);
   }
 }

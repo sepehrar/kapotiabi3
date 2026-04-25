@@ -18,6 +18,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class JobRequestServiceTest {
@@ -52,24 +56,26 @@ class JobRequestServiceTest {
 
   @Test
   void getAvailable_byCity() {
-    when(jobRequestRepository.findByStatusAndCity("pending", "Tallinn"))
-        .thenReturn(List.of(buildRequest("pending")));
+    Pageable pageable = PageRequest.of(0, 20);
+    when(jobRequestRepository.findByStatusAndCity("pending", "Tallinn", pageable))
+        .thenReturn(new PageImpl<>(List.of(buildRequest("pending"))));
 
-    List<JobRequestResponse> result = jobRequestService.getAvailable("Tallinn", null);
+    Page<JobRequestResponse> result = jobRequestService.getAvailable("Tallinn", null, pageable);
 
-    assertThat(result).hasSize(1);
-    assertThat(result.get(0).city()).isEqualTo("Tallinn");
+    assertThat(result.getContent()).hasSize(1);
+    assertThat(result.getContent().get(0).city()).isEqualTo("Tallinn");
   }
 
   @Test
   void getAvailable_byCounty() {
-    when(jobRequestRepository.findByStatusAndCounty("pending", "Harju"))
-        .thenReturn(List.of(buildRequest("pending")));
+    Pageable pageable = PageRequest.of(0, 20);
+    when(jobRequestRepository.findByStatusAndCounty("pending", "Harju", pageable))
+        .thenReturn(new PageImpl<>(List.of(buildRequest("pending"))));
 
-    List<JobRequestResponse> result = jobRequestService.getAvailable(null, "Harju");
+    Page<JobRequestResponse> result = jobRequestService.getAvailable(null, "Harju", pageable);
 
-    assertThat(result).hasSize(1);
-    assertThat(result.get(0).county()).isEqualTo("Harju");
+    assertThat(result.getContent()).hasSize(1);
+    assertThat(result.getContent().get(0).county()).isEqualTo("Harju");
   }
 
   @Test
