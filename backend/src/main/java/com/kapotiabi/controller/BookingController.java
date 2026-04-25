@@ -36,7 +36,7 @@ public class BookingController {
   @GetMapping
   @Operation(summary = "Get bookings for the authenticated user (car owner)")
   public ResponseEntity<Page<BookingResponse>> getBookings(
-      @PageableDefault(size = 20) Pageable pageable) {
+      @PageableDefault(size = 20, sort = "id") Pageable pageable) {
     return ResponseEntity.ok(bookingService.getByUser(SecurityUtils.getAuthUserId(), pageable));
   }
 

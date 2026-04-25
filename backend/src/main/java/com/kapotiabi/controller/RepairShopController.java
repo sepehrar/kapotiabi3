@@ -47,7 +47,7 @@ public class RepairShopController {
   public ResponseEntity<Page<RepairShopResponse>> getAll(
       @RequestParam(required = false) String city,
       @RequestParam(required = false) String county,
-      @PageableDefault(size = 20) Pageable pageable) {
+      @PageableDefault(size = 20, sort = "id") Pageable pageable) {
     return ResponseEntity.ok(repairShopService.getAll(city, county, pageable));
   }
 
@@ -114,7 +114,7 @@ public class RepairShopController {
   @GetMapping("/{id}/bookings")
   @Operation(summary = "Get bookings for a shop (shop owner only)")
   public ResponseEntity<Page<BookingResponse>> getBookings(
-      @PathVariable Long id, @PageableDefault(size = 20) Pageable pageable) {
+      @PathVariable Long id, @PageableDefault(size = 20, sort = "id") Pageable pageable) {
     return ResponseEntity.ok(bookingService.getByShop(id, SecurityUtils.getAuthUserId(), pageable));
   }
 

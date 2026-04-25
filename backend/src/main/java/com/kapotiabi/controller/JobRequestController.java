@@ -53,7 +53,7 @@ public class JobRequestController {
   public ResponseEntity<Page<JobRequestResponse>> getAvailable(
       @RequestParam(required = false) String city,
       @RequestParam(required = false) String county,
-      @PageableDefault(size = 20) Pageable pageable) {
+      @PageableDefault(size = 20, sort = "id") Pageable pageable) {
     return ResponseEntity.ok(jobRequestService.getAvailable(city, county, pageable));
   }
 
