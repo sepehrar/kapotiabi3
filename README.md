@@ -96,10 +96,10 @@ All subsequent requests require the header: `Authorization: Bearer {{token}}`
 
 ```http
 POST {{baseUrl}}/api/v1/cars
+Authorization: Bearer {{token}}
 ```
 ```json
 {
-  "ownerId": 1,
   "plateNumber": "123ABC",
   "make": "Toyota",
   "model": "Corolla",
@@ -108,16 +108,18 @@ POST {{baseUrl}}/api/v1/cars
 }
 ```
 
+> Owner is taken from the JWT token — do not send `ownerId` in the body.
+
 ---
 
 #### Step 3 — Create a job request
 
 ```http
 POST {{baseUrl}}/api/v1/job-requests
+Authorization: Bearer {{token}}
 ```
 ```json
 {
-  "userId": 1,
   "carId": 1,
   "description": "Oil change + brake inspection",
   "searchScope": "city",
@@ -125,6 +127,8 @@ POST {{baseUrl}}/api/v1/job-requests
   "offerDeadline": "2026-04-10T18:00:00"
 }
 ```
+
+> User is taken from the JWT token — do not send `userId` in the body.
 
 ---
 
@@ -134,15 +138,17 @@ Register a second account with `"role": "SHOP_OWNER"`, then create the shop:
 
 ```http
 POST {{baseUrl}}/api/v1/shops
+Authorization: Bearer {{token}}
 ```
 ```json
 {
-  "ownerId": 2,
   "name": "Tallinn Auto",
   "city": "Tallinn",
   "status": "active"
 }
 ```
+
+> Owner is taken from the JWT token — do not send `ownerId` in the body.
 
 ---
 
