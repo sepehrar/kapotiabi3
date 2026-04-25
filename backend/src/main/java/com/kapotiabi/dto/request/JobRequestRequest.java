@@ -2,12 +2,13 @@ package com.kapotiabi.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public record JobRequestRequest(
     @NotNull Long userId,
     @NotNull Long carId,
-    @NotBlank String description,
+    @NotBlank @Size(max = 2000) String description,
     Boolean acceptsNonOem,
     String partsPreference,
     String searchScope,
