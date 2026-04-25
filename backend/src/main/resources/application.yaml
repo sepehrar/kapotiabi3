@@ -21,5 +21,5 @@ app:
   upload-dir: ${APP_UPLOAD_DIR:uploads}
 
 jwt:
-  secret: ${JWT_SECRET:dev-secret-key-min-256-bits-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+  secret: ${JWT_SECRET}
   expiration-ms: ${JWT_EXPIRATION_MS:86400000}
