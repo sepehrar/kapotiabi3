@@ -4,8 +4,10 @@ import com.kapotiabi.dto.request.RepairShopRequest;
 import com.kapotiabi.dto.request.ShopServiceCategoryRequest;
 import com.kapotiabi.dto.response.RepairShopResponse;
 import com.kapotiabi.dto.response.ReviewResponse;
+import com.kapotiabi.dto.response.ShopOfferResponse;
 import com.kapotiabi.dto.response.ShopServiceCategoryResponse;
 import com.kapotiabi.service.RepairShopService;
+import com.kapotiabi.service.ShopOfferService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class RepairShopController {
 
   private final RepairShopService repairShopService;
+  private final ShopOfferService shopOfferService;
 
   @GetMapping
   @Operation(summary = "Get all shops, optionally filtered by city or county")
@@ -97,6 +100,12 @@ public class RepairShopController {
   public ResponseEntity<Void> deleteCategory(@PathVariable Long id, @PathVariable Long catId) {
     repairShopService.deleteCategory(id, catId);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/{id}/offers")
+  @Operation(summary = "Get all offers submitted by a shop")
+  public ResponseEntity<List<ShopOfferResponse>> getOffers(@PathVariable Long id) {
+    return ResponseEntity.ok(shopOfferService.getByShop(id));
   }
 
   @GetMapping("/{id}/reviews")

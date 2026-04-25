@@ -60,7 +60,7 @@ class ReviewServiceTest {
     when(reviewRepository.save(any(ReviewEntity.class))).thenReturn(saved);
 
     var req = new ReviewRequest(5, "Great service!");
-    var response = reviewService.submit(1L, req);
+    var response = reviewService.submit(1L, req, 5L);
 
     assertThat(response.rating()).isEqualTo(5);
     assertThat(response.bookingId()).isEqualTo(1L);
@@ -71,9 +71,18 @@ class ReviewServiceTest {
     when(bookingRepository.findById(1L)).thenReturn(Optional.of(buildBooking("confirmed")));
 
     var req = new ReviewRequest(5, "Great!");
-    assertThatThrownBy(() -> reviewService.submit(1L, req))
+    assertThatThrownBy(() -> reviewService.submit(1L, req, 5L))
         .isInstanceOf(IllegalStateException.class)
         .hasMessage("Booking is not completed");
+  }
+
+  @Test
+  void submit_wrongUser_throwsForbidden() {
+    when(bookingRepository.findById(1L)).thenReturn(Optional.of(buildBooking("completed")));
+
+    ReviewRequest req = new ReviewRequest(5, "Great!");
+    assertThatThrownBy(() -> reviewService.submit(1L, req, 999L))
+        .isInstanceOf(com.kapotiabi.exception.ForbiddenException.class);
   }
 
   @Test
@@ -82,7 +91,7 @@ class ReviewServiceTest {
     when(reviewRepository.findByBookingId(1L)).thenReturn(Optional.of(buildReview()));
 
     var req = new ReviewRequest(4, "Good.");
-    assertThatThrownBy(() -> reviewService.submit(1L, req))
+    assertThatThrownBy(() -> reviewService.submit(1L, req, 5L))
         .isInstanceOf(IllegalStateException.class)
         .hasMessage("Review already exists for this booking");
   }

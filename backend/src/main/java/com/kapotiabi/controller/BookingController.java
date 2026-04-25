@@ -3,6 +3,7 @@ package com.kapotiabi.controller;
 import com.kapotiabi.dto.request.ReviewRequest;
 import com.kapotiabi.dto.response.BookingResponse;
 import com.kapotiabi.dto.response.ReviewResponse;
+import com.kapotiabi.security.SecurityUtils;
 import com.kapotiabi.service.BookingService;
 import com.kapotiabi.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,16 +32,14 @@ public class BookingController {
   private final ReviewService reviewService;
 
   @GetMapping
-  @Operation(summary = "Get bookings by user ID or shop ID")
-  public ResponseEntity<List<BookingResponse>> getBookings(
-      @RequestParam(required = false) Long userId, @RequestParam(required = false) Long shopId) {
-    if (userId != null) {
-      return ResponseEntity.ok(bookingService.getByUser(userId));
-    } else if (shopId != null) {
-      return ResponseEntity.ok(bookingService.getByShop(shopId));
-    } else {
-      return ResponseEntity.badRequest().build();
+  @Operation(
+      summary = "Get bookings for the authenticated user (car owner) or their shop (shop owner)")
+  public ResponseEntity<List<BookingResponse>> getBookings() {
+    Long authUserId = SecurityUtils.getAuthUserId();
+    if (SecurityUtils.hasRole("SHOP_OWNER")) {
+      return ResponseEntity.ok(bookingService.getByShopOwner(authUserId));
     }
+    return ResponseEntity.ok(bookingService.getByUser(authUserId));
   }
 
   @GetMapping("/{id}")
@@ -52,7 +51,7 @@ public class BookingController {
   @PostMapping("/{id}/confirm")
   @Operation(summary = "Shop confirms a booking")
   public ResponseEntity<BookingResponse> confirm(@PathVariable Long id) {
-    return ResponseEntity.ok(bookingService.confirm(id));
+    return ResponseEntity.ok(bookingService.confirm(id, SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping("/{id}/schedule")
@@ -60,26 +59,27 @@ public class BookingController {
   public ResponseEntity<BookingResponse> schedule(
       @PathVariable Long id,
       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime scheduledAt) {
-    return ResponseEntity.ok(bookingService.schedule(id, scheduledAt));
+    return ResponseEntity.ok(
+        bookingService.schedule(id, scheduledAt, SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping("/{id}/complete")
   @Operation(summary = "Mark a booking as completed")
   public ResponseEntity<BookingResponse> complete(@PathVariable Long id) {
-    return ResponseEntity.ok(bookingService.complete(id));
+    return ResponseEntity.ok(bookingService.complete(id, SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping("/{id}/cancel")
   @Operation(summary = "Cancel a booking")
   public ResponseEntity<BookingResponse> cancel(@PathVariable Long id) {
-    return ResponseEntity.ok(bookingService.cancel(id));
+    return ResponseEntity.ok(bookingService.cancel(id, SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping("/{id}/review")
   @Operation(summary = "Submit a review for a completed booking")
   public ResponseEntity<ReviewResponse> submitReview(
       @PathVariable Long id, @Valid @RequestBody ReviewRequest req) {
-    return ResponseEntity.ok(reviewService.submit(id, req));
+    return ResponseEntity.ok(reviewService.submit(id, req, SecurityUtils.getAuthUserId()));
   }
 
   @GetMapping("/{id}/review")

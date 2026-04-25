@@ -4,6 +4,7 @@ import com.kapotiabi.dto.request.JobRequestRequest;
 import com.kapotiabi.dto.request.ShopOfferRequest;
 import com.kapotiabi.dto.response.JobRequestResponse;
 import com.kapotiabi.dto.response.ShopOfferResponse;
+import com.kapotiabi.security.SecurityUtils;
 import com.kapotiabi.service.JobRequestService;
 import com.kapotiabi.service.ShopOfferService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,10 +90,10 @@ public class JobRequestController {
   }
 
   @PostMapping("/{id}/offers")
-  @Operation(summary = "Submit an offer for a job request")
+  @Operation(summary = "Submit an offer for a job request (shop owner only)")
   public ResponseEntity<ShopOfferResponse> createOffer(
       @PathVariable Long id, @Valid @RequestBody ShopOfferRequest req) {
-    ShopOfferResponse created = shopOfferService.create(id, req);
+    ShopOfferResponse created = shopOfferService.create(id, req, SecurityUtils.getAuthUserId());
     URI location =
         ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/api/v1/offers/{offerId}")

@@ -2,7 +2,9 @@ package com.kapotiabi.service;
 
 import com.kapotiabi.dto.request.ShopOfferRequest;
 import com.kapotiabi.dto.response.ShopOfferResponse;
+import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopOfferEntity;
+import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.JobRequestRepository;
 import com.kapotiabi.repository.RepairShopRepository;
@@ -37,21 +39,30 @@ public class ShopOfferService {
         .toList();
   }
 
+  public List<ShopOfferResponse> getByShop(Long shopId) {
+    return shopOfferRepository.findByShopId(shopId).stream().map(ShopOfferResponse::from).toList();
+  }
+
   public ShopOfferResponse getById(Long id) {
     return ShopOfferResponse.from(findOrThrow(id));
   }
 
   @Transactional
-  public ShopOfferResponse create(Long jobRequestId, ShopOfferRequest req) {
+  public ShopOfferResponse create(Long jobRequestId, ShopOfferRequest req, Long authUserId) {
     var jobRequest =
         jobRequestRepository
             .findById(jobRequestId)
             .orElseThrow(() -> new NotFoundException("Job request not found: " + jobRequestId));
 
+    var shop =
+        repairShopRepository
+            .findByOwnerId(authUserId)
+            .orElseThrow(() -> new ForbiddenException("No shop found for this user"));
+
     var offer =
         ShopOfferEntity.builder()
             .jobRequest(jobRequest)
-            .shop(repairShopRepository.getReferenceById(req.shopId()))
+            .shop(shop)
             .priceEstimate(req.priceEstimate())
             .breakdown(req.breakdown())
             .partsTier(req.partsTier())
@@ -70,8 +81,10 @@ public class ShopOfferService {
     return ShopOfferResponse.from(offer);
   }
 
-  public ShopOfferResponse update(Long id, ShopOfferRequest req) {
+  @Transactional
+  public ShopOfferResponse update(Long id, ShopOfferRequest req, Long authUserId) {
     var offer = findOrThrow(id);
+    verifyShopOwner(authUserId, offer.getShop().getId());
     offer.setPriceEstimate(req.priceEstimate());
     offer.setBreakdown(req.breakdown());
     offer.setPartsTier(req.partsTier());
@@ -80,17 +93,25 @@ public class ShopOfferService {
     return ShopOfferResponse.from(shopOfferRepository.save(offer));
   }
 
-  public ShopOfferResponse reject(Long id) {
+  @Transactional
+  public ShopOfferResponse reject(Long id, Long authUserId) {
     var offer = findOrThrow(id);
+    var jobRequest = offer.getJobRequest();
+    if (!authUserId.equals(jobRequest.getUser().getId())) {
+      throw new ForbiddenException("You don't have access to this offer");
+    }
     offer.setStatus("rejected");
     return ShopOfferResponse.from(shopOfferRepository.save(offer));
   }
 
-  public ShopOfferEntity uploadPdf(Long offerId, MultipartFile file) throws IOException {
+  public ShopOfferEntity uploadPdf(Long offerId, MultipartFile file, Long authUserId)
+      throws IOException {
     if (!"application/pdf".equals(file.getContentType())) {
       throw new IllegalArgumentException("Only PDF files are allowed");
     }
     var offer = findOrThrow(offerId);
+    verifyShopOwner(authUserId, offer.getShop().getId());
+
     var dir = Paths.get(uploadDir, "offers", offerId.toString());
     Files.createDirectories(dir);
 
@@ -115,6 +136,16 @@ public class ShopOfferService {
       throw new NotFoundException("PDF file not found for offer: " + offerId);
     }
     return resource;
+  }
+
+  private void verifyShopOwner(Long authUserId, Long requiredShopId) {
+    RepairShopEntity shop =
+        repairShopRepository
+            .findByOwnerId(authUserId)
+            .orElseThrow(() -> new ForbiddenException("No shop found for this user"));
+    if (!shop.getId().equals(requiredShopId)) {
+      throw new ForbiddenException("You don't have access to this offer");
+    }
   }
 
   private ShopOfferEntity findOrThrow(Long id) {

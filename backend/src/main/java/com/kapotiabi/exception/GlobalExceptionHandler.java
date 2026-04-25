@@ -32,6 +32,12 @@ public class GlobalExceptionHandler {
     return error(HttpStatus.CONFLICT, "Shop already saved", req.getRequestURI());
   }
 
+  @ExceptionHandler(ForbiddenException.class)
+  public ResponseEntity<Map<String, Object>> handleForbidden(
+      ForbiddenException ex, HttpServletRequest req) {
+    return error(HttpStatus.FORBIDDEN, ex.getMessage(), req.getRequestURI());
+  }
+
   @ExceptionHandler(InvalidCredentialsException.class)
   public ResponseEntity<Map<String, Object>> handleInvalidCredentials(
       InvalidCredentialsException ex, HttpServletRequest req) {

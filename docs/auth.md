@@ -115,6 +115,34 @@ The response is the same whether or not the email exists — this prevents leaki
 
 ---
 
+### PUT `/api/v1/auth/me/password`
+
+Change the password for the currently logged-in user. Requires a valid JWT.
+
+**Request:**
+```json
+{
+  "currentPassword": "OldPass123",
+  "newPassword": "NewPass456"
+}
+```
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| `currentPassword` | Yes | Must match the user's existing password |
+| `newPassword` | Yes | Minimum 6, maximum 72 characters. Must differ from `currentPassword` |
+
+**Response `204 No Content`**
+
+**Error responses:**
+| Status | Reason |
+|--------|--------|
+| 400 | `newPassword` is the same as `currentPassword` |
+| 401 | `currentPassword` is wrong |
+| 404 | User not found |
+
+---
+
 ### POST `/api/v1/auth/reset-password`
 
 Reset the password using a token from the forgot-password step.
@@ -185,7 +213,16 @@ Future admins can be promoted in-app by existing admins (admin panel — future 
 When a shop owner registers:
 1. A `users` row is created with `role = shop_owner`
 2. A `repair_shops` row is automatically created with `status = draft`
-3. The shop is not visible to the public until an admin changes status to `active`
+3. The shop is not visible to the public until an admin approves it (`status = active`)
+4. An admin can also reject the shop (`status = rejected`) — rejected shops stay invisible
+
+**Shop statuses:**
+
+| Status | Meaning |
+|--------|---------|
+| `draft` | Newly created, awaiting admin review |
+| `active` | Approved — visible in search results and job request matching |
+| `rejected` | Rejected by admin — not visible, owner should contact support |
 
 ---
 
@@ -222,12 +259,12 @@ From the `backend/` directory:
 ./mvnw test -Dtest=AuthServiceTest#register_adminRole_throwsIllegalArgument
 ```
 
-**100 tests total:**
-- `AuthServiceTest` (16) — business logic: registration rules, password hashing, token lifecycle
+**114 tests total:**
+- `AuthServiceTest` (19) — business logic: registration rules, password hashing, token lifecycle
 - `AuthControllerTest` (18) — HTTP layer: status codes, validation, error responses
 - `KapotiabiApplicationTests` (1) — application context loads
 - `UserSavedShopServiceTest` (8), `UserSavedShopControllerTest` (8) — saved shops feature
-- `BookingServiceTest` (8), `CarServiceTest` (6), `JobRequestServiceTest` (7), `RepairShopServiceTest` (8), `ReviewServiceTest` (5), `ShopOfferServiceTest` (12), `UserServiceTest` (3) — domain service layer
+- `BookingServiceTest` (17), `CarServiceTest` (6), `JobRequestServiceTest` (7), `RepairShopServiceTest` (8), `ReviewServiceTest` (5), `ShopOfferServiceTest` (14), `UserServiceTest` (3) — domain service layer
 
 ---
 

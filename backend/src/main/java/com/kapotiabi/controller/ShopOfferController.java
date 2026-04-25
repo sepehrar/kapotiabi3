@@ -3,6 +3,7 @@ package com.kapotiabi.controller;
 import com.kapotiabi.dto.request.ShopOfferRequest;
 import com.kapotiabi.dto.response.BookingResponse;
 import com.kapotiabi.dto.response.ShopOfferResponse;
+import com.kapotiabi.security.SecurityUtils;
 import com.kapotiabi.service.BookingService;
 import com.kapotiabi.service.ShopOfferService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,29 +41,29 @@ public class ShopOfferController {
   }
 
   @PutMapping("/{id}")
-  @Operation(summary = "Update offer")
+  @Operation(summary = "Update offer (shop owner only)")
   public ResponseEntity<ShopOfferResponse> update(
       @PathVariable Long id, @Valid @RequestBody ShopOfferRequest req) {
-    return ResponseEntity.ok(shopOfferService.update(id, req));
+    return ResponseEntity.ok(shopOfferService.update(id, req, SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping("/{id}/accept")
-  @Operation(summary = "Accept an offer and create a booking")
+  @Operation(summary = "Accept an offer and create a booking (car owner only)")
   public ResponseEntity<BookingResponse> accept(@PathVariable Long id) {
-    return ResponseEntity.ok(bookingService.createFromOffer(id));
+    return ResponseEntity.ok(bookingService.createFromOffer(id, SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping("/{id}/reject")
-  @Operation(summary = "Reject an offer")
+  @Operation(summary = "Reject an offer (car owner only)")
   public ResponseEntity<ShopOfferResponse> reject(@PathVariable Long id) {
-    return ResponseEntity.ok(shopOfferService.reject(id));
+    return ResponseEntity.ok(shopOfferService.reject(id, SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping(value = "/{id}/pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  @Operation(summary = "Upload a PDF for an offer")
+  @Operation(summary = "Upload a PDF for an offer (shop owner only)")
   public ResponseEntity<Void> uploadPdf(
       @PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
-    shopOfferService.uploadPdf(id, file);
+    shopOfferService.uploadPdf(id, file, SecurityUtils.getAuthUserId());
     return ResponseEntity.ok().build();
   }
 
