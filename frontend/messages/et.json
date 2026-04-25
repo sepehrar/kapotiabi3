@@ -106,6 +106,13 @@
   "register": {
     "title": "Loo oma konto",
     "description": "Registreeru, et kasutada platvormi ja leida töökodasid kiiremini.",
+    "role": {
+      "label": "Registreerin kasutajana",
+      "carOwner": "Auto omanik",
+      "shopOwner": "Remonditöökoja omanik",
+      "carOwnerHint": "Soovin oma autole remondipakkumisi",
+      "shopOwnerHint": "Soovin saada klientide päringuid"
+    },
     "fields": {
       "firstName": {
         "label": "Eesnimi",
@@ -186,6 +193,12 @@
       "invalidEmail": "Palun sisesta korrektne e-posti aadress.",
       "generic": "Midagi läks valesti. Palun proovi uuesti."
     }
+  },
+  "authMenu": {
+    "account": "Minu konto",
+    "business": "Äri",
+    "businessDashboard": "Äri juhtpaneel",
+    "logout": "Logi välja"
   },
   "testimonials": {
     "title": "Mida kasutajad räägivad",

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 import SectionTitle from "../ui/SectionTitle";
 import {
   validateRegisterForm,
@@ -19,8 +20,27 @@ type RegisterApiResponse = {
   shopStatus: string | null;
 };
 
+type UserRole = "CAR_OWNER" | "SHOP_OWNER";
+
+function normalizeRole(role: string | null): UserRole | null {
+  if (role === "CAR_OWNER" || role === "car_owner") {
+    return "CAR_OWNER";
+  }
+
+  if (role === "SHOP_OWNER" || role === "shop_owner") {
+    return "SHOP_OWNER";
+  }
+
+  return null;
+}
+
 export default function RegisterForm() {
   const t = useTranslations("register");
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const localeFromPath = pathname.split("/")[1];
+  const currentLocale = localeFromPath === "et" ? "et" : "en";
 
   const [form, setForm] = useState<RegisterFormData>({
     firstName: "",
@@ -29,6 +49,7 @@ export default function RegisterForm() {
     password: "",
     confirmPassword: "",
     phone: "",
+    role: "CAR_OWNER",
   });
 
   const [error, setError] = useState("");
@@ -43,6 +64,13 @@ export default function RegisterForm() {
     setForm((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleRoleChange = (role: UserRole) => {
+    setForm((prev) => ({
+      ...prev,
+      role,
     }));
   };
 
@@ -76,7 +104,7 @@ export default function RegisterForm() {
           email: form.email.trim(),
           password: form.password,
           phone: form.phone.trim(),
-          role: "CAR_OWNER",
+          role: form.role,
         }),
       });
 
@@ -94,13 +122,22 @@ export default function RegisterForm() {
         throw new Error(message);
       }
 
-      console.log("Register response:", data);
-
-      // Temporary solution for now. You can decide later where auth should be stored.
-      // I do not recommend localStorage as a final solution.
-      // For the demo stage, sessionStorage is safer than localStorage.
       if (data && "token" in data && data.token) {
+        const normalizedRole = normalizeRole(data.role);
+
         sessionStorage.setItem("authToken", data.token);
+        sessionStorage.setItem("authRole", data.role);
+        window.dispatchEvent(new Event("auth-changed"));
+
+        if (normalizedRole === "CAR_OWNER") {
+          router.push(`/${currentLocale}/account`);
+          return;
+        }
+
+        if (normalizedRole === "SHOP_OWNER") {
+          router.push(`/${currentLocale}/business`);
+          return;
+        }
       }
 
       setSuccess(t("messages.success"));
@@ -111,9 +148,12 @@ export default function RegisterForm() {
         password: "",
         confirmPassword: "",
         phone: "",
+        role: "CAR_OWNER",
       });
       setShowPassword(false);
       setShowConfirmPassword(false);
+
+      router.push(`/${currentLocale}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.generic"));
     } finally {
@@ -127,12 +167,67 @@ export default function RegisterForm() {
   return (
     <section className="bg-black">
       <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
-        <div className="flex items-start px-6 sm:pt-20 pb-20 lg:pb-52 lg:px-8 lg:justify-start justify-center">
+        <div className="flex items-start justify-center px-6 pb-20 sm:pt-20 lg:justify-start lg:px-8 lg:pb-52">
           <div className="w-full max-w-xl lg:max-w-lg">
             <SectionTitle title={t("title")} description={t("description")} />
 
             <form onSubmit={handleSubmit} className="mt-12" noValidate>
               <div className="grid grid-cols-1 gap-y-8">
+                <div>
+                  <span className="mb-3 block text-sm font-medium text-white">
+                    {t("role.label")}
+                  </span>
+
+                  <div className="overflow-hidden rounded-full border border-(--accent)">
+                    <div className="grid grid-cols-2">
+                      <button
+                        type="button"
+                        onClick={() => handleRoleChange("CAR_OWNER")}
+                        className={`px-4 py-3 text-sm font-semibold transition ${
+                          form.role === "CAR_OWNER"
+                            ? "bg-(--accent) text-(--accent-foreground)"
+                            : "bg-transparent text-white hover:bg-white/5"
+                        }`}
+                      >
+                        {t("role.carOwner")}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleRoleChange("SHOP_OWNER")}
+                        className={`px-4 py-3 text-sm font-semibold transition ${
+                          form.role === "SHOP_OWNER"
+                            ? "bg-(--accent) text-(--accent-foreground) hover:bg-(--accent-hover)"
+                            : "bg-transparent text-gray-500 hover:bg-white/5"
+                        }`}
+                      >
+                        {t("role.shopOwner")}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-4 text-sm">
+                    <p
+                      className={`p-3 transition ${
+                        form.role === "CAR_OWNER"
+                          ? "text-white"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {t("role.carOwnerHint")}
+                    </p>
+                    <p
+                      className={`p-4 transition ${
+                        form.role === "SHOP_OWNER"
+                          ? "text-white"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {t("role.shopOwnerHint")}
+                    </p>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <label htmlFor="firstName" className="sr-only">
@@ -304,7 +399,7 @@ export default function RegisterForm() {
             <p className="mt-6 text-sm text-gray-400">
               {t("links.loginPrompt")}{" "}
               <Link
-                href="/login"
+                href={`/${currentLocale}/login`}
                 className="font-semibold text-white hover:text-(--accent)"
               >
                 {t("links.login")}
@@ -313,7 +408,7 @@ export default function RegisterForm() {
           </div>
         </div>
 
-        <div className="relative min-h-40 lg:block hidden">
+        <div className="relative hidden min-h-40 lg:block">
           <Image
             alt="Car workshop"
             src="/img/vidhi00.jpg"

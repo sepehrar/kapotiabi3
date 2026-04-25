@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   Dialog,
@@ -19,6 +19,7 @@ import {
   ScaleIcon,
   BellIcon,
   XMarkIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 
@@ -36,34 +37,46 @@ function classNames(...classes: string[]) {
 }
 
 function isActivePath(pathname: string, href: string) {
+  const normalizedPath = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "");
+
   if (href === "/account") {
-    return pathname.endsWith("/account");
+    return normalizedPath === "/account";
   }
 
-  return pathname.includes(href);
+  return normalizedPath === href || normalizedPath.startsWith(`${href}/`);
 }
 
 type SidebarContentProps = {
   pathname: string;
+  currentLocale: "en" | "et";
   t: ReturnType<typeof useTranslations<"accountSidebar">>;
+  logoutT: ReturnType<typeof useTranslations<"authMenu">>;
+  onLogout: () => void;
   onNavigate?: () => void;
 };
 
-function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
+function SidebarContent({
+  pathname,
+  currentLocale,
+  t,
+  logoutT,
+  onLogout,
+  onNavigate,
+}: SidebarContentProps) {
   return (
     <>
-      <div className="relative flex h-16 shrink-0 items-center justify-between ">
+      <div className="relative flex h-16 shrink-0 items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
+          <Link
+            href={`/${currentLocale}`}
+            className="-m-1.5 flex items-center gap-2 p-1.5"
+          >
             <span className="sr-only">{t("brand")}</span>
-
             <span className="text-xl font-bold text-white">KapotiAbi</span>
           </Link>
-          <div className="bg-(--accent) w-2 h-2 rounded-full"></div>
+          <div className="h-2 w-2 rounded-full bg-(--accent)"></div>
           <div>
-            <p className="text-base font-light  text-white">
-              {t("title")}
-            </p>{" "}
+            <p className="text-base font-light text-white">{t("title")}</p>
           </div>
         </div>
       </div>
@@ -82,7 +95,7 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
                 return (
                   <li key={item.key}>
                     <Link
-                      href={item.href}
+                      href={`/${currentLocale}${item.href}`}
                       onClick={onNavigate}
                       aria-current={active ? "page" : undefined}
                       className={classNames(
@@ -106,46 +119,40 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
                   </li>
                 );
               })}
+
+              <li>
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  className="group flex w-full items-center gap-x-3 rounded-2xl px-3 py-3 text-sm text-white/70 transition hover:bg-(--pills-background) hover:text-white"
+                >
+                  <ArrowRightOnRectangleIcon
+                    aria-hidden="true"
+                    className="size-4 shrink-0 text-white/40 transition group-hover:text-white"
+                  />
+                  {logoutT("logout")}
+                </button>
+              </li>
             </ul>
           </li>
 
           <li className="mt-auto mb-4">
             <div className="text-center">
-              <p className="text-base font-semibold text-white mb-4">
+              <p className="mb-4 text-base font-semibold text-white">
                 {t("card.title")}
               </p>
-              <p className="mb-4 text-sm leading-6 text-white/60 text-balance w-50">
+              <p className="mb-4 w-50 text-balance text-sm leading-6 text-white/60">
                 {t("card.description")}
               </p>
 
               <Link
-                href="/search"
+                href={`/${currentLocale}/search`}
                 className="shrink-0 rounded-full bg-(--pills-background) px-5 py-3 text-sm shadow ring-1 ring-inset ring-white/10 transition-colors duration-300 hover:bg-(--accent)/40 hover:ring-(--accent)"
               >
                 {t("card.button")}
               </Link>
             </div>
           </li>
-          {/* 
-          <li className="-mx-2">
-            <Link
-              href="/account/profile"
-              onClick={onNavigate}
-              className="flex items-center gap-x-3 rounded-2xl px-3 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/5 hover:text-white"
-            >
-              <div className="flex size-10 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-white ring-1 ring-inset ring-white/10">
-                TC
-              </div>
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-white">
-                  Tom Cook
-                </p>
-                <p className="truncate text-xs text-white/50">
-                  tom@example.com
-                </p>
-              </div>
-            </Link>
-          </li> */}
         </ul>
       </nav>
     </>
@@ -155,14 +162,27 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
 export default function AccountSidebar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations("accountSidebar");
+  const logoutT = useTranslations("authMenu");
+
+  const localeFromPath = pathname.split("/")[1];
+  const currentLocale: "en" | "et" = localeFromPath === "et" ? "et" : "en";
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("authRole");
+    window.dispatchEvent(new Event("auth-changed"));
+    setSidebarOpen(false);
+    router.push(`/${currentLocale}`);
+  };
 
   return (
     <>
       <Dialog
         open={sidebarOpen}
         onClose={setSidebarOpen}
-        className="relative z-50 lg:hidden "
+        className="relative z-50 lg:hidden"
       >
         <DialogBackdrop
           transition
@@ -187,10 +207,13 @@ export default function AccountSidebar() {
               </div>
             </TransitionChild>
 
-            <div className="relative flex grow flex-col gap-y-2 overflow-y-auto border-r border-white/10  px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
+            <div className="relative flex grow flex-col gap-y-2 overflow-y-auto border-r border-white/10 px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
               <SidebarContent
                 pathname={pathname}
+                currentLocale={currentLocale}
                 t={t}
+                logoutT={logoutT}
+                onLogout={handleLogout}
                 onNavigate={() => setSidebarOpen(false)}
               />
             </div>
@@ -213,18 +236,17 @@ export default function AccountSidebar() {
         </div>
 
         <LocaleSwitcher />
-
-        {/* <Link href="/account/profile" className="relative">
-          <span className="sr-only">{t("profile")}</span>
-          <div className="flex size-8 items-center justify-center rounded-full bg-black/10 text-xs font-bold text-black ring-1 ring-inset ring-black/10">
-            TC
-          </div>
-        </Link> */}
       </div>
 
       <aside className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
         <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-white/10 bg-black px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
-          <SidebarContent pathname={pathname} t={t} />
+          <SidebarContent
+            pathname={pathname}
+            currentLocale={currentLocale}
+            t={t}
+            logoutT={logoutT}
+            onLogout={handleLogout}
+          />
         </div>
       </aside>
     </>

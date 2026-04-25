@@ -41,7 +41,16 @@ public class BookingService {
         shopOfferRepository
             .findById(offerId)
             .orElseThrow(() -> new NotFoundException("Shop offer not found: " + offerId));
-    var jobRequest = offer.getJobRequest();
+
+    if (offer.getValidUntil() != null && offer.getValidUntil().isBefore(LocalDateTime.now())) {
+      throw new IllegalStateException("Offer has expired");
+    }
+
+    JobRequestEntity jobRequest =
+        jobRequestRepository
+            .findById(offer.getJobRequestId())
+            .orElseThrow(
+                () -> new NotFoundException("Job request not found: " + offer.getJobRequestId()));
 
     offer.setStatus("accepted");
     shopOfferRepository.save(offer);

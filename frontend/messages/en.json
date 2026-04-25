@@ -106,6 +106,13 @@
   "register": {
     "title": "Create your account",
     "description": "Sign up to start using the platform and explore workshops faster.",
+    "role": {
+      "label": "I am registering as",
+      "carOwner": "Car owner",
+      "shopOwner": "Repair shop owner",
+      "carOwnerHint": "I need repair offers for my car",
+      "shopOwnerHint": "I want to receive customer requests"
+    },
     "fields": {
       "firstName": {
         "label": "First name",
@@ -186,6 +193,12 @@
       "invalidEmail": "Please enter a valid email address.",
       "generic": "Something went wrong. Please try again."
     }
+  },
+  "authMenu": {
+    "account": "My account",
+    "business": "Business",
+    "businessDashboard": "Business dashboard",
+    "logout": "Log out"
   },
   "testimonials": {
     "title": "What users say",

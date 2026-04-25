@@ -17,12 +17,12 @@ function AccentCheckbox({
           type="checkbox"
           checked={checked}
           onChange={(event) => onChange(event.target.checked)}
-          className="col-start-1 row-start-1 size-6 appearance-none rounded-md border border-white/15 bg-white/5 checked:border-[var(--accent)] checked:bg-[var(--accent)] hover:border-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] forced-colors:appearance-auto"
+          className="col-start-1 row-start-1 size-6 appearance-none rounded-md border border-white/15 bg-white/5 checked:border-(--accent) checked:bg-(--accent) hover:border-white/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) forced-colors:appearance-auto"
         />
         <svg
           fill="none"
           viewBox="0 0 14 14"
-          className="pointer-events-none col-start-1 row-start-1 size-4 self-center justify-self-center stroke-[var(--accent-foreground)]"
+          className="pointer-events-none col-start-1 row-start-1 size-4 self-center justify-self-center stroke-(--accent-foreground)"
         >
           <path
             d="M3 8L6 11L11 3.5"

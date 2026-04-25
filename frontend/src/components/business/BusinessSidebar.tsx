@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   Dialog,
@@ -19,6 +19,7 @@ import {
   CreditCardIcon,
   Cog6ToothIcon,
   XMarkIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 
@@ -47,16 +48,29 @@ function isActivePath(pathname: string, href: string) {
 
 type SidebarContentProps = {
   pathname: string;
+  currentLocale: "en" | "et";
   t: ReturnType<typeof useTranslations<"businessSidebar">>;
+  logoutT: ReturnType<typeof useTranslations<"authMenu">>;
+  onLogout: () => void;
   onNavigate?: () => void;
 };
 
-function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
+function SidebarContent({
+  pathname,
+  currentLocale,
+  t,
+  logoutT,
+  onLogout,
+  onNavigate,
+}: SidebarContentProps) {
   return (
     <>
-      <div className="relative flex h-16 shrink-0 items-center justify-between ">
+      <div className="relative flex h-16 shrink-0 items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/" className="-m-1.5 flex items-center gap-2 p-1.5">
+          <Link
+            href={`/${currentLocale}`}
+            className="-m-1.5 flex items-center gap-2 p-1.5"
+          >
             <span className="sr-only">{t("brand")}</span>
             <span className="text-xl font-bold text-white">KapotiAbi</span>
           </Link>
@@ -83,7 +97,7 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
                 return (
                   <li key={item.key}>
                     <Link
-                      href={item.href}
+                      href={`/${currentLocale}${item.href}`}
                       onClick={onNavigate}
                       aria-current={active ? "page" : undefined}
                       className={classNames(
@@ -107,6 +121,20 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
                   </li>
                 );
               })}
+
+              <li>
+                <button
+                  type="button"
+                  onClick={onLogout}
+                  className="group flex w-full items-center gap-x-3 rounded-2xl px-3 py-3 text-sm text-white/70 transition hover:bg-(--pills-background) hover:text-white"
+                >
+                  <ArrowRightOnRectangleIcon
+                    aria-hidden="true"
+                    className="size-4 shrink-0 text-white/40 transition group-hover:text-white"
+                  />
+                  {logoutT("logout")}
+                </button>
+              </li>
             </ul>
           </li>
 
@@ -121,8 +149,8 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
               </p>
 
               <Link
-                href="/business/listing"
-                className="mt-4 inline-flex items-center justify-center rounded-full bg-(--accent) px-4 py-2 text-sm font-semibold text-(--accent-foreground) transition hover:bg-(--accent-hover) text-nowrap ring-1 ring-inset ring-(--accent)"
+                href={`/${currentLocale}/business/listing`}
+                className="mt-4 inline-flex items-center justify-center rounded-full bg-(--accent) px-4 py-2 text-sm font-semibold text-(--accent-foreground) text-nowrap ring-1 ring-inset ring-(--accent) transition hover:bg-(--accent-hover)"
               >
                 {t("card.button")}
               </Link>
@@ -137,7 +165,20 @@ function SidebarContent({ pathname, t, onNavigate }: SidebarContentProps) {
 export default function BusinessSidebar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations("businessSidebar");
+  const logoutT = useTranslations("authMenu");
+
+  const localeFromPath = pathname.split("/")[1];
+  const currentLocale: "en" | "et" = localeFromPath === "et" ? "et" : "en";
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("authRole");
+    window.dispatchEvent(new Event("auth-changed"));
+    setSidebarOpen(false);
+    router.push(`/${currentLocale}`);
+  };
 
   return (
     <>
@@ -172,7 +213,10 @@ export default function BusinessSidebar() {
             <div className="relative flex grow flex-col gap-y-2 overflow-y-auto border-r border-white/10 bg-black px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
               <SidebarContent
                 pathname={pathname}
+                currentLocale={currentLocale}
                 t={t}
+                logoutT={logoutT}
+                onLogout={handleLogout}
                 onNavigate={() => setSidebarOpen(false)}
               />
             </div>
@@ -199,7 +243,13 @@ export default function BusinessSidebar() {
 
       <aside className="hidden lg:fixed lg:inset-y-0 lg:z-40 lg:flex lg:w-72 lg:flex-col">
         <div className="relative flex grow flex-col gap-y-5 overflow-y-auto border-r border-white/10 bg-black px-6 pb-6 before:pointer-events-none before:absolute before:inset-0 before:bg-black/20">
-          <SidebarContent pathname={pathname} t={t} />
+          <SidebarContent
+            pathname={pathname}
+            currentLocale={currentLocale}
+            t={t}
+            logoutT={logoutT}
+            onLogout={handleLogout}
+          />
         </div>
       </aside>
     </>

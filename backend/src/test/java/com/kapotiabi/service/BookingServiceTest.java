@@ -96,6 +96,18 @@ class BookingServiceTest {
   }
 
   @Test
+  void createFromOffer_expiredOffer_throwsIllegalState() {
+    ShopOfferEntity expiredOffer = buildOffer();
+    expiredOffer.setValidUntil(LocalDateTime.now().minusDays(1));
+    when(bookingRepository.findByOfferId(2L)).thenReturn(Optional.empty());
+    when(shopOfferRepository.findById(2L)).thenReturn(Optional.of(expiredOffer));
+
+    assertThatThrownBy(() -> bookingService.createFromOffer(2L))
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessage("Offer has expired");
+  }
+
+  @Test
   void confirm() {
     var booking = buildBooking("awaiting_shop");
     when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
