@@ -8,14 +8,12 @@ import static org.mockito.Mockito.when;
 
 import com.kapotiabi.dto.request.RepairShopRequest;
 import com.kapotiabi.dto.request.ShopServiceCategoryRequest;
-import com.kapotiabi.dto.response.RepairShopResponse;
 import com.kapotiabi.dto.response.ShopServiceCategoryResponse;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopServiceCategoryEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
-import com.kapotiabi.repository.ReviewRepository;
 import com.kapotiabi.repository.ShopServiceCategoryRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,10 +24,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class RepairShopServiceTest {
@@ -37,8 +33,6 @@ class RepairShopServiceTest {
   @Mock private RepairShopRepository repairShopRepository;
 
   @Mock private ShopServiceCategoryRepository categoryRepository;
-
-  @Mock private ReviewRepository reviewRepository;
 
   @InjectMocks private RepairShopService repairShopService;
 
@@ -68,21 +62,21 @@ class RepairShopServiceTest {
 
   @Test
   void getAll_byCity() {
-    Pageable pageable = PageRequest.of(0, 20);
+    var pageable = PageRequest.of(0, 20);
     when(repairShopRepository.findByStatusAndCity("active", "Tallinn", pageable))
         .thenReturn(new PageImpl<>(List.of(buildShop())));
 
-    Page<RepairShopResponse> result = repairShopService.getAll("Tallinn", null, pageable);
+    var result = repairShopService.getAll("Tallinn", null, pageable);
 
     assertThat(result.getContent()).hasSize(1);
-    assertThat(result.getContent().get(0).city()).isEqualTo("Tallinn");
+    assertThat(result.getContent().getFirst().city()).isEqualTo("Tallinn");
   }
 
   @Test
   void getById() {
     when(repairShopRepository.findById(1L)).thenReturn(Optional.of(buildShop()));
 
-    RepairShopResponse response = repairShopService.getById(1L);
+    var response = repairShopService.getById(1L);
 
     assertThat(response.id()).isEqualTo(1L);
     assertThat(response.name()).isEqualTo("Test Garage");
@@ -97,9 +91,10 @@ class RepairShopServiceTest {
 
   @Test
   void create() {
-    RepairShopRequest req =
-        new RepairShopRequest("New Shop", null, "Tartu", null, null, null, null, null, "active");
-    RepairShopEntity saved =
+    var req =
+        new RepairShopRequest(
+            5L, "New Shop", null, "Tartu", null, null, null, null, null, "active");
+    var saved =
         RepairShopEntity.builder()
             .id(2L)
             .ownerId(5L)
@@ -111,7 +106,7 @@ class RepairShopServiceTest {
             .build();
     when(repairShopRepository.save(any(RepairShopEntity.class))).thenReturn(saved);
 
-    RepairShopResponse response = repairShopService.create(req, 5L);
+    var response = repairShopService.create(req, 5L);
 
     assertThat(response.id()).isEqualTo(2L);
     assertThat(response.city()).isEqualTo("Tartu");
@@ -119,15 +114,15 @@ class RepairShopServiceTest {
 
   @Test
   void update() {
-    RepairShopEntity shop = buildShop();
+    var shop = buildShop();
     when(repairShopRepository.findById(1L)).thenReturn(Optional.of(shop));
     when(repairShopRepository.save(any(RepairShopEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
 
-    RepairShopRequest req =
+    var req =
         new RepairShopRequest(
-            "Updated Garage", null, "Narva", null, null, null, null, null, "active");
-    RepairShopResponse response = repairShopService.update(1L, req, 5L);
+            5L, "Updated Garage", null, "Narva", null, null, null, null, null, "active");
+    var response = repairShopService.update(1L, req, 5L);
 
     assertThat(response.name()).isEqualTo("Updated Garage");
     assertThat(response.city()).isEqualTo("Narva");
@@ -137,9 +132,9 @@ class RepairShopServiceTest {
   void update_wrongOwner_throwsForbidden() {
     when(repairShopRepository.findById(1L)).thenReturn(Optional.of(buildShop()));
 
-    RepairShopRequest req =
+    var req =
         new RepairShopRequest(
-            "Updated Garage", null, "Narva", null, null, null, null, null, "active");
+            5L, "Updated Garage", null, "Narva", null, null, null, null, null, "active");
     assertThatThrownBy(() -> repairShopService.update(1L, req, 99L))
         .isInstanceOf(ForbiddenException.class);
   }
@@ -147,13 +142,13 @@ class RepairShopServiceTest {
   @Test
   void addCategory() {
     when(repairShopRepository.findById(1L)).thenReturn(Optional.of(buildShop()));
-    ShopServiceCategoryEntity saved = buildCategory();
+    var saved = buildCategory();
     when(categoryRepository.save(any(ShopServiceCategoryEntity.class))).thenReturn(saved);
 
-    ShopServiceCategoryRequest req =
+    var req =
         new ShopServiceCategoryRequest(
             "oil_change", new BigDecimal("30.00"), new BigDecimal("60.00"), "OEM");
-    ShopServiceCategoryResponse response = repairShopService.addCategory(1L, req);
+    var response = repairShopService.addCategory(1L, req);
 
     assertThat(response.category()).isEqualTo("oil_change");
     assertThat(response.shopId()).isEqualTo(1L);
@@ -162,12 +157,12 @@ class RepairShopServiceTest {
   @Test
   void updateCategory() {
     when(repairShopRepository.findById(1L)).thenReturn(Optional.of(buildShop()));
-    ShopServiceCategoryEntity category = buildCategory();
+    var category = buildCategory();
     when(categoryRepository.findById(10L)).thenReturn(Optional.of(category));
     when(categoryRepository.save(any(ShopServiceCategoryEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
 
-    ShopServiceCategoryRequest req =
+    var req =
         new ShopServiceCategoryRequest(
             "tire_change", new BigDecimal("50.00"), new BigDecimal("100.00"), "OEM");
     ShopServiceCategoryResponse response = repairShopService.updateCategory(1L, 10L, req);
