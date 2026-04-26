@@ -802,7 +802,8 @@
     "title": "Book a time",
     "description": "Confirm your appointment with",
     "actions": {
-      "backToNotifications": "Back to notifications"
+      "backToNotifications": "Back to notifications",
+      "backToCompare": "Back to compare"
     },
     "sections": {
       "request": "Your request",
@@ -822,8 +823,13 @@
       "messagePlaceholder": "Any additional info about your car or request…",
       "selectDateAndTime": "Select a date and time to continue",
       "confirmBooking": "Confirm booking",
+      "reviewTitle": "Review booking details",
+      "reviewDescription": "Confirm the selected time before we send the booking request.",
+      "cancel": "Cancel",
+      "confirmFinal": "Confirm",
       "bookingConfirmed": "Booking confirmed!",
-      "redirecting": "Redirecting to notifications…"
+      "redirecting": "Redirecting to bookings…",
+      "bookingFailed": "We could not confirm this booking. Please try again."
     }
   }
 }

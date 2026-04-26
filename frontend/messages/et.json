@@ -802,7 +802,8 @@
     "title": "Broneeri aeg",
     "description": "Kinnita oma aeg töökojas",
     "actions": {
-      "backToNotifications": "Tagasi teavituste juurde"
+      "backToNotifications": "Tagasi teavituste juurde",
+      "backToCompare": "Tagasi võrdlusesse"
     },
     "sections": {
       "request": "Sinu päring",
@@ -822,8 +823,13 @@
       "messagePlaceholder": "Lisa täiendav info auto või päringu kohta…",
       "selectDateAndTime": "Jätkamiseks vali kuupäev ja aeg",
       "confirmBooking": "Kinnita broneering",
+      "reviewTitle": "Kontrolli broneeringu andmeid",
+      "reviewDescription": "Kinnita valitud aeg enne broneeringupäringu saatmist.",
+      "cancel": "Tühista",
+      "confirmFinal": "Kinnita",
       "bookingConfirmed": "Broneering kinnitatud!",
-      "redirecting": "Suuname sind teavituste lehele…"
+      "redirecting": "Suuname sind broneeringute lehele…",
+      "bookingFailed": "Broneeringut ei saanud kinnitada. Palun proovi uuesti."
     }
   }
 }

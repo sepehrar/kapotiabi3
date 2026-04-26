@@ -2,9 +2,15 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
-type Slot = { id: string; date: string; time: string };
+export type BookingSlot = { id: string; date: string; time: string; slotId?: number };
 
 type Labels = {
   selectDate: string;
@@ -14,11 +20,24 @@ type Labels = {
   messagePlaceholder: string;
   selectDateAndTime: string;
   confirmBooking: string;
+  reviewTitle: string;
+  reviewDescription: string;
+  cancel: string;
+  confirmFinal: string;
   bookingConfirmed: string;
   redirecting: string;
+  bookingFailed: string;
 };
 
-type Props = { slots: Slot[]; redirectTo: string; labels: Labels };
+type Props = {
+  slots: BookingSlot[];
+  redirectTo: string;
+  labels: Labels;
+  onConfirm: (details: {
+    slot: BookingSlot;
+    messageToShop: string;
+  }) => Promise<void> | void;
+};
 
 type CalendarDay = {
   date: string;
@@ -52,7 +71,7 @@ function formatMonthTitle(date: Date) {
   return date.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 }
 
-function groupByDate(slots: Slot[]): Record<string, Slot[]> {
+function groupByDate(slots: BookingSlot[]): Record<string, BookingSlot[]> {
   return slots.reduce(
     (acc, slot) => {
       if (!acc[slot.date]) acc[slot.date] = [];
@@ -92,7 +111,12 @@ function cn(...classes: (string | false | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function BookingForm({ slots, redirectTo, labels: l }: Props) {
+export default function BookingForm({
+  slots,
+  redirectTo,
+  labels: l,
+  onConfirm,
+}: Props) {
   const router = useRouter();
 
   const grouped = useMemo(() => groupByDate(slots), [slots]);
@@ -104,6 +128,9 @@ export default function BookingForm({ slots, redirectTo, labels: l }: Props) {
   const [visibleMonth, setVisibleMonth] = useState(parseDateKey(firstDate));
   const [message, setMessage] = useState("");
   const [confirmed, setConfirmed] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const slotDates = useMemo(() => new Set(dates), [dates]);
   const calendarDays = useMemo(
@@ -111,7 +138,28 @@ export default function BookingForm({ slots, redirectTo, labels: l }: Props) {
     [visibleMonth, slotDates],
   );
   const selectedSlots = grouped[selectedDate] ?? [];
-  const selectedTime = selectedSlots.find((s) => s.id === selectedSlot)?.time;
+  const selectedSlotDetails =
+    selectedSlots.find((s) => s.id === selectedSlot) ?? null;
+  const selectedTime = selectedSlotDetails?.time;
+
+  async function handleFinalConfirm() {
+    if (!selectedSlotDetails) {
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      setError(null);
+      await onConfirm({ slot: selectedSlotDetails, messageToShop: message });
+      setConfirmOpen(false);
+      setConfirmed(true);
+      setTimeout(() => router.push(redirectTo), 1500);
+    } catch {
+      setError(l.bookingFailed);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   if (confirmed) {
     return (
@@ -317,15 +365,50 @@ export default function BookingForm({ slots, redirectTo, labels: l }: Props) {
         <button
           type="button"
           disabled={!selectedSlot}
-          onClick={() => {
-            setConfirmed(true);
-            setTimeout(() => router.push(redirectTo), 1500);
-          }}
+          onClick={() => setConfirmOpen(true)}
           className="inline-flex shrink-0 items-center justify-center rounded-full bg-(--accent) px-8 py-3 text-sm font-semibold text-(--accent-foreground) ring-1 ring-inset ring-(--accent) transition hover:bg-(--accent-hover) disabled:cursor-not-allowed disabled:opacity-30"
         >
           {l.confirmBooking}
         </button>
       </div>
+
+      <Dialog open={confirmOpen} onClose={setConfirmOpen} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <DialogPanel className="w-full max-w-md rounded-2xl border border-white/10 bg-black p-6 shadow-2xl">
+            <DialogTitle className="text-xl font-semibold text-white">
+              {l.reviewTitle}
+            </DialogTitle>
+            <p className="mt-3 text-sm leading-6 text-white/50">
+              {l.reviewDescription}
+            </p>
+            <div className="mt-5 rounded-2xl border border-white/10 bg-(--pills-background) p-4 text-sm text-white/70">
+              {selectedSlotDetails
+                ? `${formatDate(selectedSlotDetails.date)} · ${selectedSlotDetails.time}`
+                : l.selectDateAndTime}
+            </div>
+            {error ? <p className="mt-4 text-sm text-red-400">{error}</p> : null}
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setConfirmOpen(false)}
+                disabled={submitting}
+                className="rounded-full border border-white/15 px-5 py-2 text-sm font-medium text-white/70 transition hover:bg-white/10 disabled:opacity-40"
+              >
+                {l.cancel}
+              </button>
+              <button
+                type="button"
+                onClick={handleFinalConfirm}
+                disabled={submitting}
+                className="rounded-full bg-(--accent) px-5 py-2 text-sm font-semibold text-(--accent-foreground) transition hover:bg-(--accent-hover) disabled:opacity-40"
+              >
+                {l.confirmFinal}
+              </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </div>
   );
 }
