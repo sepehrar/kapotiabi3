@@ -62,7 +62,8 @@ class RepairShopServiceTest {
 
   @Test
   void getAll_byCity() {
-    when(repairShopRepository.findByCity("Tallinn")).thenReturn(List.of(buildShop()));
+    when(repairShopRepository.findByStatusAndCity("active", "Tallinn"))
+        .thenReturn(List.of(buildShop()));
 
     var result = repairShopService.getAll("Tallinn", null);
 
@@ -102,7 +103,7 @@ class RepairShopServiceTest {
             .createdAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now())
             .build();
-    when(userRepository.getReferenceById(5L)).thenReturn(UserEntity.builder().id(5L).build());
+    when(userRepository.findById(5L)).thenReturn(Optional.of(UserEntity.builder().id(5L).build()));
     when(repairShopRepository.save(any(RepairShopEntity.class))).thenReturn(saved);
 
     var response = repairShopService.create(req);
@@ -115,7 +116,7 @@ class RepairShopServiceTest {
   void update() {
     var shop = buildShop();
     when(repairShopRepository.findById(1L)).thenReturn(Optional.of(shop));
-    when(userRepository.getReferenceById(5L)).thenReturn(UserEntity.builder().id(5L).build());
+    when(userRepository.findById(5L)).thenReturn(Optional.of(UserEntity.builder().id(5L).build()));
     when(repairShopRepository.save(any(RepairShopEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
 
@@ -126,6 +127,32 @@ class RepairShopServiceTest {
 
     assertThat(response.name()).isEqualTo("Updated Garage");
     assertThat(response.city()).isEqualTo("Narva");
+  }
+
+  @Test
+  void create_ownerNotFound() {
+    var req =
+        new RepairShopRequest(
+            99L, "New Shop", null, "Tartu", null, null, null, null, null, "active");
+    when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> repairShopService.create(req))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessage("User not found: 99");
+  }
+
+  @Test
+  void update_ownerNotFound() {
+    when(repairShopRepository.findById(1L)).thenReturn(Optional.of(buildShop()));
+    when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+    var req =
+        new RepairShopRequest(
+            99L, "Updated Garage", null, "Narva", null, null, null, null, null, "active");
+
+    assertThatThrownBy(() -> repairShopService.update(1L, req))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessage("User not found: 99");
   }
 
   @Test

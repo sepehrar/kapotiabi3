@@ -5,7 +5,6 @@ import com.kapotiabi.dto.response.UserResponse;
 import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.UserRepository;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,6 @@ public class UserService {
     user.setPreferredCity(req.preferredCity());
     user.setSearchRadiusKm(req.searchRadiusKm());
     user.setPartsQualityPreference(req.partsQualityPreference());
-    user.setUpdatedAt(LocalDateTime.now());
     return UserResponse.from(userRepository.save(user));
   }
 

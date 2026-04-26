@@ -29,13 +29,29 @@ public class RepairShopService {
   public List<RepairShopResponse> getAll(String city, String county) {
     List<RepairShopEntity> shops;
     if (city != null) {
-      shops = repairShopRepository.findByCity(city);
+      shops = repairShopRepository.findByStatusAndCity("active", city);
     } else if (county != null) {
-      shops = repairShopRepository.findByCounty(county);
+      shops = repairShopRepository.findByStatusAndCounty("active", county);
     } else {
-      shops = repairShopRepository.findAll();
+      shops = repairShopRepository.findByStatus("active");
     }
     return shops.stream().map(RepairShopResponse::from).toList();
+  }
+
+  public List<RepairShopResponse> getAllForAdmin(String status) {
+    List<RepairShopEntity> shops =
+        status != null ? repairShopRepository.findByStatus(status) : repairShopRepository.findAll();
+    return shops.stream().map(RepairShopResponse::from).toList();
+  }
+
+  public RepairShopResponse updateShopStatus(Long id, String action) {
+    RepairShopEntity shop = findOrThrow(id);
+    if (!"draft".equals(shop.getStatus())) {
+      throw new IllegalStateException(
+          "Shop " + id + " is not in draft status (current: " + shop.getStatus() + ")");
+    }
+    shop.setStatus("approve".equals(action) ? "active" : "rejected");
+    return RepairShopResponse.from(repairShopRepository.save(shop));
   }
 
   public RepairShopResponse getById(Long id) {
@@ -43,10 +59,9 @@ public class RepairShopService {
   }
 
   public RepairShopResponse create(RepairShopRequest req) {
-    var now = LocalDateTime.now();
     var shop =
         RepairShopEntity.builder()
-            .owner(userRepository.getReferenceById(req.ownerId()))
+            .owner(findOwnerOrThrow(req.ownerId()))
             .name(req.name())
             .address(req.address())
             .city(req.city())
@@ -56,15 +71,13 @@ public class RepairShopService {
             .website(req.website())
             .googleMapsUrl(req.googleMapsUrl())
             .status(req.status())
-            .createdAt(now)
-            .updatedAt(now)
             .build();
     return RepairShopResponse.from(repairShopRepository.save(shop));
   }
 
   public RepairShopResponse update(Long id, RepairShopRequest req) {
     var shop = findOrThrow(id);
-    shop.setOwner(userRepository.getReferenceById(req.ownerId()));
+    shop.setOwner(findOwnerOrThrow(req.ownerId()));
     shop.setName(req.name());
     shop.setAddress(req.address());
     shop.setCity(req.city());
@@ -74,7 +87,6 @@ public class RepairShopService {
     shop.setWebsite(req.website());
     shop.setGoogleMapsUrl(req.googleMapsUrl());
     shop.setStatus(req.status());
-    shop.setUpdatedAt(LocalDateTime.now());
     return RepairShopResponse.from(repairShopRepository.save(shop));
   }
 
@@ -136,5 +148,11 @@ public class RepairShopService {
     return repairShopRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException("Repair shop not found: " + id));
+  }
+
+  private com.kapotiabi.entity.UserEntity findOwnerOrThrow(Long ownerId) {
+    return userRepository
+        .findById(ownerId)
+        .orElseThrow(() -> new NotFoundException("User not found: " + ownerId));
   }
 }
