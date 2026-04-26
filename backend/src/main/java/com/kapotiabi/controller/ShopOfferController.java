@@ -1,5 +1,6 @@
 package com.kapotiabi.controller;
 
+import com.kapotiabi.dto.request.AcceptOfferRequest;
 import com.kapotiabi.dto.request.ShopOfferRequest;
 import com.kapotiabi.dto.response.BookingResponse;
 import com.kapotiabi.dto.response.ShopOfferResponse;
@@ -49,8 +50,10 @@ public class ShopOfferController {
 
   @PostMapping("/{id}/accept")
   @Operation(summary = "Accept an offer and create a booking (car owner only)")
-  public ResponseEntity<BookingResponse> accept(@PathVariable Long id) {
-    return ResponseEntity.ok(bookingService.createFromOffer(id, SecurityUtils.getAuthUserId()));
+  public ResponseEntity<BookingResponse> accept(
+      @PathVariable Long id, @Valid @RequestBody AcceptOfferRequest req) {
+    return ResponseEntity.ok(
+        bookingService.createFromOffer(id, req.slotId(), SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping("/{id}/reject")

@@ -1,8 +1,10 @@
 package com.kapotiabi.dto.response;
 
+import com.kapotiabi.entity.OfferSlotEntity;
 import com.kapotiabi.entity.ShopOfferEntity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ShopOfferResponse(
     Long id,
@@ -15,8 +17,10 @@ public record ShopOfferResponse(
     LocalDateTime validUntil,
     String pdfUrl,
     String status,
-    LocalDateTime createdAt) {
-  public static ShopOfferResponse from(ShopOfferEntity e) {
+    LocalDateTime createdAt,
+    List<OfferSlotResponse> slots) {
+
+  public static ShopOfferResponse from(ShopOfferEntity e, List<OfferSlotEntity> slots) {
     return new ShopOfferResponse(
         e.getId(),
         e.getJobRequestId(),
@@ -28,6 +32,7 @@ public record ShopOfferResponse(
         e.getValidUntil(),
         e.getPdfUrl(),
         e.getStatus(),
-        e.getCreatedAt());
+        e.getCreatedAt(),
+        slots.stream().map(OfferSlotResponse::from).toList());
   }
 }

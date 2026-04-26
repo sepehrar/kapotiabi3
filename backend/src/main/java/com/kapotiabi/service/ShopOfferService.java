@@ -3,11 +3,13 @@ package com.kapotiabi.service;
 import com.kapotiabi.dto.request.ShopOfferRequest;
 import com.kapotiabi.dto.response.ShopOfferResponse;
 import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.entity.OfferSlotEntity;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopOfferEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.JobRequestRepository;
+import com.kapotiabi.repository.OfferSlotRepository;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ShopOfferRepository;
 import java.io.IOException;
@@ -29,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ShopOfferService {
 
   private final ShopOfferRepository shopOfferRepository;
+  private final OfferSlotRepository offerSlotRepository;
   private final JobRequestRepository jobRequestRepository;
   private final RepairShopRepository repairShopRepository;
 
@@ -37,16 +40,19 @@ public class ShopOfferService {
 
   public List<ShopOfferResponse> getByJobRequest(Long jobRequestId) {
     return shopOfferRepository.findByJobRequestId(jobRequestId).stream()
-        .map(ShopOfferResponse::from)
+        .map(offer -> ShopOfferResponse.from(offer, offerSlotRepository.findByOfferId(offer.getId())))
         .toList();
   }
 
   public List<ShopOfferResponse> getByShop(Long shopId) {
-    return shopOfferRepository.findByShopId(shopId).stream().map(ShopOfferResponse::from).toList();
+    return shopOfferRepository.findByShopId(shopId).stream()
+        .map(offer -> ShopOfferResponse.from(offer, offerSlotRepository.findByOfferId(offer.getId())))
+        .toList();
   }
 
   public ShopOfferResponse getById(Long id) {
-    return ShopOfferResponse.from(findOrThrow(id));
+    ShopOfferEntity offer = findOrThrow(id);
+    return ShopOfferResponse.from(offer, offerSlotRepository.findByOfferId(id));
   }
 
   @Transactional
@@ -80,7 +86,8 @@ public class ShopOfferService {
       jobRequestRepository.save(jobRequest);
     }
 
-    return ShopOfferResponse.from(offer);
+    List<OfferSlotEntity> slots = saveSlots(offer.getId(), req.slots());
+    return ShopOfferResponse.from(offer, slots);
   }
 
   @Transactional
@@ -92,22 +99,27 @@ public class ShopOfferService {
     offer.setPartsTier(req.partsTier());
     offer.setEstimatedDurationHours(req.estimatedDurationHours());
     offer.setValidUntil(req.validUntil());
-    return ShopOfferResponse.from(shopOfferRepository.save(offer));
+    offer = shopOfferRepository.save(offer);
+
+    offerSlotRepository.deleteAll(offerSlotRepository.findByOfferId(id));
+    List<OfferSlotEntity> slots = saveSlots(id, req.slots());
+    return ShopOfferResponse.from(offer, slots);
   }
 
   @Transactional
   public ShopOfferResponse reject(Long id, Long authUserId) {
     ShopOfferEntity offer = findOrThrow(id);
+    Long jobRequestId = offer.getJobRequestId();
     JobRequestEntity jobRequest =
         jobRequestRepository
-            .findById(offer.getJobRequestId())
-            .orElseThrow(
-                () -> new NotFoundException("Job request not found: " + offer.getJobRequestId()));
+            .findById(jobRequestId)
+            .orElseThrow(() -> new NotFoundException("Job request not found: " + jobRequestId));
     if (!authUserId.equals(jobRequest.getUserId())) {
       throw new ForbiddenException("You don't have access to this offer");
     }
     offer.setStatus("rejected");
-    return ShopOfferResponse.from(shopOfferRepository.save(offer));
+    offer = shopOfferRepository.save(offer);
+    return ShopOfferResponse.from(offer, offerSlotRepository.findByOfferId(id));
   }
 
   public ShopOfferEntity uploadPdf(Long offerId, MultipartFile file, Long authUserId)
@@ -144,6 +156,30 @@ public class ShopOfferService {
     return resource;
   }
 
+  public OfferSlotEntity getSlotOrThrow(Long slotId) {
+    return offerSlotRepository
+        .findById(slotId)
+        .orElseThrow(() -> new NotFoundException("Slot not found: " + slotId));
+  }
+
+  private List<OfferSlotEntity> saveSlots(Long offerId, List<LocalDateTime> startsAts) {
+    if (startsAts == null || startsAts.isEmpty()) {
+      return List.of();
+    }
+    LocalDateTime now = LocalDateTime.now();
+    List<OfferSlotEntity> entities =
+        startsAts.stream()
+            .map(
+                startsAt ->
+                    OfferSlotEntity.builder()
+                        .offerId(offerId)
+                        .startsAt(startsAt)
+                        .createdAt(now)
+                        .build())
+            .toList();
+    return offerSlotRepository.saveAll(entities);
+  }
+
   private void verifyShopOwner(Long authUserId, Long requiredShopId) {
     RepairShopEntity shop =
         repairShopRepository
@@ -154,7 +190,7 @@ public class ShopOfferService {
     }
   }
 
-  private ShopOfferEntity findOrThrow(Long id) {
+  public ShopOfferEntity findOrThrow(Long id) {
     return shopOfferRepository
         .findById(id)
         .orElseThrow(() -> new NotFoundException("Shop offer not found: " + id));

@@ -3,6 +3,7 @@ package com.kapotiabi.service;
 import com.kapotiabi.dto.response.BookingResponse;
 import com.kapotiabi.entity.BookingEntity;
 import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.entity.OfferSlotEntity;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopOfferEntity;
 import com.kapotiabi.exception.ForbiddenException;
@@ -25,6 +26,7 @@ public class BookingService {
   private final ShopOfferRepository shopOfferRepository;
   private final JobRequestRepository jobRequestRepository;
   private final RepairShopRepository repairShopRepository;
+  private final ShopOfferService shopOfferService;
 
   public List<BookingResponse> getByUser(Long userId) {
     return bookingRepository.findByUserId(userId).stream().map(BookingResponse::from).toList();
@@ -45,7 +47,7 @@ public class BookingService {
   }
 
   @Transactional
-  public BookingResponse createFromOffer(Long offerId, Long authUserId) {
+  public BookingResponse createFromOffer(Long offerId, Long slotId, Long authUserId) {
     if (bookingRepository.findByOfferId(offerId).isPresent()) {
       throw new IllegalStateException("Booking already exists for offer: " + offerId);
     }
@@ -56,6 +58,11 @@ public class BookingService {
 
     if (offer.getValidUntil() != null && offer.getValidUntil().isBefore(LocalDateTime.now())) {
       throw new IllegalStateException("Offer has expired");
+    }
+
+    OfferSlotEntity slot = shopOfferService.getSlotOrThrow(slotId);
+    if (!slot.getOfferId().equals(offerId)) {
+      throw new ForbiddenException("Slot does not belong to this offer");
     }
 
     JobRequestEntity jobRequest =
@@ -82,6 +89,7 @@ public class BookingService {
             .jobRequestId(offer.getJobRequestId())
             .userId(jobRequest.getUserId())
             .shopId(offer.getShopId())
+            .scheduledAt(slot.getStartsAt())
             .confirmedByShop(false)
             .status("awaiting_shop")
             .createdAt(now)
