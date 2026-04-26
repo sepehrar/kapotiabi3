@@ -78,7 +78,7 @@ function groupByDate(slots: BookingSlot[]): Record<string, BookingSlot[]> {
       acc[slot.date].push(slot);
       return acc;
     },
-    {} as Record<string, Slot[]>,
+    {} as Record<string, BookingSlot[]>,
   );
 }
 
