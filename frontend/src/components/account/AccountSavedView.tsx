@@ -11,7 +11,7 @@ const savedServices = [
     distance: "3.2 km",
     rating: "4.7",
     reviews: 214,
-    updatedAt: "Updated 2 days ago",
+    updatedAt: "2 days ago",
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const savedServices = [
     distance: "5.6 km",
     rating: "4.5",
     reviews: 98,
-    updatedAt: "Updated today",
+    updatedAt: "Today",
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ const savedServices = [
     distance: "6.8 km",
     rating: "4.8",
     reviews: 156,
-    updatedAt: "Updated 5 days ago",
+    updatedAt: "5 days ago",
   },
 ];
 
@@ -42,93 +42,70 @@ export default function AccountSavedView() {
 
   return (
     <div className="mx-auto w-full max-w-6xl">
-      <div className="mb-8">
+      {/* title */}
+      <div className="pt-4">
         <h1 className="text-2xl font-light tracking-tight text-white text-balance sm:text-3xl">
           {t("title")}
         </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60 sm:text-base">
+        <p className="mt-6 max-w-xl text-lg leading-8 text-white/50 text-balance">
           {t("description")}
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="mt-12 space-y-4">
         {savedServices.map((item) => (
           <section
             key={item.id}
-            className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8"
+            className="w-full rounded-2xl border border-white/10 bg-(--pills-background) p-6 flex flex-row gap-3 items-start justify-between"
           >
-            <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-              <div className="min-w-0">
+            <div className="flex gap-5 flex-col sm:flex-row items-start justify-between w-full">
+              <div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-xl font-semibold text-black">
+                  <h2 className="text-xl font-semibold text-white">
                     {item.name}
                   </h2>
-                  <span className="rounded-full bg-black/5 px-3 py-1 text-xs font-medium text-black/60">
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/60">
                     {item.service}
                   </span>
                 </div>
 
-                <p className="mt-2 text-sm leading-6 text-black/60">
+                <p className="mt-2 text-lg leading-6 text-white/60">
                   {item.car}
                 </p>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                  <div className="rounded-2xl bg-black/3 px-4 py-3">
-                    <p className="text-xs font-medium uppercase tracking-wide text-black/40">
-                      {t("meta.price")}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-black">
-                      {item.price}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-black/3 px-4 py-3">
-                    <p className="text-xs font-medium uppercase tracking-wide text-black/40">
-                      {t("meta.distance")}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-black">
-                      {item.distance}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-black/3 px-4 py-3">
-                    <p className="text-xs font-medium uppercase tracking-wide text-black/40">
-                      {t("meta.rating")}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-black">
-                      {item.rating} ({item.reviews} {t("meta.reviews")})
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl bg-black/3 px-4 py-3">
-                    <p className="text-xs font-medium uppercase tracking-wide text-black/40">
-                      {t("meta.priceStatus")}
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-black">
-                      {item.updatedAt}
-                    </p>
-                  </div>
+                <div className="mt-6 flex flex-wrap items-center gap-3 text-base text-white/50">
+                  <span>{item.price}</span>
+                  <span className="text-white/20">•</span>
+                  <span>{item.distance}</span>
+                  <span className="text-white/20">•</span>
+                  <span>
+                    {item.rating} ({item.reviews} {t("meta.reviews")})
+                  </span>
+                  <span className="text-white/20">•</span>
+                  <span>
+                    {t("meta.updated")} {item.updatedAt}
+                  </span>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3 xl:w-auto xl:flex-col">
+              <div className="flex flex-row sm:flex-col gap-2 shrink-0">
                 <Link
-                  href="/search"
-                  className="inline-flex items-center justify-center rounded-full bg-(--accent) px-5 py-2.5 text-sm font-semibold text-(--accent-foreground) transition hover:bg-(--accent-hover)"
+                  href={`/booking/${item.id}`}
+                  className="inline-flex items-center justify-center rounded-full bg-(--accent) px-5 py-3 text-sm font-semibold text-(--accent-foreground) ring-1 ring-inset ring-(--accent) transition hover:bg-(--accent-hover)"
                 >
                   {t("actions.view")}
                 </Link>
 
-                <button
+                {/* <button
                   type="button"
-                  className="inline-flex items-center justify-center rounded-full border border-black/10 px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
+                  className="shrink-0 rounded-full bg-(--pills-background) px-5 py-3 text-sm shadow ring-1 ring-inset ring-white/10 transition-colors duration-300 hover:bg-(--accent)/40 hover:ring-(--accent) hover:text-white text-white/60"
                 >
                   {t("actions.compare")}
-                </button>
+                </button> */}
 
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center rounded-full border border-black/10 px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-black hover:text-white"
+                  className="shrink-0 rounded-full bg-(--pills-background) px-5 py-3 text-sm shadow ring-1 ring-inset ring-white/10 transition-colors duration-300 hover:bg-(--accent)/40 hover:ring-(--accent) hover:text-white text-white/60"
                 >
                   {t("actions.remove")}
                 </button>

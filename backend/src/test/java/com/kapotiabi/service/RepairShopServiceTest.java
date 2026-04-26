@@ -12,6 +12,7 @@ import com.kapotiabi.dto.response.RepairShopResponse;
 import com.kapotiabi.dto.response.ShopServiceCategoryResponse;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopServiceCategoryEntity;
+import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ReviewRepository;
@@ -97,8 +98,7 @@ class RepairShopServiceTest {
   @Test
   void create() {
     RepairShopRequest req =
-        new RepairShopRequest(
-            5L, "New Shop", null, "Tartu", null, null, null, null, null, "active");
+        new RepairShopRequest("New Shop", null, "Tartu", null, null, null, null, null, "active");
     RepairShopEntity saved =
         RepairShopEntity.builder()
             .id(2L)
@@ -111,7 +111,7 @@ class RepairShopServiceTest {
             .build();
     when(repairShopRepository.save(any(RepairShopEntity.class))).thenReturn(saved);
 
-    RepairShopResponse response = repairShopService.create(req);
+    RepairShopResponse response = repairShopService.create(req, 5L);
 
     assertThat(response.id()).isEqualTo(2L);
     assertThat(response.city()).isEqualTo("Tartu");
@@ -126,11 +126,22 @@ class RepairShopServiceTest {
 
     RepairShopRequest req =
         new RepairShopRequest(
-            5L, "Updated Garage", null, "Narva", null, null, null, null, null, "active");
-    RepairShopResponse response = repairShopService.update(1L, req);
+            "Updated Garage", null, "Narva", null, null, null, null, null, "active");
+    RepairShopResponse response = repairShopService.update(1L, req, 5L);
 
     assertThat(response.name()).isEqualTo("Updated Garage");
     assertThat(response.city()).isEqualTo("Narva");
+  }
+
+  @Test
+  void update_wrongOwner_throwsForbidden() {
+    when(repairShopRepository.findById(1L)).thenReturn(Optional.of(buildShop()));
+
+    RepairShopRequest req =
+        new RepairShopRequest(
+            "Updated Garage", null, "Narva", null, null, null, null, null, "active");
+    assertThatThrownBy(() -> repairShopService.update(1L, req, 99L))
+        .isInstanceOf(ForbiddenException.class);
   }
 
   @Test

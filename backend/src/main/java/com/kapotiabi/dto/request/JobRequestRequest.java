@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public record JobRequestRequest(
-    @NotNull Long userId,
     @NotNull Long carId,
     @NotBlank @Size(max = 2000) String description,
     Boolean acceptsNonOem,

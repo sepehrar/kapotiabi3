@@ -449,7 +449,8 @@
       "compare": "Compare",
       "searches": "Recent searches",
       "notifications": "Notifications",
-      "profile": "Profile"
+      "profile": "Profile",
+      "bookings": "My bookings"
     },
     "card": {
       "title": "Continue searching",
@@ -491,34 +492,42 @@
   },
   "accountNotifications": {
     "title": "Notifications",
-    "description": "Choose which updates you want to receive from KapotiAbi.",
-    "items": {
-      "priceUpdates": {
-        "title": "Price updates",
-        "description": "Get notified when a saved service or repair shop changes its price."
-      },
-      "savedServices": {
-        "title": "Saved services",
-        "description": "Get updates about services and repair shops you saved."
-      },
-      "searchAlerts": {
-        "title": "Search alerts",
-        "description": "Get notified when new matching services appear for your searches."
-      },
-      "accountUpdates": {
-        "title": "Account updates",
-        "description": "Receive important account, security, and product-related updates."
-      }
+    "description": "Replies from repair shops to your service requests.",
+
+    "statuses": {
+      "new": "Waiting for replies",
+      "accepted": "Replies received",
+      "booked": "Booked"
     },
-    "delivery": {
-      "title": "Delivery channels",
-      "description": "Choose how you would like to receive notifications.",
-      "email": "Email notifications",
-      "browser": "Browser notifications",
-      "browserDescription": "Receive notifications directly in your browser."
+
+    "replies": {
+      "one": "reply",
+      "other": "replies",
+      "empty": "No replies yet. Shops have been notified."
     },
+
     "actions": {
-      "save": "Save preferences"
+      "bookTime": "Book a time",
+      "decline": "Decline",
+      "appointmentConfirmed": "Appointment confirmed"
+    },
+
+    "criteria": {
+      "vehicle": "Vehicle",
+      "partsPreference": "Parts preference",
+      "distance": "Distance",
+      "location": "Location",
+      "sentAt": "Sent at",
+      "price": "Price",
+      "availableTimes": "Available times",
+      "shop": "Repair shop"
+    },
+
+    "values": {
+      "oem": "OEM",
+      "oemEquivalent": "OEM-equivalent",
+      "budget": "Budget",
+      "from": "From"
     }
   },
   "accountSearches": {
@@ -541,7 +550,8 @@
       "distance": "Distance",
       "rating": "Google rating",
       "reviews": "reviews",
-      "priceStatus": "Price status"
+      "priceStatus": "Price status",
+      "updated": "Updated"
     },
     "actions": {
       "view": "View details",
@@ -563,8 +573,9 @@
       "actions": "Actions"
     },
     "actions": {
-      "view": "View details",
-      "remove": "Remove"
+      "book": "Book a time",
+      "remove": "Remove",
+      "save": "Save"
     }
   },
   "accountOverview": {
@@ -599,6 +610,20 @@
       "viewAll": "View all"
     }
   },
+  "accountBookings": {
+    "title": "My bookings",
+    "description": "Track your upcoming and past appointments with repair shops.",
+    "sections": {
+      "upcoming": "Upcoming",
+      "past": "Past bookings"
+    },
+    "actions": {
+      "reschedule": "Reschedule",
+      "cancel": "Cancel",
+      "bookAgain": "Book again"
+    }
+  },
+
   "businessSidebar": {
     "brand": "KapotiAbi",
     "title": "My Business",
@@ -770,6 +795,34 @@
       "status": "Status",
       "active": "Active",
       "lastUpdated": "Last updated"
+    }
+  },
+  "booking": {
+    "title": "Book a time",
+    "description": "Confirm your appointment with",
+    "actions": {
+      "backToNotifications": "Back to notifications"
+    },
+    "sections": {
+      "request": "Your request",
+      "shopMessage": "Message from shop"
+    },
+    "fields": {
+      "service": "Service",
+      "car": "Car",
+      "parts": "Parts",
+      "price": "Price"
+    },
+    "form": {
+      "selectDate": "Select a date",
+      "availableTimes": "Available times",
+      "messageToShop": "Message to shop",
+      "optional": "optional",
+      "messagePlaceholder": "Any additional info about your car or request…",
+      "selectDateAndTime": "Select a date and time to continue",
+      "confirmBooking": "Confirm booking",
+      "bookingConfirmed": "Booking confirmed!",
+      "redirecting": "Redirecting to notifications…"
     }
   }
 }

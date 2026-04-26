@@ -7,6 +7,7 @@ import com.kapotiabi.dto.response.ReviewResponse;
 import com.kapotiabi.dto.response.ShopServiceCategoryResponse;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopServiceCategoryEntity;
+import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ReviewRepository;
@@ -60,10 +61,10 @@ public class RepairShopService {
     return RepairShopResponse.from(findOrThrow(id));
   }
 
-  public RepairShopResponse create(RepairShopRequest req) {
+  public RepairShopResponse create(RepairShopRequest req, Long authUserId) {
     RepairShopEntity shop =
         RepairShopEntity.builder()
-            .ownerId(req.ownerId())
+            .ownerId(authUserId)
             .name(req.name())
             .address(req.address())
             .city(req.city())
@@ -77,9 +78,10 @@ public class RepairShopService {
     return RepairShopResponse.from(repairShopRepository.save(shop));
   }
 
-  public RepairShopResponse update(Long id, RepairShopRequest req) {
+  public RepairShopResponse update(Long id, RepairShopRequest req, Long authUserId) {
     RepairShopEntity shop = findOrThrow(id);
-    shop.setOwnerId(req.ownerId());
+    if (!authUserId.equals(shop.getOwnerId()))
+      throw new ForbiddenException("You don't have access to this shop");
     shop.setName(req.name());
     shop.setAddress(req.address());
     shop.setCity(req.city());

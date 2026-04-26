@@ -3,6 +3,7 @@ package com.kapotiabi.service;
 import com.kapotiabi.dto.request.JobRequestRequest;
 import com.kapotiabi.dto.response.JobRequestResponse;
 import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.JobRequestRepository;
 import java.time.LocalDateTime;
@@ -42,11 +43,11 @@ public class JobRequestService {
     return JobRequestResponse.from(findOrThrow(id));
   }
 
-  public JobRequestResponse create(JobRequestRequest req) {
+  public JobRequestResponse create(JobRequestRequest req, Long authUserId) {
     LocalDateTime now = LocalDateTime.now();
     JobRequestEntity entity =
         JobRequestEntity.builder()
-            .userId(req.userId())
+            .userId(authUserId)
             .carId(req.carId())
             .description(req.description())
             .acceptsNonOem(req.acceptsNonOem())
@@ -62,9 +63,10 @@ public class JobRequestService {
     return JobRequestResponse.from(jobRequestRepository.save(entity));
   }
 
-  public JobRequestResponse update(Long id, JobRequestRequest req) {
+  public JobRequestResponse update(Long id, JobRequestRequest req, Long authUserId) {
     JobRequestEntity entity = findOrThrow(id);
-    entity.setUserId(req.userId());
+    if (!authUserId.equals(entity.getUserId()))
+      throw new ForbiddenException("You don't have access to this job request");
     entity.setCarId(req.carId());
     entity.setDescription(req.description());
     entity.setAcceptsNonOem(req.acceptsNonOem());
@@ -77,8 +79,10 @@ public class JobRequestService {
     return JobRequestResponse.from(jobRequestRepository.save(entity));
   }
 
-  public JobRequestResponse cancel(Long id) {
+  public JobRequestResponse cancel(Long id, Long authUserId) {
     JobRequestEntity entity = findOrThrow(id);
+    if (!authUserId.equals(entity.getUserId()))
+      throw new ForbiddenException("You don't have access to this job request");
     entity.setStatus("cancelled");
     entity.setUpdatedAt(LocalDateTime.now());
     return JobRequestResponse.from(jobRequestRepository.save(entity));

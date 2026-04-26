@@ -54,7 +54,7 @@ public class RepairShopController {
   @PostMapping
   @Operation(summary = "Create a new repair shop")
   public ResponseEntity<RepairShopResponse> create(@Valid @RequestBody RepairShopRequest req) {
-    RepairShopResponse created = repairShopService.create(req);
+    RepairShopResponse created = repairShopService.create(req, SecurityUtils.getAuthUserId());
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
@@ -73,7 +73,7 @@ public class RepairShopController {
   @Operation(summary = "Update repair shop")
   public ResponseEntity<RepairShopResponse> update(
       @PathVariable Long id, @Valid @RequestBody RepairShopRequest req) {
-    return ResponseEntity.ok(repairShopService.update(id, req));
+    return ResponseEntity.ok(repairShopService.update(id, req, SecurityUtils.getAuthUserId()));
   }
 
   @GetMapping("/{id}/categories")

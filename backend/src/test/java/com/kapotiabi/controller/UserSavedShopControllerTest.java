@@ -1,11 +1,7 @@
 package com.kapotiabi.controller;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -17,12 +13,15 @@ import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.service.UserSavedShopService;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -41,6 +40,13 @@ class UserSavedShopControllerTest {
         MockMvcBuilders.standaloneSetup(userSavedShopController)
             .setControllerAdvice(new GlobalExceptionHandler())
             .build();
+    SecurityContextHolder.getContext()
+        .setAuthentication(new UsernamePasswordAuthenticationToken("5", null, List.of()));
+  }
+
+  @AfterEach
+  void tearDown() {
+    SecurityContextHolder.clearContext();
   }
 
   private SavedShopResponse buildResponse() {
@@ -66,7 +72,7 @@ class UserSavedShopControllerTest {
         .thenReturn(buildPagedResponse(List.of(buildResponse())));
 
     mockMvc
-        .perform(get("/api/v1/users/5/saved-shops"))
+        .perform(get("/api/v1/users/me/saved-shops"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.content[0].shopId").value(10))
         .andExpect(jsonPath("$.content[0].name").value("AutoExpert Tallinn"))
@@ -83,7 +89,7 @@ class UserSavedShopControllerTest {
         .thenReturn(new PagedResponse<>(List.of(), 1, 5, 0, 0));
 
     mockMvc
-        .perform(get("/api/v1/users/5/saved-shops?page=1&size=5"))
+        .perform(get("/api/v1/users/me/saved-shops?page=1&size=5"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.page").value(1))
         .andExpect(jsonPath("$.size").value(5));
@@ -94,7 +100,7 @@ class UserSavedShopControllerTest {
     when(userSavedShopService.getSaved(5L, 0, 10)).thenReturn(buildPagedResponse(List.of()));
 
     mockMvc
-        .perform(get("/api/v1/users/5/saved-shops"))
+        .perform(get("/api/v1/users/me/saved-shops"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.content").isEmpty())
         .andExpect(jsonPath("$.totalElements").value(0));
@@ -107,7 +113,7 @@ class UserSavedShopControllerTest {
     when(userSavedShopService.save(5L, 10L)).thenReturn(buildResponse());
 
     mockMvc
-        .perform(post("/api/v1/users/5/saved-shops/10"))
+        .perform(post("/api/v1/users/me/saved-shops/10"))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.shopId").value(10))
         .andExpect(jsonPath("$.name").value("AutoExpert Tallinn"));
@@ -118,7 +124,7 @@ class UserSavedShopControllerTest {
     when(userSavedShopService.save(5L, 99L)).thenThrow(new NotFoundException("Shop not found: 99"));
 
     mockMvc
-        .perform(post("/api/v1/users/5/saved-shops/99"))
+        .perform(post("/api/v1/users/me/saved-shops/99"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").value("Shop not found: 99"));
   }
@@ -128,7 +134,7 @@ class UserSavedShopControllerTest {
     when(userSavedShopService.save(5L, 10L)).thenThrow(new AlreadySavedException());
 
     mockMvc
-        .perform(post("/api/v1/users/5/saved-shops/10"))
+        .perform(post("/api/v1/users/me/saved-shops/10"))
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.message").value("Shop already saved"));
   }
@@ -139,7 +145,7 @@ class UserSavedShopControllerTest {
   void unsave_returns204() throws Exception {
     doNothing().when(userSavedShopService).unsave(5L, 10L);
 
-    mockMvc.perform(delete("/api/v1/users/5/saved-shops/10")).andExpect(status().isNoContent());
+    mockMvc.perform(delete("/api/v1/users/me/saved-shops/10")).andExpect(status().isNoContent());
   }
 
   @Test
@@ -149,7 +155,7 @@ class UserSavedShopControllerTest {
         .unsave(5L, 10L);
 
     mockMvc
-        .perform(delete("/api/v1/users/5/saved-shops/10"))
+        .perform(delete("/api/v1/users/me/saved-shops/10"))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").value("Saved shop not found"));
   }

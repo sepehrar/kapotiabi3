@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import com.kapotiabi.dto.request.JobRequestRequest;
 import com.kapotiabi.dto.response.JobRequestResponse;
 import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.JobRequestRepository;
 import java.time.LocalDateTime;
@@ -90,11 +91,11 @@ class JobRequestServiceTest {
   @Test
   void create() {
     JobRequestRequest req =
-        new JobRequestRequest(5L, 3L, "Oil change", false, "OEM", "city", "Tallinn", null, null);
+        new JobRequestRequest(3L, "Oil change", false, "OEM", "city", "Tallinn", null, null);
     JobRequestEntity saved = buildRequest("pending");
     when(jobRequestRepository.save(any(JobRequestEntity.class))).thenReturn(saved);
 
-    JobRequestResponse response = jobRequestService.create(req);
+    JobRequestResponse response = jobRequestService.create(req, 5L);
 
     assertThat(response.status()).isEqualTo("pending");
     assertThat(response.userId()).isEqualTo(5L);
@@ -107,9 +108,27 @@ class JobRequestServiceTest {
     when(jobRequestRepository.save(any(JobRequestEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
 
-    JobRequestResponse response = jobRequestService.cancel(1L);
+    JobRequestResponse response = jobRequestService.cancel(1L, 5L);
 
     assertThat(response.status()).isEqualTo("cancelled");
+  }
+
+  @Test
+  void cancel_wrongUser_throwsForbidden() {
+    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest("pending")));
+
+    assertThatThrownBy(() -> jobRequestService.cancel(1L, 999L))
+        .isInstanceOf(ForbiddenException.class);
+  }
+
+  @Test
+  void update_wrongUser_throwsForbidden() {
+    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest("pending")));
+
+    JobRequestRequest req =
+        new JobRequestRequest(3L, "Changed", false, "OEM", "city", "Tallinn", null, null);
+    assertThatThrownBy(() -> jobRequestService.update(1L, req, 999L))
+        .isInstanceOf(ForbiddenException.class);
   }
 
   @Test
