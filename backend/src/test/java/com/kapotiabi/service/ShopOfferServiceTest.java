@@ -3,17 +3,20 @@ package com.kapotiabi.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.kapotiabi.dto.request.ShopOfferRequest;
 import com.kapotiabi.dto.response.ShopOfferResponse;
 import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.entity.OfferSlotEntity;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopOfferEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.JobRequestRepository;
+import com.kapotiabi.repository.OfferSlotRepository;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ShopOfferRepository;
 import java.math.BigDecimal;
@@ -37,6 +40,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class ShopOfferServiceTest {
 
   @Mock private ShopOfferRepository shopOfferRepository;
+  @Mock private OfferSlotRepository offerSlotRepository;
   @Mock private JobRequestRepository jobRequestRepository;
   @Mock private RepairShopRepository repairShopRepository;
 
@@ -80,9 +84,19 @@ class ShopOfferServiceTest {
     return RepairShopEntity.builder().id(SHOP_ID).ownerId(SHOP_OWNER_ID).name("Test Shop").build();
   }
 
+  private OfferSlotEntity buildSlot(Long offerId) {
+    return OfferSlotEntity.builder()
+        .id(100L)
+        .offerId(offerId)
+        .startsAt(LocalDateTime.of(2026, 5, 10, 10, 0))
+        .createdAt(LocalDateTime.now())
+        .build();
+  }
+
   @Test
   void getByJobRequest() {
     when(shopOfferRepository.findByJobRequestId(10L)).thenReturn(List.of(buildOffer("pending")));
+    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of());
 
     List<ShopOfferResponse> result = shopOfferService.getByJobRequest(10L);
 
@@ -93,6 +107,7 @@ class ShopOfferServiceTest {
   @Test
   void getByShop() {
     when(shopOfferRepository.findByShopId(2L)).thenReturn(List.of(buildOffer("pending")));
+    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of());
 
     List<ShopOfferResponse> result = shopOfferService.getByShop(2L);
 
@@ -101,45 +116,53 @@ class ShopOfferServiceTest {
   }
 
   @Test
-  void getById() {
+  void getById_includesSlots() {
     when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
+    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of(buildSlot(1L)));
 
     ShopOfferResponse response = shopOfferService.getById(1L);
 
     assertThat(response.id()).isEqualTo(1L);
+    assertThat(response.slots()).hasSize(1);
+    assertThat(response.slots().get(0).startsAt()).isEqualTo(LocalDateTime.of(2026, 5, 10, 10, 0));
   }
 
   @Test
-  void create_updatesPending() {
+  void create_withSlots_savesSlots() {
     JobRequestEntity jobRequest = buildJobRequest("pending");
     when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(jobRequest));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
-    ShopOfferEntity savedOffer = buildOffer("pending");
-    when(shopOfferRepository.save(any(ShopOfferEntity.class))).thenReturn(savedOffer);
+    when(shopOfferRepository.save(any(ShopOfferEntity.class))).thenReturn(buildOffer("pending"));
     when(jobRequestRepository.save(any(JobRequestEntity.class))).thenReturn(jobRequest);
+    when(offerSlotRepository.saveAll(anyList())).thenReturn(List.of(buildSlot(1L)));
 
     ShopOfferRequest req =
         new ShopOfferRequest(
-            SHOP_ID, new BigDecimal("100.00"), "breakdown", "OEM", new BigDecimal("2.0"), null);
+            new BigDecimal("100.00"),
+            "breakdown",
+            "OEM",
+            new BigDecimal("2.0"),
+            null,
+            List.of(LocalDateTime.of(2026, 5, 10, 10, 0)));
     ShopOfferResponse response = shopOfferService.create(10L, req, SHOP_OWNER_ID);
 
-    assertThat(response.shopId()).isEqualTo(SHOP_ID);
-    verify(jobRequestRepository).save(any(JobRequestEntity.class));
+    assertThat(response.slots()).hasSize(1);
+    verify(offerSlotRepository).saveAll(anyList());
   }
 
   @Test
-  void create_alreadyOffers() {
-    JobRequestEntity jobRequest = buildJobRequest("offers_received");
+  void create_withoutSlots_returnsEmptySlots() {
+    JobRequestEntity jobRequest = buildJobRequest("pending");
     when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(jobRequest));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
-    ShopOfferEntity savedOffer = buildOffer("pending");
-    when(shopOfferRepository.save(any(ShopOfferEntity.class))).thenReturn(savedOffer);
+    when(shopOfferRepository.save(any(ShopOfferEntity.class))).thenReturn(buildOffer("pending"));
+    when(jobRequestRepository.save(any(JobRequestEntity.class))).thenReturn(jobRequest);
 
     ShopOfferRequest req =
-        new ShopOfferRequest(SHOP_ID, new BigDecimal("100.00"), null, null, null, null);
+        new ShopOfferRequest(new BigDecimal("100.00"), null, null, null, null, null);
     ShopOfferResponse response = shopOfferService.create(10L, req, SHOP_OWNER_ID);
 
-    assertThat(response).isNotNull();
+    assertThat(response.slots()).isEmpty();
   }
 
   @Test
@@ -148,47 +171,55 @@ class ShopOfferServiceTest {
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.empty());
 
     ShopOfferRequest req =
-        new ShopOfferRequest(SHOP_ID, new BigDecimal("100.00"), null, null, null, null);
+        new ShopOfferRequest(new BigDecimal("100.00"), null, null, null, null, null);
     assertThatThrownBy(() -> shopOfferService.create(10L, req, SHOP_OWNER_ID))
         .isInstanceOf(ForbiddenException.class);
   }
 
   @Test
-  void update_success() {
-    ShopOfferEntity offer = buildOffer("pending");
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
+  void update_replacesSlots() {
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
     when(shopOfferRepository.save(any(ShopOfferEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
+    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of(buildSlot(1L)));
+    when(offerSlotRepository.saveAll(anyList())).thenReturn(List.of(buildSlot(1L)));
 
     ShopOfferRequest req =
-        new ShopOfferRequest(SHOP_ID, new BigDecimal("200.00"), "new breakdown", "OEM", null, null);
+        new ShopOfferRequest(
+            new BigDecimal("200.00"),
+            "new breakdown",
+            "OEM",
+            null,
+            null,
+            List.of(LocalDateTime.of(2026, 5, 11, 14, 0)));
     ShopOfferResponse response = shopOfferService.update(1L, req, SHOP_OWNER_ID);
 
     assertThat(response.priceEstimate()).isEqualByComparingTo(new BigDecimal("200.00"));
+    verify(offerSlotRepository).deleteAll(anyList());
+    verify(offerSlotRepository).saveAll(anyList());
   }
 
   @Test
   void update_wrongShop_throwsForbidden() {
-    ShopOfferEntity offer = buildOffer("pending");
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
     RepairShopEntity wrongShop =
         RepairShopEntity.builder().id(99L).ownerId(SHOP_OWNER_ID).name("Other Shop").build();
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(wrongShop));
 
     ShopOfferRequest req =
-        new ShopOfferRequest(SHOP_ID, new BigDecimal("200.00"), null, null, null, null);
+        new ShopOfferRequest(new BigDecimal("200.00"), null, null, null, null, null);
     assertThatThrownBy(() -> shopOfferService.update(1L, req, SHOP_OWNER_ID))
         .isInstanceOf(ForbiddenException.class);
   }
 
   @Test
   void reject_success() {
-    ShopOfferEntity offer = buildOffer("pending");
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
     when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest("pending")));
     when(shopOfferRepository.save(any(ShopOfferEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
+    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of());
 
     ShopOfferResponse response = shopOfferService.reject(1L, CAR_OWNER_ID);
 
@@ -197,8 +228,7 @@ class ShopOfferServiceTest {
 
   @Test
   void reject_wrongUser_throwsForbidden() {
-    ShopOfferEntity offer = buildOffer("pending");
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
     when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest("pending")));
 
     assertThatThrownBy(() -> shopOfferService.reject(1L, 999L))
@@ -210,6 +240,15 @@ class ShopOfferServiceTest {
     when(shopOfferRepository.findById(99L)).thenReturn(Optional.empty());
 
     assertThatThrownBy(() -> shopOfferService.getById(99L)).isInstanceOf(NotFoundException.class);
+  }
+
+  @Test
+  void getSlotOrThrow_notFound() {
+    when(offerSlotRepository.findById(99L)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> shopOfferService.getSlotOrThrow(99L))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("99");
   }
 
   // ── PDF upload ────────────────────────────────────────────────────────────
@@ -226,8 +265,7 @@ class ShopOfferServiceTest {
 
   @Test
   void uploadPdf_validPdf_persistsPdfUrl() throws Exception {
-    ShopOfferEntity offer = buildOffer("pending");
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
     when(shopOfferRepository.save(any(ShopOfferEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
@@ -267,8 +305,7 @@ class ShopOfferServiceTest {
 
   @Test
   void downloadPdf_noPdfUrl_throwsNotFound() {
-    ShopOfferEntity offer = buildOffer("pending");
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
 
     assertThatThrownBy(() -> shopOfferService.downloadPdf(1L))
         .isInstanceOf(NotFoundException.class)

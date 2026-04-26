@@ -40,13 +40,17 @@ public class ShopOfferService {
 
   public List<ShopOfferResponse> getByJobRequest(Long jobRequestId) {
     return shopOfferRepository.findByJobRequestId(jobRequestId).stream()
-        .map(offer -> ShopOfferResponse.from(offer, offerSlotRepository.findByOfferId(offer.getId())))
+        .map(
+            offer ->
+                ShopOfferResponse.from(offer, offerSlotRepository.findByOfferId(offer.getId())))
         .toList();
   }
 
   public List<ShopOfferResponse> getByShop(Long shopId) {
     return shopOfferRepository.findByShopId(shopId).stream()
-        .map(offer -> ShopOfferResponse.from(offer, offerSlotRepository.findByOfferId(offer.getId())))
+        .map(
+            offer ->
+                ShopOfferResponse.from(offer, offerSlotRepository.findByOfferId(offer.getId())))
         .toList();
   }
 
