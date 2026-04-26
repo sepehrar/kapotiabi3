@@ -38,13 +38,9 @@ public class JobRequestController {
   private final ShopOfferService shopOfferService;
 
   @GetMapping
-  @Operation(summary = "Get job requests by user ID")
-  public ResponseEntity<List<JobRequestResponse>> getByUser(
-      @RequestParam(required = false) Long userId) {
-    if (userId == null) {
-      return ResponseEntity.badRequest().build();
-    }
-    return ResponseEntity.ok(jobRequestService.getByUser(userId));
+  @Operation(summary = "Get job requests for the authenticated user")
+  public ResponseEntity<List<JobRequestResponse>> getByUser() {
+    return ResponseEntity.ok(jobRequestService.getByUser(SecurityUtils.getAuthUserId()));
   }
 
   @GetMapping("/available")
