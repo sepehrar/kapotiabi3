@@ -74,7 +74,7 @@ class CarServiceTest {
 
   @Test
   void create() {
-    CarRequest req = new CarRequest(10L, "XYZ789", "BMW", "3 Series", 2022, "2.0 diesel");
+    var req = new CarRequest("XYZ789", "BMW", "3 Series", 2022, "2.0 diesel");
     var saved =
         CarEntity.builder()
             .id(2L)
@@ -100,7 +100,7 @@ class CarServiceTest {
     when(carRepository.findById(1L)).thenReturn(Optional.of(car));
     when(carRepository.save(any(CarEntity.class))).thenAnswer(inv -> inv.getArgument(0));
 
-    var req = new CarRequest(10L, "NEW123", "Honda", "Civic", 2021, "1.5 turbo");
+    var req = new CarRequest("NEW123", "Honda", "Civic", 2021, "1.5 turbo");
     var response = carService.update(1L, req, 10L);
 
     assertThat(response.plateNumber()).isEqualTo("NEW123");
@@ -111,7 +111,7 @@ class CarServiceTest {
   void update_wrongOwner_throwsForbidden() {
     when(carRepository.findById(1L)).thenReturn(Optional.of(buildCar()));
 
-    var req = new CarRequest(10L, "NEW123", "Honda", "Civic", 2021, "1.5 turbo");
+    var req = new CarRequest("NEW123", "Honda", "Civic", 2021, "1.5 turbo");
     assertThatThrownBy(() -> carService.update(1L, req, 99L))
         .isInstanceOf(ForbiddenException.class);
   }

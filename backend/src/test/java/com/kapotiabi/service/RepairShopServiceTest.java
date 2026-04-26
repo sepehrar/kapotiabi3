@@ -92,8 +92,7 @@ class RepairShopServiceTest {
   @Test
   void create() {
     var req =
-        new RepairShopRequest(
-            5L, "New Shop", null, "Tartu", null, null, null, null, null, "active");
+        new RepairShopRequest("New Shop", null, "Tartu", null, null, null, null, null, "active");
     var saved =
         RepairShopEntity.builder()
             .id(2L)
@@ -121,7 +120,7 @@ class RepairShopServiceTest {
 
     var req =
         new RepairShopRequest(
-            5L, "Updated Garage", null, "Narva", null, null, null, null, null, "active");
+            "Updated Garage", null, "Narva", null, null, null, null, null, "active");
     var response = repairShopService.update(1L, req, 5L);
 
     assertThat(response.name()).isEqualTo("Updated Garage");
@@ -134,7 +133,7 @@ class RepairShopServiceTest {
 
     var req =
         new RepairShopRequest(
-            5L, "Updated Garage", null, "Narva", null, null, null, null, null, "active");
+            "Updated Garage", null, "Narva", null, null, null, null, null, "active");
     assertThatThrownBy(() -> repairShopService.update(1L, req, 99L))
         .isInstanceOf(ForbiddenException.class);
   }
