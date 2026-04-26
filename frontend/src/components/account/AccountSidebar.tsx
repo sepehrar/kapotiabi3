@@ -221,11 +221,11 @@ export default function AccountSidebar() {
         </div>
       </Dialog>
 
-      <div className="sticky top-0 z-40 flex gap-x-4 border-b border-black/10 bg-white px-4 py-4 sm:px-6 lg:hidden">
+      <div className="sticky top-0 z-40 flex items-center gap-x-4 border-b border-white/10 bg-black px-4 py-4 sm:px-6 lg:hidden">
         <button
           type="button"
           onClick={() => setSidebarOpen(true)}
-          className="-m-2.5 p-2.5 text-black/70"
+          className="-m-2.5 p-2.5 text-white/70"
         >
           <span className="sr-only">{t("openSidebar")}</span>
           <Bars3Icon aria-hidden="true" className="size-6" />

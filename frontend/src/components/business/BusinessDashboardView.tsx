@@ -1,9 +1,11 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function BusinessDashboardView() {
   const t = useTranslations("businessDashboard");
+  const locale = useLocale();
 
   const stats = [
     { label: t("stats.views"), value: "1,248", change: "+12.4%" },
@@ -41,138 +43,139 @@ export default function BusinessDashboardView() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-3xl border border-white/10 bg-(--pills-background) p-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <section className="border-b border-white/10 pb-6">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-sm text-white/60">{t("eyebrow")}</p>
-            <h1 className="mt-4 text-2xl font-light tracking-tight text-white text-balance sm:text-3xl">
+            <p className="text-sm text-white/50">{t("eyebrow")}</p>
+            <h1 className="mt-3 text-2xl font-light tracking-tight text-white text-balance sm:text-3xl">
               {t("title")}
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-white/50 text-balance">
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-white/55">
               {t("description")}
             </p>
           </div>
 
-          <div className="inline-flex w-fit items-center rounded-full border border-white/10 bg-black px-4 py-2 text-sm text-white/70">
-            {t("period")}
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href={`/${locale}/business/leads`}
+              className="inline-flex items-center justify-center rounded-full bg-(--accent) px-4 py-2 text-sm font-semibold text-(--accent-foreground) transition hover:bg-(--accent-hover)"
+            >
+              {t("recentLeads.title")}
+            </Link>
+            <span className="inline-flex items-center rounded-full border border-white/10 px-4 py-2 text-sm text-white/65">
+              {t("period")}
+            </span>
           </div>
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 xl:grid-cols-4">
         {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-3xl border border-white/10 bg-(--pills-background) p-5"
-          >
-            <p className="text-sm text-white/60">{stat.label}</p>
-            <p className="mt-3 text-3xl font-semibold text-white">
-              {stat.value}
-            </p>
-            <p className="mt-2 text-sm text-(--accent)">{stat.change}</p>
+          <div key={stat.label} className="bg-black p-5">
+            <p className="text-xs uppercase text-white/40">{stat.label}</p>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <p className="text-2xl font-semibold text-white">{stat.value}</p>
+              <p className="text-sm text-(--accent)">{stat.change}</p>
+            </div>
           </div>
         ))}
       </section>
 
-      <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <div className="xl:col-span-2 rounded-3xl border border-white/10 bg-(--pills-background) p-6">
-          <div className="flex items-start justify-between gap-4">
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="rounded-lg border border-white/10">
+          <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
             <div>
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-base font-semibold text-white">
                 {t("recentLeads.title")}
               </h2>
-              <p className="mt-1 text-sm text-white/60">
+              <p className="mt-1 text-sm text-white/50">
                 {t("recentLeads.description")}
               </p>
             </div>
           </div>
 
-          <div className="mt-6 space-y-3">
+          <div className="divide-y divide-white/10">
             {recentLeads.map((lead) => (
               <div
                 key={lead.id}
-                className="rounded-2xl border border-white/10 bg-black/40 p-4"
+                className="grid gap-3 p-5 sm:grid-cols-[minmax(0,1fr)_8rem_6rem]"
               >
-                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-white">
-                      {lead.service}
-                    </p>
-                    <p className="mt-1 text-sm text-white/60">
-                      {lead.car} · {lead.location}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
-                      {lead.status}
-                    </span>
-                    <span className="text-xs text-white/50">{lead.date}</span>
-                  </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">
+                    {lead.service}
+                  </p>
+                  <p className="mt-1 text-sm text-white/55">
+                    {lead.car} · {lead.location}
+                  </p>
                 </div>
+                <span className="h-fit w-fit rounded-full border border-white/10 px-3 py-1 text-xs text-white/70">
+                  {lead.status}
+                </span>
+                <span className="text-sm text-white/45 sm:text-right">
+                  {lead.date}
+                </span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="rounded-3xl border border-white/10 bg-(--pills-background) p-6">
-            <h2 className="text-lg font-semibold text-white">
+        <aside className="space-y-6">
+          <section className="rounded-lg border border-white/10 p-5">
+            <h2 className="text-base font-semibold text-white">
               {t("listingStatus.title")}
             </h2>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-white/50">
               {t("listingStatus.description")}
             </p>
 
-            <div className="mt-5 space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-white/70">
+            <dl className="mt-5 space-y-4">
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-sm text-white/60">
                   {t("listingStatus.status")}
-                </span>
-                <span className="rounded-full bg-(--accent) px-3 py-1 text-xs font-medium text-(--accent-foreground)">
+                </dt>
+                <dd className="rounded-full bg-(--accent) px-3 py-1 text-xs font-medium text-(--accent-foreground)">
                   {t("listingStatus.active")}
-                </span>
+                </dd>
               </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-white/70">
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-sm text-white/60">
                   {t("listingStatus.services")}
-                </span>
-                <span className="text-sm text-white">
+                </dt>
+                <dd className="text-sm text-white">
                   {t("listingStatus.listed", { count: 24 })}
-                </span>
+                </dd>
               </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-white/70">
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-sm text-white/60">
                   {t("listingStatus.lastUpdated")}
-                </span>
-                <span className="text-sm text-white">
+                </dt>
+                <dd className="text-sm text-white">
                   {t("listingStatus.daysAgo", { count: 2 })}
-                </span>
+                </dd>
               </div>
-            </div>
-          </div>
+            </dl>
+          </section>
 
-          <div className="rounded-3xl border border-white/10 bg-(--pills-background) p-6">
-            <h2 className="text-lg font-semibold text-white">
+          <section className="rounded-lg border border-white/10 p-5">
+            <h2 className="text-base font-semibold text-white">
               {t("subscription.title")}
             </h2>
-            <p className="mt-1 text-sm text-white/60">
+            <p className="mt-1 text-sm text-white/50">
               {t("subscription.description")}
             </p>
-
-            <div className="mt-5 rounded-2xl border border-white/10 bg-black/40 p-4">
-              <p className="text-sm text-white/60">
-                {t("subscription.currentPlan")}
-              </p>
-              <p className="mt-2 text-xl font-semibold text-white">Pro</p>
-              <p className="mt-2 text-sm text-white/70">
-                {t("subscription.renewsOn", { date: "24 Sep 2025" })}
-              </p>
-            </div>
-          </div>
-        </div>
+            <dl className="mt-5 space-y-2">
+              <div>
+                <dt className="text-sm text-white/45">
+                  {t("subscription.currentPlan")}
+                </dt>
+                <dd className="mt-1 text-xl font-semibold text-white">Pro</dd>
+              </div>
+              <div className="text-sm text-white/60">
+                {t("subscription.renewsOn", { date: "24 Sep 2026" })}
+              </div>
+            </dl>
+          </section>
+        </aside>
       </section>
     </div>
   );

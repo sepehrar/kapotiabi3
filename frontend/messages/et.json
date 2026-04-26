@@ -701,6 +701,12 @@
       "viewed": "Vaadatud",
       "responded": "Vastatud"
     },
+    "table": {
+      "request": "Päring",
+      "status": "Staatus",
+      "budget": "Eelarve",
+      "received": "Saabunud"
+    },
     "openDetails": "Ava detailid"
   },
   "businessListing": {

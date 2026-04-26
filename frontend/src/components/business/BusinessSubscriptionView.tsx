@@ -69,7 +69,7 @@ export default function BusinessSubscriptionView() {
 
         <div className="rounded-3xl border border-white/10 bg-(--pills-background) p-5">
           <p className="text-sm text-white/60">{t("summary.renewalDate")}</p>
-          <p className="mt-3 text-3xl font-semibold text-white">24 Sep 2025</p>
+          <p className="mt-3 text-3xl font-semibold text-white">24 Sep 2026</p>
         </div>
       </section>
 

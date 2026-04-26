@@ -701,6 +701,12 @@
       "viewed": "Viewed",
       "responded": "Responded"
     },
+    "table": {
+      "request": "Request",
+      "status": "Status",
+      "budget": "Budget",
+      "received": "Received"
+    },
     "openDetails": "Open details"
   },
   "businessListing": {
