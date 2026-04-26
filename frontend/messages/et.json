@@ -449,7 +449,8 @@
       "compare": "Võrdlus",
       "searches": "Hiljutised otsingud",
       "notifications": "Teavitused",
-      "profile": "Profiil"
+      "profile": "Profiil",
+      "bookings": "Minu broneeringud"
     },
     "card": {
       "title": "Jätka otsingut",
@@ -492,34 +493,42 @@
   },
   "accountNotifications": {
     "title": "Teavitused",
-    "description": "Vali, milliseid uuendusi soovid KapotiAbilt saada.",
-    "items": {
-      "priceUpdates": {
-        "title": "Hinnauuendused",
-        "description": "Saa teavitus, kui salvestatud teenuse või autoteeninduse hind muutub."
-      },
-      "savedServices": {
-        "title": "Salvestatud teenused",
-        "description": "Saa uuendusi teenuste ja autoteeninduste kohta, mille oled salvestanud."
-      },
-      "searchAlerts": {
-        "title": "Otsinguteavitused",
-        "description": "Saa teavitus, kui sinu otsingule ilmuvad uued sobivad teenused."
-      },
-      "accountUpdates": {
-        "title": "Konto uuendused",
-        "description": "Saa olulisi konto, turvalisuse ja toote uuendusi."
-      }
+    "description": "Remonditöökodade vastused sinu hoolduspäringutele.",
+
+    "statuses": {
+      "new": "Ootab vastuseid",
+      "accepted": "Vastused saabunud",
+      "booked": "Broneeritud"
     },
-    "delivery": {
-      "title": "Teavituste kanalid",
-      "description": "Vali, kuidas soovid teavitusi saada.",
-      "email": "E-posti teavitused",
-      "browser": "Brauseri teavitused",
-      "browserDescription": "Saa teavitused otse oma brauserisse."
+
+    "replies": {
+      "one": "vastus",
+      "other": "vastust",
+      "empty": "Vastuseid veel pole. Töökodasid on teavitatud."
     },
+
     "actions": {
-      "save": "Salvesta eelistused"
+      "bookTime": "Broneeri aeg",
+      "decline": "Keeldu",
+      "appointmentConfirmed": "Aeg on kinnitatud"
+    },
+
+    "criteria": {
+      "vehicle": "Sõiduk",
+      "partsPreference": "Varuosade eelistus",
+      "distance": "Kaugus",
+      "location": "Asukoht",
+      "sentAt": "Saadetud",
+      "price": "Hind",
+      "availableTimes": "Saadaval ajad",
+      "shop": "Remonditöökoda"
+    },
+
+    "values": {
+      "oem": "OEM",
+      "oemEquivalent": "OEM-väärne",
+      "budget": "Soodne",
+      "from": "Alates"
     }
   },
   "accountSearches": {
@@ -542,7 +551,8 @@
       "distance": "Kaugus",
       "rating": "Google'i hinnang",
       "reviews": "arvustust",
-      "priceStatus": "Hinna staatus"
+      "priceStatus": "Hinna staatus",
+      "updated": "Viimati uuendatud"
     },
     "actions": {
       "view": "Vaata detaile",
@@ -564,8 +574,9 @@
       "actions": "Toimingud"
     },
     "actions": {
-      "view": "Vaata detaile",
-      "remove": "Eemalda"
+      "book": "Broneeri aeg",
+      "remove": "Eemalda",
+      "save": "Salvesta"
     }
   },
   "accountOverview": {
@@ -598,6 +609,19 @@
     },
     "actions": {
       "viewAll": "Vaata kõiki"
+    }
+  },
+  "accountBookings": {
+    "title": "Minu broneeringud",
+    "description": "Jälgi oma eelseisvaid ja varasemaid kohtumisi autoremonditeenustega.",
+    "sections": {
+      "upcoming": "Eelseisvad",
+      "past": "Varasemad broneeringud"
+    },
+    "actions": {
+      "reschedule": "Muuda aega",
+      "cancel": "Tühista",
+      "bookAgain": "Broneeri uuesti"
     }
   },
   "businessSidebar": {
@@ -771,6 +795,34 @@
       "status": "Staatus",
       "active": "Aktiivne",
       "lastUpdated": "Viimati uuendatud"
+    }
+  },
+  "booking": {
+    "title": "Broneeri aeg",
+    "description": "Kinnita oma aeg töökojas",
+    "actions": {
+      "backToNotifications": "Tagasi teavituste juurde"
+    },
+    "sections": {
+      "request": "Sinu päring",
+      "shopMessage": "Töökoja sõnum"
+    },
+    "fields": {
+      "service": "Teenus",
+      "car": "Auto",
+      "parts": "Varuosad",
+      "price": "Hind"
+    },
+    "form": {
+      "selectDate": "Vali kuupäev",
+      "availableTimes": "Saadaval ajad",
+      "messageToShop": "Sõnum töökojale",
+      "optional": "valikuline",
+      "messagePlaceholder": "Lisa täiendav info auto või päringu kohta…",
+      "selectDateAndTime": "Jätkamiseks vali kuupäev ja aeg",
+      "confirmBooking": "Kinnita broneering",
+      "bookingConfirmed": "Broneering kinnitatud!",
+      "redirecting": "Suuname sind teavituste lehele…"
     }
   }
 }

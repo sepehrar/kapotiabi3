@@ -3,11 +3,14 @@ package com.kapotiabi.service;
 import com.kapotiabi.dto.request.JobRequestRequest;
 import com.kapotiabi.dto.response.JobRequestResponse;
 import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.JobRequestRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,27 +25,29 @@ public class JobRequestService {
         .toList();
   }
 
-  public List<JobRequestResponse> getAvailable(String city, String county) {
-    List<JobRequestEntity> results;
+  public Page<JobRequestResponse> getAvailable(String city, String county, Pageable pageable) {
     if (city != null) {
-      results = jobRequestRepository.findByStatusAndCity("pending", city);
+      return jobRequestRepository
+          .findByStatusAndCity("pending", city, pageable)
+          .map(JobRequestResponse::from);
     } else if (county != null) {
-      results = jobRequestRepository.findByStatusAndCounty("pending", county);
+      return jobRequestRepository
+          .findByStatusAndCounty("pending", county, pageable)
+          .map(JobRequestResponse::from);
     } else {
-      results = jobRequestRepository.findByStatus("pending");
+      return jobRequestRepository.findByStatus("pending", pageable).map(JobRequestResponse::from);
     }
-    return results.stream().map(JobRequestResponse::from).toList();
   }
 
   public JobRequestResponse getById(Long id) {
     return JobRequestResponse.from(findOrThrow(id));
   }
 
-  public JobRequestResponse create(JobRequestRequest req) {
+  public JobRequestResponse create(JobRequestRequest req, Long authUserId) {
     LocalDateTime now = LocalDateTime.now();
     JobRequestEntity entity =
         JobRequestEntity.builder()
-            .userId(req.userId())
+            .userId(authUserId)
             .carId(req.carId())
             .description(req.description())
             .acceptsNonOem(req.acceptsNonOem())
@@ -58,9 +63,10 @@ public class JobRequestService {
     return JobRequestResponse.from(jobRequestRepository.save(entity));
   }
 
-  public JobRequestResponse update(Long id, JobRequestRequest req) {
+  public JobRequestResponse update(Long id, JobRequestRequest req, Long authUserId) {
     JobRequestEntity entity = findOrThrow(id);
-    entity.setUserId(req.userId());
+    if (!authUserId.equals(entity.getUserId()))
+      throw new ForbiddenException("You don't have access to this job request");
     entity.setCarId(req.carId());
     entity.setDescription(req.description());
     entity.setAcceptsNonOem(req.acceptsNonOem());
@@ -73,8 +79,10 @@ public class JobRequestService {
     return JobRequestResponse.from(jobRequestRepository.save(entity));
   }
 
-  public JobRequestResponse cancel(Long id) {
+  public JobRequestResponse cancel(Long id, Long authUserId) {
     JobRequestEntity entity = findOrThrow(id);
+    if (!authUserId.equals(entity.getUserId()))
+      throw new ForbiddenException("You don't have access to this job request");
     entity.setStatus("cancelled");
     entity.setUpdatedAt(LocalDateTime.now());
     return JobRequestResponse.from(jobRequestRepository.save(entity));

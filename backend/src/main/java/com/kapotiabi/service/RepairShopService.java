@@ -7,6 +7,7 @@ import com.kapotiabi.dto.response.ReviewResponse;
 import com.kapotiabi.dto.response.ShopServiceCategoryResponse;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopServiceCategoryEntity;
+import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ReviewRepository;
@@ -14,6 +15,8 @@ import com.kapotiabi.repository.ShopServiceCategoryRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,16 +27,18 @@ public class RepairShopService {
   private final ShopServiceCategoryRepository categoryRepository;
   private final ReviewRepository reviewRepository;
 
-  public List<RepairShopResponse> getAll(String city, String county) {
-    List<RepairShopEntity> shops;
+  public Page<RepairShopResponse> getAll(String city, String county, Pageable pageable) {
     if (city != null) {
-      shops = repairShopRepository.findByStatusAndCity("active", city);
+      return repairShopRepository
+          .findByStatusAndCity("active", city, pageable)
+          .map(RepairShopResponse::from);
     } else if (county != null) {
-      shops = repairShopRepository.findByStatusAndCounty("active", county);
+      return repairShopRepository
+          .findByStatusAndCounty("active", county, pageable)
+          .map(RepairShopResponse::from);
     } else {
-      shops = repairShopRepository.findByStatus("active");
+      return repairShopRepository.findByStatus("active", pageable).map(RepairShopResponse::from);
     }
-    return shops.stream().map(RepairShopResponse::from).toList();
   }
 
   public List<RepairShopResponse> getAllForAdmin(String status) {
@@ -56,10 +61,10 @@ public class RepairShopService {
     return RepairShopResponse.from(findOrThrow(id));
   }
 
-  public RepairShopResponse create(RepairShopRequest req) {
+  public RepairShopResponse create(RepairShopRequest req, Long authUserId) {
     RepairShopEntity shop =
         RepairShopEntity.builder()
-            .ownerId(req.ownerId())
+            .ownerId(authUserId)
             .name(req.name())
             .address(req.address())
             .city(req.city())
@@ -73,9 +78,10 @@ public class RepairShopService {
     return RepairShopResponse.from(repairShopRepository.save(shop));
   }
 
-  public RepairShopResponse update(Long id, RepairShopRequest req) {
+  public RepairShopResponse update(Long id, RepairShopRequest req, Long authUserId) {
     RepairShopEntity shop = findOrThrow(id);
-    shop.setOwnerId(req.ownerId());
+    if (!authUserId.equals(shop.getOwnerId()))
+      throw new ForbiddenException("You don't have access to this shop");
     shop.setName(req.name());
     shop.setAddress(req.address());
     shop.setCity(req.city());

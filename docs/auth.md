@@ -275,7 +275,7 @@ From the `backend/` directory:
 | `SPRING_DATASOURCE_URL` | `jdbc:postgresql://localhost:5432/kapotiabi` | Database URL |
 | `SPRING_DATASOURCE_USERNAME` | `kapotiabi` | DB username |
 | `SPRING_DATASOURCE_PASSWORD` | *(empty)* | DB password |
-| `JWT_SECRET` | `dev-secret-key-...` | JWT signing key — **change in production** |
+| `JWT_SECRET` | *(required — no default)* | JWT signing key — app will not start without this set. For local dev use `SPRING_PROFILES_ACTIVE=dev` |
 | `JWT_EXPIRATION_MS` | `86400000` | Token lifetime in ms (default 24h) |
 
 ---
@@ -289,7 +289,7 @@ psql -U postgres -c "CREATE DATABASE kapotiabi OWNER kapotiabi;"
 
 # 2. Start the app — Flyway runs all migrations automatically
 cd backend
-SPRING_DATASOURCE_PASSWORD=kapotiabi ./mvnw spring-boot:run
+SPRING_DATASOURCE_PASSWORD=kapotiabi SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
 ```
 
 Flyway runs on startup:

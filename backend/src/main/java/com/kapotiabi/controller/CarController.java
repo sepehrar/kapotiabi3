@@ -2,6 +2,7 @@ package com.kapotiabi.controller;
 
 import com.kapotiabi.dto.request.CarRequest;
 import com.kapotiabi.dto.response.CarResponse;
+import com.kapotiabi.security.SecurityUtils;
 import com.kapotiabi.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,18 +31,14 @@ public class CarController {
 
   @GetMapping
   @Operation(summary = "Get cars by owner ID")
-  public ResponseEntity<List<CarResponse>> getByOwner(
-      @RequestParam(required = false) Long ownerId) {
-    if (ownerId == null) {
-      return ResponseEntity.badRequest().build();
-    }
-    return ResponseEntity.ok(carService.getByOwner(ownerId));
+  public ResponseEntity<List<CarResponse>> getByOwner() {
+    return ResponseEntity.ok(carService.getByOwner(SecurityUtils.getAuthUserId()));
   }
 
   @PostMapping
   @Operation(summary = "Create a new car")
   public ResponseEntity<CarResponse> create(@Valid @RequestBody CarRequest req) {
-    CarResponse created = carService.create(req);
+    CarResponse created = carService.create(req, SecurityUtils.getAuthUserId());
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
@@ -61,13 +57,13 @@ public class CarController {
   @Operation(summary = "Update car")
   public ResponseEntity<CarResponse> update(
       @PathVariable Long id, @Valid @RequestBody CarRequest req) {
-    return ResponseEntity.ok(carService.update(id, req));
+    return ResponseEntity.ok(carService.update(id, req, SecurityUtils.getAuthUserId()));
   }
 
   @DeleteMapping("/{id}")
   @Operation(summary = "Delete car")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
-    carService.delete(id);
+    carService.delete(id, SecurityUtils.getAuthUserId());
     return ResponseEntity.noContent().build();
   }
 }

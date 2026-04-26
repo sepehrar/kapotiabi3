@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,14 +34,10 @@ public class BookingController {
   private final ReviewService reviewService;
 
   @GetMapping
-  @Operation(
-      summary = "Get bookings for the authenticated user (car owner) or their shop (shop owner)")
-  public ResponseEntity<List<BookingResponse>> getBookings() {
-    Long authUserId = SecurityUtils.getAuthUserId();
-    if (SecurityUtils.hasRole("SHOP_OWNER")) {
-      return ResponseEntity.ok(bookingService.getByShopOwner(authUserId));
-    }
-    return ResponseEntity.ok(bookingService.getByUser(authUserId));
+  @Operation(summary = "Get bookings for the authenticated user (car owner)")
+  public ResponseEntity<Page<BookingResponse>> getBookings(
+      @PageableDefault(size = 20, sort = "id") Pageable pageable) {
+    return ResponseEntity.ok(bookingService.getByUser(SecurityUtils.getAuthUserId(), pageable));
   }
 
   @GetMapping("/{id}")

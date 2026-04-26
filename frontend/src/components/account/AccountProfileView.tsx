@@ -7,7 +7,7 @@ type AccountProfileViewProps = {
 
 export default function AccountProfileView({ t }: AccountProfileViewProps) {
   return (
-    <div className="w-full px-8 py-8 xl:px-16">
+    <div className="mx-auto w-full max-w-6xl">
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
         <p className="mt-2 text-sm text-white/40">{t("description")}</p>

@@ -1,0 +1,2 @@
+jwt:
+  secret: dev-secret-key-min-256-bits-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -3,6 +3,7 @@ package com.kapotiabi.service;
 import com.kapotiabi.dto.request.CarRequest;
 import com.kapotiabi.dto.response.CarResponse;
 import com.kapotiabi.entity.CarEntity;
+import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.CarRepository;
 import java.time.LocalDateTime;
@@ -24,10 +25,10 @@ public class CarService {
     return CarResponse.from(findOrThrow(id));
   }
 
-  public CarResponse create(CarRequest req) {
+  public CarResponse create(CarRequest req, Long authUserId) {
     CarEntity car =
         CarEntity.builder()
-            .ownerId(req.ownerId())
+            .ownerId(authUserId)
             .plateNumber(req.plateNumber())
             .make(req.make())
             .model(req.model())
@@ -38,9 +39,10 @@ public class CarService {
     return CarResponse.from(carRepository.save(car));
   }
 
-  public CarResponse update(Long id, CarRequest req) {
+  public CarResponse update(Long id, CarRequest req, Long authUserId) {
     CarEntity car = findOrThrow(id);
-    car.setOwnerId(req.ownerId());
+    if (!authUserId.equals(car.getOwnerId()))
+      throw new ForbiddenException("You don't have access to this car");
     car.setPlateNumber(req.plateNumber());
     car.setMake(req.make());
     car.setModel(req.model());
@@ -49,8 +51,10 @@ public class CarService {
     return CarResponse.from(carRepository.save(car));
   }
 
-  public void delete(Long id) {
-    findOrThrow(id);
+  public void delete(Long id, Long authUserId) {
+    CarEntity car = findOrThrow(id);
+    if (!authUserId.equals(car.getOwnerId()))
+      throw new ForbiddenException("You don't have access to this car");
     carRepository.deleteById(id);
   }
 

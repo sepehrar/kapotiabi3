@@ -2,13 +2,13 @@ package com.kapotiabi.controller;
 
 import com.kapotiabi.dto.response.PagedResponse;
 import com.kapotiabi.dto.response.SavedShopResponse;
+import com.kapotiabi.security.SecurityUtils;
 import com.kapotiabi.service.UserSavedShopService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/api/v1/users/{userId}/saved-shops")
+@RequestMapping("/api/v1/users/me/saved-shops")
 @RequiredArgsConstructor
 @Tag(name = "Saved Shops", description = "User saved shops management")
 public class UserSavedShopController {
@@ -27,30 +27,25 @@ public class UserSavedShopController {
   private final UserSavedShopService userSavedShopService;
 
   @GetMapping
-  @PreAuthorize("authentication.principal == #userId.toString()")
-  @Operation(summary = "Get saved shops for a user")
+  @Operation(summary = "Get saved shops for the authenticated user")
   public ResponseEntity<PagedResponse<SavedShopResponse>> getSaved(
-      @PathVariable Long userId,
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int size) {
-    return ResponseEntity.ok(userSavedShopService.getSaved(userId, page, size));
+      @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    return ResponseEntity.ok(
+        userSavedShopService.getSaved(SecurityUtils.getAuthUserId(), page, size));
   }
 
   @PostMapping("/{shopId}")
-  @PreAuthorize("authentication.principal == #userId.toString()")
-  @Operation(summary = "Save a shop for a user")
-  public ResponseEntity<SavedShopResponse> save(
-      @PathVariable Long userId, @PathVariable Long shopId) {
-    SavedShopResponse saved = userSavedShopService.save(userId, shopId);
+  @Operation(summary = "Save a shop for the authenticated user")
+  public ResponseEntity<SavedShopResponse> save(@PathVariable Long shopId) {
+    SavedShopResponse saved = userSavedShopService.save(SecurityUtils.getAuthUserId(), shopId);
     URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
     return ResponseEntity.created(location).body(saved);
   }
 
   @DeleteMapping("/{shopId}")
-  @PreAuthorize("authentication.principal == #userId.toString()")
-  @Operation(summary = "Remove a saved shop for a user")
-  public ResponseEntity<Void> unsave(@PathVariable Long userId, @PathVariable Long shopId) {
-    userSavedShopService.unsave(userId, shopId);
+  @Operation(summary = "Remove a saved shop for the authenticated user")
+  public ResponseEntity<Void> unsave(@PathVariable Long shopId) {
+    userSavedShopService.unsave(SecurityUtils.getAuthUserId(), shopId);
     return ResponseEntity.noContent().build();
   }
 }
