@@ -623,6 +623,11 @@
       "reschedule": "Muuda aega",
       "cancel": "Tühista",
       "bookAgain": "Broneeri uuesti"
+    },
+    "empty": {
+      "title": "Broneeringuid veel pole",
+      "description": "Vali võrdlusest teenus ja kinnita aeg, et broneering siin ilmuks.",
+      "action": "Alusta otsingut"
     }
   },
   "businessSidebar": {

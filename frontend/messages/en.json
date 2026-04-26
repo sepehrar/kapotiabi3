@@ -622,6 +622,11 @@
       "reschedule": "Reschedule",
       "cancel": "Cancel",
       "bookAgain": "Book again"
+    },
+    "empty": {
+      "title": "No bookings yet",
+      "description": "Choose a service from compare and confirm a time to see it here.",
+      "action": "Start a search"
     }
   },
 
