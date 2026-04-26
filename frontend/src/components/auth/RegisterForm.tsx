@@ -7,6 +7,7 @@ import { FormEvent, useState } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import SectionTitle from "../ui/SectionTitle";
+import { getPublicApiBaseUrl } from "@/lib/publicApiBaseUrl";
 import {
   validateRegisterForm,
   type RegisterFormData,
@@ -88,25 +89,23 @@ export default function RegisterForm() {
     try {
       setLoading(true);
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      if (!apiUrl) {
-        throw new Error("NEXT_PUBLIC_API_URL is not configured.");
-      }
-
-      const response = await fetch(`${apiUrl}/api/v1/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${getPublicApiBaseUrl()}/api/v1/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
+            email: form.email.trim(),
+            password: form.password,
+            phone: form.phone.trim(),
+            role: form.role,
+          }),
         },
-        body: JSON.stringify({
-          firstName: form.firstName.trim(),
-          lastName: form.lastName.trim(),
-          email: form.email.trim(),
-          password: form.password,
-          phone: form.phone.trim(),
-          role: form.role,
-        }),
-      });
+      );
 
       const data = (await response.json().catch(() => null)) as
         | RegisterApiResponse

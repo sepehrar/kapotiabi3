@@ -33,6 +33,11 @@ const mockReply = {
 };
 
 export default function BookingView({ bookingId, t }: BookingViewProps) {
+  const reply = {
+    ...mockReply,
+    id: Number(bookingId) || mockReply.id,
+  };
+
   return (
     <div className="mx-auto w-full max-w-7xl">
       {/* Back link */}
@@ -51,7 +56,7 @@ export default function BookingView({ bookingId, t }: BookingViewProps) {
           {t("title")}
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-8 text-white/50 text-balance">
-          {t("description")} {mockReply.shop.name}.
+        {t("description")} {reply.shop.name}.
         </p>
       </div>
 
@@ -62,12 +67,12 @@ export default function BookingView({ bookingId, t }: BookingViewProps) {
             {/* Shop info */}
             <section>
               <h2 className="text-xl font-semibold text-white">
-                {mockReply.shop.name}
+                {reply.shop.name}
               </h2>
 
               <div className="mt-4 space-y-2 text-base text-white/50">
-                <p>{mockReply.shop.address}</p>
-                <p>{mockReply.shop.phone}</p>
+                <p>{reply.shop.address}</p>
+                <p>{reply.shop.phone}</p>
               </div>
             </section>
 
@@ -79,7 +84,7 @@ export default function BookingView({ bookingId, t }: BookingViewProps) {
 
               <div className="mt-6 rounded-2xl border border-white/10 bg-(--pills-background) p-6">
                 <p className="text-base leading-relaxed text-white/70">
-                  {mockReply.message}
+                  {reply.message}
                 </p>
               </div>
             </section>
@@ -97,7 +102,7 @@ export default function BookingView({ bookingId, t }: BookingViewProps) {
                       {t("fields.service")}
                     </span>
                     <span className="text-right text-sm font-semibold text-white">
-                      {mockReply.request.service}
+                      {reply.request.service}
                     </span>
                   </div>
 
@@ -106,7 +111,7 @@ export default function BookingView({ bookingId, t }: BookingViewProps) {
                       {t("fields.car")}
                     </span>
                     <span className="text-right text-sm font-semibold text-white">
-                      {mockReply.request.car}
+                      {reply.request.car}
                     </span>
                   </div>
 
@@ -115,7 +120,7 @@ export default function BookingView({ bookingId, t }: BookingViewProps) {
                       {t("fields.parts")}
                     </span>
                     <span className="text-right text-sm font-semibold text-white">
-                      {mockReply.request.partsQuality}
+                      {reply.request.partsQuality}
                     </span>
                   </div>
 
@@ -124,7 +129,7 @@ export default function BookingView({ bookingId, t }: BookingViewProps) {
                       {t("fields.price")}
                     </span>
                     <span className="text-right text-base font-semibold text-(--accent)">
-                      {mockReply.price}
+                      {reply.price}
                     </span>
                   </div>
                 </div>
@@ -136,7 +141,7 @@ export default function BookingView({ bookingId, t }: BookingViewProps) {
         {/* Right block */}
         <div className="w-full min-w-0 xl:w-[66%]">
           <BookingForm
-            slots={mockReply.slots}
+            slots={reply.slots}
             redirectTo="/account/notifications"
             labels={{
               selectDate: t("form.selectDate"),

@@ -7,6 +7,7 @@ import { FormEvent, useState } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import SectionTitle from "../ui/SectionTitle";
+import { getPublicApiBaseUrl } from "@/lib/publicApiBaseUrl";
 import { validateLoginForm, type LoginFormData } from "@/lib/validations/auth";
 
 type LoginApiResponse = {
@@ -68,12 +69,7 @@ export default function LoginForm() {
     try {
       setLoading(true);
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      if (!apiUrl) {
-        throw new Error("NEXT_PUBLIC_API_URL is not configured.");
-      }
-
-      const response = await fetch(`${apiUrl}/api/v1/auth/login`, {
+      const response = await fetch(`${getPublicApiBaseUrl()}/api/v1/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

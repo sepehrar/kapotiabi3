@@ -3,11 +3,13 @@ package com.kapotiabi.security;
 import com.kapotiabi.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.WeakKeyException;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 import javax.crypto.SecretKey;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,17 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProvider {
 
   private final JwtConfig jwtConfig;
+
+  @PostConstruct
+  void requireSigningKey() {
+    try {
+      signingKey();
+    } catch (WeakKeyException e) {
+      throw new IllegalStateException(
+          "JWT secret is too short for HMAC-SHA. Use at least 256 bits (e.g. set JWT_SECRET in the environment, or rely on the local-dev default in application.yaml).",
+          e);
+    }
+  }
 
   private SecretKey signingKey() {
     return Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes(StandardCharsets.UTF_8));
