@@ -11,12 +11,20 @@ Car repair marketplace for Estonia. Car owners describe their problem, get price
 
 ## Documentation
 
+- [Architecture overview](docs/architecture.md)
+- [Product flow diagram](docs/flow-diagram.md)
+- [Database diagram](docs/database-diagram.md)
+- [LLM usage](docs/llm-usage.md)
 - [Authentication (login, register, password reset)](docs/auth.md)
 - [Saved Shops (bookmarks)](docs/saved-shops.md)
 - [Authorization](docs/authorization.md)
 - [Offer slots](docs/offer-slots.md)
 - [User preferences](docs/user-preferences.md)
 - [Hybrid frontend demo flow](docs/frontend-demo-flow.md)
+
+## Team
+
+Kapotiabi is built as a full-stack student team project. The current focus is a working MVP demo: car owner search and booking flow, repair shop offer flow, protected account/business areas, and clear project documentation.
 
 ## Demo Flow
 
