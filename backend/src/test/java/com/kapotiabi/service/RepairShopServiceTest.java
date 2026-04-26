@@ -14,6 +14,7 @@ import com.kapotiabi.entity.ShopServiceCategoryEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
+import com.kapotiabi.repository.ReviewRepository;
 import com.kapotiabi.repository.ShopServiceCategoryRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,6 +34,8 @@ class RepairShopServiceTest {
   @Mock private RepairShopRepository repairShopRepository;
 
   @Mock private ShopServiceCategoryRepository categoryRepository;
+
+  @Mock private ReviewRepository reviewRepository;
 
   @InjectMocks private RepairShopService repairShopService;
 
