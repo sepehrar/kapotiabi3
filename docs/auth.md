@@ -259,12 +259,12 @@ From the `backend/` directory:
 ./mvnw test -Dtest=AuthServiceTest#register_adminRole_throwsIllegalArgument
 ```
 
-**114 tests total:**
+**121 tests total:**
 - `AuthServiceTest` (19) — business logic: registration rules, password hashing, token lifecycle
 - `AuthControllerTest` (18) — HTTP layer: status codes, validation, error responses
 - `KapotiabiApplicationTests` (1) — application context loads
 - `UserSavedShopServiceTest` (8), `UserSavedShopControllerTest` (8) — saved shops feature
-- `BookingServiceTest` (17), `CarServiceTest` (6), `JobRequestServiceTest` (7), `RepairShopServiceTest` (8), `ReviewServiceTest` (5), `ShopOfferServiceTest` (14), `UserServiceTest` (3) — domain service layer
+- `BookingServiceTest` (19), `CarServiceTest` (6), `JobRequestServiceTest` (7), `RepairShopServiceTest` (8), `ReviewServiceTest` (5), `ShopOfferServiceTest` (18), `UserServiceTest` (3) — domain service layer
 
 ---
 
