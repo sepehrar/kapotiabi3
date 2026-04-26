@@ -9,6 +9,7 @@ type SearchCompareBarProps = {
   onRemove: (id: number) => void;
   onClear: () => void;
   onOpen: () => void;
+  onContinue: () => void;
 };
 
 export default function SearchCompareBar({
@@ -16,6 +17,7 @@ export default function SearchCompareBar({
   onRemove,
   onClear,
   onOpen,
+  onContinue,
 }: SearchCompareBarProps) {
   const t = useTranslations("searchCompare");
 
@@ -65,6 +67,14 @@ export default function SearchCompareBar({
             className="rounded-full bg-(--accent) px-5 py-2 text-sm font-medium text-white transition hover:bg-(--accent-hover)"
           >
             {t("open")}
+          </button>
+
+          <button
+            type="button"
+            onClick={onContinue}
+            className="rounded-full bg-white px-5 py-2 text-sm font-medium text-black transition hover:bg-white/80"
+          >
+            {t("continueToAccount")}
           </button>
         </div>
       </div>

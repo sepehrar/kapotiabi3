@@ -422,6 +422,7 @@
     "removeShop": "Remove {name} from compare",
     "clear": "Clear compare",
     "open": "Compare now",
+    "continueToAccount": "Open in account",
     "dialogTitle": "Compare selected repair shops",
     "dialogDescription": "A side-by-side view for {query}.",
     "dialogDescriptionFallback": "A side-by-side view of your shortlisted shops.",

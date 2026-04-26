@@ -422,6 +422,7 @@
     "removeShop": "Eemalda {name} võrdlusest",
     "clear": "Tühjenda võrdlus",
     "open": "Võrdle nüüd",
+    "continueToAccount": "Ava kontol",
     "dialogTitle": "Võrdle valitud teenindusi",
     "dialogDescription": "Kõrvuti vaade päringule {query}.",
     "dialogDescriptionFallback": "Kõrvuti vaade sinu valitud teenindustele.",

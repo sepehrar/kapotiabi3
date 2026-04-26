@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import SearchHeader from "./SearchHeader";
 import SearchChatPanel from "./SearchChatPanel";
 import SearchSummary from "./SearchSummary";
@@ -25,6 +26,7 @@ import {
   type SearchFilters,
 } from "@/lib/search-chat";
 import type { Locale } from "@/lib/locale";
+import { buildDemoService, saveCompareDraft } from "@/lib/demoFlowSession";
 import type { SortOption } from "./SearchResultsToolbar";
 import type { SearchResult } from "./SearchResultCard";
 
@@ -511,6 +513,7 @@ function deriveVisibleResults(
 
 export default function SearchPageView() {
   const locale = useLocale() as Locale;
+  const router = useRouter();
   const t = useTranslations("searchPage");
   const searchChatT = useTranslations("searchChat");
   const searchResultT = useTranslations("searchResultCard");
@@ -693,6 +696,25 @@ export default function SearchPageView() {
 
       return [...currentIds, id];
     });
+  }
+
+  function handleContinueToAccountCompare() {
+    saveCompareDraft(
+      comparedResults.map((result) =>
+        buildDemoService({
+          id: result.id,
+          name: result.name,
+          price: result.price,
+          distance: result.distance,
+          rating: result.rating,
+          reviews: result.reviews,
+          updatedAt: result.updatedAt,
+          serviceFit: result.serviceFit,
+        }),
+      ),
+      searchQueryLabel,
+    );
+    router.push(`/${locale}/account/compare`);
   }
 
   useEffect(() => {
@@ -902,6 +924,7 @@ export default function SearchPageView() {
         onRemove={handleToggleCompare}
         onClear={() => setComparedResultIds([])}
         onOpen={() => setIsCompareOpen(true)}
+        onContinue={handleContinueToAccountCompare}
       />
 
       <SearchCompareDialog
