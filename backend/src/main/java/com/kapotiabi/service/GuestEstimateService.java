@@ -13,10 +13,7 @@ import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ShopServiceCategoryRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -58,7 +55,7 @@ public class GuestEstimateService {
     List<Long> shopIds = shops.stream().map(RepairShopEntity::getId).toList();
     Map<Long, List<ShopServiceCategoryEntity>> categoriesByShop =
         categoryRepository.findByShopIdIn(shopIds).stream()
-            .collect(Collectors.groupingBy(ShopServiceCategoryEntity::getShopId));
+            .collect(Collectors.groupingBy(c -> c.getShop().getId()));
 
     for (RepairShopEntity shop : shops) {
       List<ShopServiceCategoryEntity> categories =
@@ -70,18 +67,18 @@ public class GuestEstimateService {
       Optional<BigDecimal> shopMin =
           categories.stream()
               .map(ShopServiceCategoryEntity::getPriceFrom)
-              .filter(p -> p != null)
+              .filter(Objects::nonNull)
               .min(Comparator.naturalOrder());
       Optional<BigDecimal> shopMax =
           categories.stream()
               .map(ShopServiceCategoryEntity::getPriceTo)
-              .filter(p -> p != null)
+              .filter(Objects::nonNull)
               .max(Comparator.naturalOrder());
 
       GuestEstimateResultEntity result =
           GuestEstimateResultEntity.builder()
-              .guestEstimateId(estimate.getId())
-              .shopId(shop.getId())
+              .guestEstimate(estimate)
+              .shop(shop)
               .priceFrom(shopMin.orElse(null))
               .priceTo(shopMax.orElse(null))
               .build();

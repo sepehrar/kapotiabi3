@@ -73,8 +73,8 @@ public class ShopOfferService {
 
     ShopOfferEntity offer =
         ShopOfferEntity.builder()
-            .jobRequestId(jobRequestId)
-            .shopId(shop.getId())
+            .jobRequest(jobRequest)
+            .shop(shop)
             .priceEstimate(req.priceEstimate())
             .breakdown(req.breakdown())
             .partsTier(req.partsTier())
@@ -97,7 +97,7 @@ public class ShopOfferService {
   @Transactional
   public ShopOfferResponse update(Long id, ShopOfferRequest req, Long authUserId) {
     ShopOfferEntity offer = findOrThrow(id);
-    verifyShopOwner(authUserId, offer.getShopId());
+    verifyShopOwner(authUserId, offer.getShop().getId());
     offer.setPriceEstimate(req.priceEstimate());
     offer.setBreakdown(req.breakdown());
     offer.setPartsTier(req.partsTier());
@@ -113,12 +113,12 @@ public class ShopOfferService {
   @Transactional
   public ShopOfferResponse reject(Long id, Long authUserId) {
     ShopOfferEntity offer = findOrThrow(id);
-    Long jobRequestId = offer.getJobRequestId();
+    Long jobRequestId = offer.getJobRequest().getId();
     JobRequestEntity jobRequest =
         jobRequestRepository
             .findById(jobRequestId)
             .orElseThrow(() -> new NotFoundException("Job request not found: " + jobRequestId));
-    if (!authUserId.equals(jobRequest.getUserId())) {
+    if (!authUserId.equals(jobRequest.getUser().getId())) {
       throw new ForbiddenException("You don't have access to this offer");
     }
     offer.setStatus("rejected");
@@ -132,7 +132,7 @@ public class ShopOfferService {
       throw new IllegalArgumentException("Only PDF files are allowed");
     }
     ShopOfferEntity offer = findOrThrow(offerId);
-    verifyShopOwner(authUserId, offer.getShopId());
+    verifyShopOwner(authUserId, offer.getShop().getId());
 
     Path dir = Paths.get(uploadDir, "offers", offerId.toString());
     Files.createDirectories(dir);
@@ -171,12 +171,13 @@ public class ShopOfferService {
       return List.of();
     }
     LocalDateTime now = LocalDateTime.now();
+    ShopOfferEntity offerRef = shopOfferRepository.getReferenceById(offerId);
     List<OfferSlotEntity> entities =
         startsAts.stream()
             .map(
                 startsAt ->
                     OfferSlotEntity.builder()
-                        .offerId(offerId)
+                        .offer(offerRef)
                         .startsAt(startsAt)
                         .createdAt(now)
                         .build())

@@ -5,7 +5,9 @@ import com.kapotiabi.dto.response.JobRequestResponse;
 import com.kapotiabi.entity.JobRequestEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
+import com.kapotiabi.repository.CarRepository;
 import com.kapotiabi.repository.JobRequestRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class JobRequestService {
 
   private final JobRequestRepository jobRequestRepository;
+  private final UserRepository userRepository;
+  private final CarRepository carRepository;
 
   public List<JobRequestResponse> getByUser(Long userId) {
     return jobRequestRepository.findByUserId(userId).stream()
@@ -47,8 +51,8 @@ public class JobRequestService {
     LocalDateTime now = LocalDateTime.now();
     JobRequestEntity entity =
         JobRequestEntity.builder()
-            .userId(authUserId)
-            .carId(req.carId())
+            .user(userRepository.getReferenceById(authUserId))
+            .car(carRepository.getReferenceById(req.carId()))
             .description(req.description())
             .acceptsNonOem(req.acceptsNonOem())
             .partsPreference(req.partsPreference())
@@ -65,9 +69,9 @@ public class JobRequestService {
 
   public JobRequestResponse update(Long id, JobRequestRequest req, Long authUserId) {
     JobRequestEntity entity = findOrThrow(id);
-    if (!authUserId.equals(entity.getUserId()))
+    if (!authUserId.equals(entity.getUser().getId()))
       throw new ForbiddenException("You don't have access to this job request");
-    entity.setCarId(req.carId());
+    entity.setCar(carRepository.getReferenceById(req.carId()));
     entity.setDescription(req.description());
     entity.setAcceptsNonOem(req.acceptsNonOem());
     entity.setPartsPreference(req.partsPreference());
@@ -81,7 +85,7 @@ public class JobRequestService {
 
   public JobRequestResponse cancel(Long id, Long authUserId) {
     JobRequestEntity entity = findOrThrow(id);
-    if (!authUserId.equals(entity.getUserId()))
+    if (!authUserId.equals(entity.getUser().getId()))
       throw new ForbiddenException("You don't have access to this job request");
     entity.setStatus("cancelled");
     entity.setUpdatedAt(LocalDateTime.now());

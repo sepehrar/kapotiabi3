@@ -25,7 +25,7 @@ public record GuestEstimateResponse(
             .map(
                 r ->
                     new GuestEstimateResultResponse(
-                        r.getShopId(), r.getPriceFrom(), r.getPriceTo()))
+                        r.getShop().getId(), r.getPriceFrom(), r.getPriceTo()))
             .toList();
     return new GuestEstimateResponse(
         e.getId(),

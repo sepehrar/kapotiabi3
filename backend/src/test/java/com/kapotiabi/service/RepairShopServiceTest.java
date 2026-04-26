@@ -11,11 +11,13 @@ import com.kapotiabi.dto.request.ShopServiceCategoryRequest;
 import com.kapotiabi.dto.response.ShopServiceCategoryResponse;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopServiceCategoryEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ReviewRepository;
 import com.kapotiabi.repository.ShopServiceCategoryRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,12 +39,14 @@ class RepairShopServiceTest {
 
   @Mock private ReviewRepository reviewRepository;
 
+  @Mock private UserRepository userRepository;
+
   @InjectMocks private RepairShopService repairShopService;
 
   private RepairShopEntity buildShop() {
     return RepairShopEntity.builder()
         .id(1L)
-        .ownerId(5L)
+        .owner(UserEntity.builder().id(5L).build())
         .name("Test Garage")
         .city("Tallinn")
         .county("Harju")
@@ -55,7 +59,7 @@ class RepairShopServiceTest {
   private ShopServiceCategoryEntity buildCategory() {
     return ShopServiceCategoryEntity.builder()
         .id(10L)
-        .shopId(1L)
+        .shop(RepairShopEntity.builder().id(1L).build())
         .category("oil_change")
         .priceFrom(new BigDecimal("30.00"))
         .priceTo(new BigDecimal("60.00"))
@@ -99,7 +103,7 @@ class RepairShopServiceTest {
     var saved =
         RepairShopEntity.builder()
             .id(2L)
-            .ownerId(5L)
+            .owner(UserEntity.builder().id(5L).build())
             .name("New Shop")
             .city("Tartu")
             .status("active")

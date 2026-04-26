@@ -6,6 +6,7 @@ import com.kapotiabi.entity.CarEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.CarRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class CarService {
 
   private final CarRepository carRepository;
+  private final UserRepository userRepository;
 
   public List<CarResponse> getByOwner(Long ownerId) {
     return carRepository.findByOwnerId(ownerId).stream().map(CarResponse::from).toList();
@@ -28,7 +30,7 @@ public class CarService {
   public CarResponse create(CarRequest req, Long authUserId) {
     CarEntity car =
         CarEntity.builder()
-            .ownerId(authUserId)
+            .owner(userRepository.getReferenceById(authUserId))
             .plateNumber(req.plateNumber())
             .make(req.make())
             .model(req.model())
@@ -41,7 +43,7 @@ public class CarService {
 
   public CarResponse update(Long id, CarRequest req, Long authUserId) {
     CarEntity car = findOrThrow(id);
-    if (!authUserId.equals(car.getOwnerId()))
+    if (!authUserId.equals(car.getOwner().getId()))
       throw new ForbiddenException("You don't have access to this car");
     car.setPlateNumber(req.plateNumber());
     car.setMake(req.make());
@@ -53,7 +55,7 @@ public class CarService {
 
   public void delete(Long id, Long authUserId) {
     CarEntity car = findOrThrow(id);
-    if (!authUserId.equals(car.getOwnerId()))
+    if (!authUserId.equals(car.getOwner().getId()))
       throw new ForbiddenException("You don't have access to this car");
     carRepository.deleteById(id);
   }

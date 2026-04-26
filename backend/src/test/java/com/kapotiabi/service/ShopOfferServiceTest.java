@@ -9,10 +9,12 @@ import static org.mockito.Mockito.when;
 
 import com.kapotiabi.dto.request.ShopOfferRequest;
 import com.kapotiabi.dto.response.ShopOfferResponse;
+import com.kapotiabi.entity.CarEntity;
 import com.kapotiabi.entity.JobRequestEntity;
 import com.kapotiabi.entity.OfferSlotEntity;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopOfferEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.JobRequestRepository;
@@ -57,37 +59,41 @@ class ShopOfferServiceTest {
     ReflectionTestUtils.setField(shopOfferService, "uploadDir", tempDir.toString());
   }
 
-  private ShopOfferEntity buildOffer(String status) {
+  private ShopOfferEntity buildOffer() {
     return ShopOfferEntity.builder()
         .id(1L)
-        .jobRequestId(10L)
-        .shopId(SHOP_ID)
+        .jobRequest(JobRequestEntity.builder().id(10L).build())
+        .shop(RepairShopEntity.builder().id(SHOP_ID).build())
         .priceEstimate(new BigDecimal("100.00"))
-        .status(status)
+        .status("pending")
         .createdAt(LocalDateTime.now())
         .build();
   }
 
-  private JobRequestEntity buildJobRequest(String status) {
+  private JobRequestEntity buildJobRequest() {
     return JobRequestEntity.builder()
         .id(10L)
-        .userId(CAR_OWNER_ID)
-        .carId(3L)
+        .user(UserEntity.builder().id(CAR_OWNER_ID).build())
+        .car(CarEntity.builder().id(3L).build())
         .description("Oil change")
-        .status(status)
+        .status("pending")
         .createdAt(LocalDateTime.now())
         .updatedAt(LocalDateTime.now())
         .build();
   }
 
   private RepairShopEntity buildShop() {
-    return RepairShopEntity.builder().id(SHOP_ID).ownerId(SHOP_OWNER_ID).name("Test Shop").build();
+    return RepairShopEntity.builder()
+        .id(SHOP_ID)
+        .owner(UserEntity.builder().id(SHOP_OWNER_ID).build())
+        .name("Test Shop")
+        .build();
   }
 
-  private OfferSlotEntity buildSlot(Long offerId) {
+  private OfferSlotEntity buildSlot() {
     return OfferSlotEntity.builder()
         .id(100L)
-        .offerId(offerId)
+        .offer(ShopOfferEntity.builder().id(1L).build())
         .startsAt(LocalDateTime.of(2026, 5, 10, 10, 0))
         .createdAt(LocalDateTime.now())
         .build();
@@ -95,46 +101,47 @@ class ShopOfferServiceTest {
 
   @Test
   void getByJobRequest() {
-    when(shopOfferRepository.findByJobRequestId(10L)).thenReturn(List.of(buildOffer("pending")));
+    when(shopOfferRepository.findByJobRequestId(10L)).thenReturn(List.of(buildOffer()));
     when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of());
 
     List<ShopOfferResponse> result = shopOfferService.getByJobRequest(10L);
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).jobRequestId()).isEqualTo(10L);
+    assertThat(result.getFirst().jobRequestId()).isEqualTo(10L);
   }
 
   @Test
   void getByShop() {
-    when(shopOfferRepository.findByShopId(2L)).thenReturn(List.of(buildOffer("pending")));
+    when(shopOfferRepository.findByShopId(2L)).thenReturn(List.of(buildOffer()));
     when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of());
 
     List<ShopOfferResponse> result = shopOfferService.getByShop(2L);
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).shopId()).isEqualTo(2L);
+    assertThat(result.getFirst().shopId()).isEqualTo(2L);
   }
 
   @Test
   void getById_includesSlots() {
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
-    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of(buildSlot(1L)));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer()));
+    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of(buildSlot()));
 
     ShopOfferResponse response = shopOfferService.getById(1L);
 
     assertThat(response.id()).isEqualTo(1L);
     assertThat(response.slots()).hasSize(1);
-    assertThat(response.slots().get(0).startsAt()).isEqualTo(LocalDateTime.of(2026, 5, 10, 10, 0));
+    assertThat(response.slots().getFirst().startsAt())
+        .isEqualTo(LocalDateTime.of(2026, 5, 10, 10, 0));
   }
 
   @Test
   void create_withSlots_savesSlots() {
-    JobRequestEntity jobRequest = buildJobRequest("pending");
+    JobRequestEntity jobRequest = buildJobRequest();
     when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(jobRequest));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
-    when(shopOfferRepository.save(any(ShopOfferEntity.class))).thenReturn(buildOffer("pending"));
+    when(shopOfferRepository.save(any(ShopOfferEntity.class))).thenReturn(buildOffer());
     when(jobRequestRepository.save(any(JobRequestEntity.class))).thenReturn(jobRequest);
-    when(offerSlotRepository.saveAll(anyList())).thenReturn(List.of(buildSlot(1L)));
+    when(offerSlotRepository.saveAll(anyList())).thenReturn(List.of(buildSlot()));
 
     ShopOfferRequest req =
         new ShopOfferRequest(
@@ -152,10 +159,10 @@ class ShopOfferServiceTest {
 
   @Test
   void create_withoutSlots_returnsEmptySlots() {
-    JobRequestEntity jobRequest = buildJobRequest("pending");
+    JobRequestEntity jobRequest = buildJobRequest();
     when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(jobRequest));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
-    when(shopOfferRepository.save(any(ShopOfferEntity.class))).thenReturn(buildOffer("pending"));
+    when(shopOfferRepository.save(any(ShopOfferEntity.class))).thenReturn(buildOffer());
     when(jobRequestRepository.save(any(JobRequestEntity.class))).thenReturn(jobRequest);
 
     ShopOfferRequest req =
@@ -167,7 +174,7 @@ class ShopOfferServiceTest {
 
   @Test
   void create_noShop_throwsForbidden() {
-    when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest("pending")));
+    when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest()));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.empty());
 
     ShopOfferRequest req =
@@ -178,12 +185,12 @@ class ShopOfferServiceTest {
 
   @Test
   void update_replacesSlots() {
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer()));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
     when(shopOfferRepository.save(any(ShopOfferEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
-    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of(buildSlot(1L)));
-    when(offerSlotRepository.saveAll(anyList())).thenReturn(List.of(buildSlot(1L)));
+    when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of(buildSlot()));
+    when(offerSlotRepository.saveAll(anyList())).thenReturn(List.of(buildSlot()));
 
     ShopOfferRequest req =
         new ShopOfferRequest(
@@ -202,9 +209,13 @@ class ShopOfferServiceTest {
 
   @Test
   void update_wrongShop_throwsForbidden() {
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer()));
     RepairShopEntity wrongShop =
-        RepairShopEntity.builder().id(99L).ownerId(SHOP_OWNER_ID).name("Other Shop").build();
+        RepairShopEntity.builder()
+            .id(99L)
+            .owner(UserEntity.builder().id(SHOP_OWNER_ID).build())
+            .name("Other Shop")
+            .build();
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(wrongShop));
 
     ShopOfferRequest req =
@@ -215,8 +226,8 @@ class ShopOfferServiceTest {
 
   @Test
   void reject_success() {
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
-    when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest("pending")));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer()));
+    when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest()));
     when(shopOfferRepository.save(any(ShopOfferEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
     when(offerSlotRepository.findByOfferId(1L)).thenReturn(List.of());
@@ -228,8 +239,8 @@ class ShopOfferServiceTest {
 
   @Test
   void reject_wrongUser_throwsForbidden() {
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
-    when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest("pending")));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer()));
+    when(jobRequestRepository.findById(10L)).thenReturn(Optional.of(buildJobRequest()));
 
     assertThatThrownBy(() -> shopOfferService.reject(1L, 999L))
         .isInstanceOf(ForbiddenException.class);
@@ -265,7 +276,7 @@ class ShopOfferServiceTest {
 
   @Test
   void uploadPdf_validPdf_persistsPdfUrl() throws Exception {
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer()));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
     when(shopOfferRepository.save(any(ShopOfferEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
@@ -285,7 +296,7 @@ class ShopOfferServiceTest {
     Path oldFile = oldDir.resolve("old_offer.pdf");
     Files.write(oldFile, "%PDF-old".getBytes());
 
-    ShopOfferEntity offer = buildOffer("pending");
+    ShopOfferEntity offer = buildOffer();
     offer.setPdfUrl("offers/1/old_offer.pdf");
     when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(buildShop()));
@@ -305,7 +316,7 @@ class ShopOfferServiceTest {
 
   @Test
   void downloadPdf_noPdfUrl_throwsNotFound() {
-    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer("pending")));
+    when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(buildOffer()));
 
     assertThatThrownBy(() -> shopOfferService.downloadPdf(1L))
         .isInstanceOf(NotFoundException.class)
@@ -314,7 +325,7 @@ class ShopOfferServiceTest {
 
   @Test
   void downloadPdf_fileNotOnDisk_throwsNotFound() {
-    ShopOfferEntity offer = buildOffer("pending");
+    ShopOfferEntity offer = buildOffer();
     offer.setPdfUrl("offers/1/1_offer.pdf");
     when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
 
@@ -328,7 +339,7 @@ class ShopOfferServiceTest {
     Path pdfDir = Files.createDirectories(tempDir.resolve("offers/1"));
     Files.write(pdfDir.resolve("1_offer.pdf"), "%PDF-data".getBytes());
 
-    ShopOfferEntity offer = buildOffer("pending");
+    ShopOfferEntity offer = buildOffer();
     offer.setPdfUrl("offers/1/1_offer.pdf");
     when(shopOfferRepository.findById(1L)).thenReturn(Optional.of(offer));
 

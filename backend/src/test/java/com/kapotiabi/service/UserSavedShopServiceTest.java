@@ -9,9 +9,11 @@ import static org.mockito.Mockito.when;
 import com.kapotiabi.dto.response.PagedResponse;
 import com.kapotiabi.dto.response.SavedShopResponse;
 import com.kapotiabi.entity.RepairShopEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.entity.UserSavedShopEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
+import com.kapotiabi.repository.UserRepository;
 import com.kapotiabi.repository.UserSavedShopRepository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,13 +33,14 @@ class UserSavedShopServiceTest {
 
   @Mock private UserSavedShopRepository savedShopRepository;
   @Mock private RepairShopRepository repairShopRepository;
+  @Mock private UserRepository userRepository;
 
   @InjectMocks private UserSavedShopService userSavedShopService;
 
   private RepairShopEntity buildShop() {
     return RepairShopEntity.builder()
         .id(10L)
-        .ownerId(99L)
+        .owner(UserEntity.builder().id(99L).build())
         .name("AutoExpert Tallinn")
         .city("Tallinn")
         .county("Harju")
@@ -49,8 +52,8 @@ class UserSavedShopServiceTest {
   private UserSavedShopEntity buildSaved() {
     return UserSavedShopEntity.builder()
         .id(1L)
-        .userId(5L)
-        .shopId(10L)
+        .user(UserEntity.builder().id(5L).build())
+        .shop(RepairShopEntity.builder().id(10L).build())
         .savedAt(LocalDateTime.now())
         .build();
   }
@@ -68,8 +71,8 @@ class UserSavedShopServiceTest {
     PagedResponse<SavedShopResponse> result = userSavedShopService.getSaved(5L, 0, 10);
 
     assertThat(result.content()).hasSize(1);
-    assertThat(result.content().get(0).shopId()).isEqualTo(10L);
-    assertThat(result.content().get(0).name()).isEqualTo("AutoExpert Tallinn");
+    assertThat(result.content().getFirst().shopId()).isEqualTo(10L);
+    assertThat(result.content().getFirst().name()).isEqualTo("AutoExpert Tallinn");
     assertThat(result.totalElements()).isEqualTo(1);
     assertThat(result.totalPages()).isEqualTo(1);
     assertThat(result.page()).isEqualTo(0);

@@ -19,7 +19,7 @@ public record RepairShopResponse(
   public static RepairShopResponse from(RepairShopEntity e) {
     return new RepairShopResponse(
         e.getId(),
-        e.getOwnerId(),
+        e.getOwner().getId(),
         e.getName(),
         e.getAddress(),
         e.getCity(),

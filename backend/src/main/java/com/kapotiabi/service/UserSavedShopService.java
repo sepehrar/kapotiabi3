@@ -6,6 +6,7 @@ import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.UserSavedShopEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
+import com.kapotiabi.repository.UserRepository;
 import com.kapotiabi.repository.UserSavedShopRepository;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,19 +22,21 @@ public class UserSavedShopService {
 
   private final UserSavedShopRepository savedShopRepository;
   private final RepairShopRepository repairShopRepository;
+  private final UserRepository userRepository;
 
   public PagedResponse<SavedShopResponse> getSaved(Long userId, int page, int size) {
     var pageable = PageRequest.of(page, size, Sort.by("savedAt").descending());
     var savedPage = savedShopRepository.findByUserId(userId, pageable);
-    var shopIds = savedPage.getContent().stream().map(UserSavedShopEntity::getShopId).toList();
+    var shopIds = savedPage.getContent().stream().map(s -> s.getShop().getId()).toList();
     var shopMap =
         repairShopRepository.findAllById(shopIds).stream()
             .collect(Collectors.toMap(RepairShopEntity::getId, Function.identity()));
     return PagedResponse.from(
         savedPage.map(
             saved -> {
-              RepairShopEntity shop = shopMap.get(saved.getShopId());
-              if (shop == null) throw new NotFoundException("Shop not found: " + saved.getShopId());
+              RepairShopEntity shop = shopMap.get(saved.getShop().getId());
+              if (shop == null)
+                throw new NotFoundException("Shop not found: " + saved.getShop().getId());
               return SavedShopResponse.from(saved, shop);
             }));
   }
@@ -46,7 +49,10 @@ public class UserSavedShopService {
             .orElseThrow(() -> new NotFoundException("Shop not found: " + shopId));
     UserSavedShopEntity saved =
         savedShopRepository.save(
-            UserSavedShopEntity.builder().userId(userId).shopId(shopId).build());
+            UserSavedShopEntity.builder()
+                .user(userRepository.getReferenceById(userId))
+                .shop(shop)
+                .build());
     return SavedShopResponse.from(saved, shop);
   }
 

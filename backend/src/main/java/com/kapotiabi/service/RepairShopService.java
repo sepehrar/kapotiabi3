@@ -12,6 +12,7 @@ import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.ReviewRepository;
 import com.kapotiabi.repository.ShopServiceCategoryRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class RepairShopService {
   private final RepairShopRepository repairShopRepository;
   private final ShopServiceCategoryRepository categoryRepository;
   private final ReviewRepository reviewRepository;
+  private final UserRepository userRepository;
 
   public Page<RepairShopResponse> getAll(String city, String county, Pageable pageable) {
     if (city != null) {
@@ -64,7 +66,7 @@ public class RepairShopService {
   public RepairShopResponse create(RepairShopRequest req, Long authUserId) {
     RepairShopEntity shop =
         RepairShopEntity.builder()
-            .ownerId(authUserId)
+            .owner(userRepository.getReferenceById(authUserId))
             .name(req.name())
             .address(req.address())
             .city(req.city())
@@ -80,7 +82,7 @@ public class RepairShopService {
 
   public RepairShopResponse update(Long id, RepairShopRequest req, Long authUserId) {
     RepairShopEntity shop = findOrThrow(id);
-    if (!authUserId.equals(shop.getOwnerId()))
+    if (!authUserId.equals(shop.getOwner().getId()))
       throw new ForbiddenException("You don't have access to this shop");
     shop.setName(req.name());
     shop.setAddress(req.address());
@@ -101,10 +103,10 @@ public class RepairShopService {
   }
 
   public ShopServiceCategoryResponse addCategory(Long shopId, ShopServiceCategoryRequest req) {
-    findOrThrow(shopId);
+    RepairShopEntity shop = findOrThrow(shopId);
     ShopServiceCategoryEntity category =
         ShopServiceCategoryEntity.builder()
-            .shopId(shopId)
+            .shop(shop)
             .category(req.category())
             .priceFrom(req.priceFrom())
             .priceTo(req.priceTo())
@@ -121,7 +123,7 @@ public class RepairShopService {
         categoryRepository
             .findById(categoryId)
             .orElseThrow(() -> new NotFoundException("Category not found: " + categoryId));
-    if (!shopId.equals(category.getShopId())) {
+    if (!shopId.equals(category.getShop().getId())) {
       throw new NotFoundException("Category not found: " + categoryId);
     }
     category.setCategory(req.category());
@@ -138,7 +140,7 @@ public class RepairShopService {
         categoryRepository
             .findById(categoryId)
             .orElseThrow(() -> new NotFoundException("Category not found: " + categoryId));
-    if (!shopId.equals(category.getShopId())) {
+    if (!shopId.equals(category.getShop().getId())) {
       throw new NotFoundException("Category not found: " + categoryId);
     }
     categoryRepository.deleteById(categoryId);

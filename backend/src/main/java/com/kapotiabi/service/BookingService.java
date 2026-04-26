@@ -38,7 +38,7 @@ public class BookingService {
         repairShopRepository
             .findById(shopId)
             .orElseThrow(() -> new NotFoundException("Shop not found: " + shopId));
-    if (!authUserId.equals(shop.getOwnerId()))
+    if (!authUserId.equals(shop.getOwner().getId()))
       throw new ForbiddenException("You don't have access to this shop");
     return bookingRepository.findByShopId(shopId, pageable).map(BookingResponse::from);
   }
@@ -62,17 +62,19 @@ public class BookingService {
     }
 
     OfferSlotEntity slot = shopOfferService.getSlotOrThrow(slotId);
-    if (!slot.getOfferId().equals(offerId)) {
+    if (!slot.getOffer().getId().equals(offerId)) {
       throw new ForbiddenException("Slot does not belong to this offer");
     }
 
     JobRequestEntity jobRequest =
         jobRequestRepository
-            .findById(offer.getJobRequestId())
+            .findById(offer.getJobRequest().getId())
             .orElseThrow(
-                () -> new NotFoundException("Job request not found: " + offer.getJobRequestId()));
+                () ->
+                    new NotFoundException(
+                        "Job request not found: " + offer.getJobRequest().getId()));
 
-    if (!authUserId.equals(jobRequest.getUserId())) {
+    if (!authUserId.equals(jobRequest.getUser().getId())) {
       throw new ForbiddenException("You don't have access to this job request");
     }
 
@@ -86,10 +88,10 @@ public class BookingService {
     LocalDateTime now = LocalDateTime.now();
     BookingEntity booking =
         BookingEntity.builder()
-            .offerId(offerId)
-            .jobRequestId(offer.getJobRequestId())
-            .userId(jobRequest.getUserId())
-            .shopId(offer.getShopId())
+            .offer(offer)
+            .jobRequest(jobRequest)
+            .user(jobRequest.getUser())
+            .shop(offer.getShop())
             .scheduledAt(slot.getStartsAt())
             .confirmedByShop(false)
             .status("awaiting_shop")
@@ -106,7 +108,7 @@ public class BookingService {
       throw new IllegalStateException(
           "Booking cannot be confirmed from status: " + booking.getStatus());
     }
-    verifyShopOwner(authUserId, booking.getShopId());
+    verifyShopOwner(authUserId, booking.getShop().getId());
     booking.setConfirmedByShop(true);
     booking.setShopConfirmedAt(LocalDateTime.now());
     booking.setStatus("confirmed");
@@ -121,7 +123,7 @@ public class BookingService {
       throw new IllegalStateException(
           "Booking cannot be scheduled from status: " + booking.getStatus());
     }
-    verifyShopOwner(authUserId, booking.getShopId());
+    verifyShopOwner(authUserId, booking.getShop().getId());
     booking.setScheduledAt(scheduledAt);
     booking.setUpdatedAt(LocalDateTime.now());
     return BookingResponse.from(bookingRepository.save(booking));
@@ -134,7 +136,7 @@ public class BookingService {
       throw new IllegalStateException(
           "Booking cannot be completed from status: " + booking.getStatus());
     }
-    verifyShopOwner(authUserId, booking.getShopId());
+    verifyShopOwner(authUserId, booking.getShop().getId());
     booking.setStatus("completed");
     booking.setUpdatedAt(LocalDateTime.now());
     return BookingResponse.from(bookingRepository.save(booking));
@@ -147,11 +149,11 @@ public class BookingService {
       throw new IllegalStateException(
           "Booking cannot be cancelled from status: " + booking.getStatus());
     }
-    if (!authUserId.equals(booking.getUserId())) {
+    if (!authUserId.equals(booking.getUser().getId())) {
       boolean isShopOwner =
           repairShopRepository
               .findByOwnerId(authUserId)
-              .map(shop -> shop.getId().equals(booking.getShopId()))
+              .map(shop -> shop.getId().equals(booking.getShop().getId()))
               .orElse(false);
       if (!isShopOwner) {
         throw new ForbiddenException("You don't have access to this booking");

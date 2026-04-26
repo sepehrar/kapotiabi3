@@ -7,10 +7,14 @@ import static org.mockito.Mockito.when;
 
 import com.kapotiabi.dto.request.JobRequestRequest;
 import com.kapotiabi.dto.response.JobRequestResponse;
+import com.kapotiabi.entity.CarEntity;
 import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
+import com.kapotiabi.repository.CarRepository;
 import com.kapotiabi.repository.JobRequestRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,16 +32,18 @@ import org.springframework.data.domain.Pageable;
 class JobRequestServiceTest {
 
   @Mock private JobRequestRepository jobRequestRepository;
+  @Mock private UserRepository userRepository;
+  @Mock private CarRepository carRepository;
 
   @InjectMocks private JobRequestService jobRequestService;
 
-  private JobRequestEntity buildRequest(String status) {
+  private JobRequestEntity buildRequest() {
     return JobRequestEntity.builder()
         .id(1L)
-        .userId(5L)
-        .carId(3L)
+        .user(UserEntity.builder().id(5L).build())
+        .car(CarEntity.builder().id(3L).build())
         .description("Oil change")
-        .status(status)
+        .status("pending")
         .city("Tallinn")
         .county("Harju")
         .createdAt(LocalDateTime.now())
@@ -47,41 +53,41 @@ class JobRequestServiceTest {
 
   @Test
   void getByUser() {
-    when(jobRequestRepository.findByUserId(5L)).thenReturn(List.of(buildRequest("pending")));
+    when(jobRequestRepository.findByUserId(5L)).thenReturn(List.of(buildRequest()));
 
     List<JobRequestResponse> result = jobRequestService.getByUser(5L);
 
     assertThat(result).hasSize(1);
-    assertThat(result.get(0).userId()).isEqualTo(5L);
+    assertThat(result.getFirst().userId()).isEqualTo(5L);
   }
 
   @Test
   void getAvailable_byCity() {
     Pageable pageable = PageRequest.of(0, 20);
     when(jobRequestRepository.findByStatusAndCity("pending", "Tallinn", pageable))
-        .thenReturn(new PageImpl<>(List.of(buildRequest("pending"))));
+        .thenReturn(new PageImpl<>(List.of(buildRequest())));
 
     Page<JobRequestResponse> result = jobRequestService.getAvailable("Tallinn", null, pageable);
 
     assertThat(result.getContent()).hasSize(1);
-    assertThat(result.getContent().get(0).city()).isEqualTo("Tallinn");
+    assertThat(result.getContent().getFirst().city()).isEqualTo("Tallinn");
   }
 
   @Test
   void getAvailable_byCounty() {
     Pageable pageable = PageRequest.of(0, 20);
     when(jobRequestRepository.findByStatusAndCounty("pending", "Harju", pageable))
-        .thenReturn(new PageImpl<>(List.of(buildRequest("pending"))));
+        .thenReturn(new PageImpl<>(List.of(buildRequest())));
 
     Page<JobRequestResponse> result = jobRequestService.getAvailable(null, "Harju", pageable);
 
     assertThat(result.getContent()).hasSize(1);
-    assertThat(result.getContent().get(0).county()).isEqualTo("Harju");
+    assertThat(result.getContent().getFirst().county()).isEqualTo("Harju");
   }
 
   @Test
   void getById() {
-    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest("pending")));
+    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest()));
 
     JobRequestResponse response = jobRequestService.getById(1L);
 
@@ -92,7 +98,7 @@ class JobRequestServiceTest {
   void create() {
     JobRequestRequest req =
         new JobRequestRequest(3L, "Oil change", false, "OEM", "city", "Tallinn", null, null);
-    JobRequestEntity saved = buildRequest("pending");
+    JobRequestEntity saved = buildRequest();
     when(jobRequestRepository.save(any(JobRequestEntity.class))).thenReturn(saved);
 
     JobRequestResponse response = jobRequestService.create(req, 5L);
@@ -103,7 +109,7 @@ class JobRequestServiceTest {
 
   @Test
   void cancel() {
-    JobRequestEntity entity = buildRequest("pending");
+    JobRequestEntity entity = buildRequest();
     when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(entity));
     when(jobRequestRepository.save(any(JobRequestEntity.class)))
         .thenAnswer(inv -> inv.getArgument(0));
@@ -115,7 +121,7 @@ class JobRequestServiceTest {
 
   @Test
   void cancel_wrongUser_throwsForbidden() {
-    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest("pending")));
+    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest()));
 
     assertThatThrownBy(() -> jobRequestService.cancel(1L, 999L))
         .isInstanceOf(ForbiddenException.class);
@@ -123,7 +129,7 @@ class JobRequestServiceTest {
 
   @Test
   void update_wrongUser_throwsForbidden() {
-    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest("pending")));
+    when(jobRequestRepository.findById(1L)).thenReturn(Optional.of(buildRequest()));
 
     JobRequestRequest req =
         new JobRequestRequest(3L, "Changed", false, "OEM", "city", "Tallinn", null, null);

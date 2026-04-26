@@ -8,7 +8,11 @@ import static org.mockito.Mockito.when;
 import com.kapotiabi.dto.request.ReviewRequest;
 import com.kapotiabi.dto.response.ReviewResponse;
 import com.kapotiabi.entity.BookingEntity;
+import com.kapotiabi.entity.JobRequestEntity;
+import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ReviewEntity;
+import com.kapotiabi.entity.ShopOfferEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.BookingRepository;
 import com.kapotiabi.repository.ReviewRepository;
@@ -32,10 +36,10 @@ class ReviewServiceTest {
   private BookingEntity buildBooking(String status) {
     return BookingEntity.builder()
         .id(1L)
-        .offerId(2L)
-        .jobRequestId(10L)
-        .userId(5L)
-        .shopId(3L)
+        .offer(ShopOfferEntity.builder().id(2L).build())
+        .jobRequest(JobRequestEntity.builder().id(10L).build())
+        .user(UserEntity.builder().id(5L).build())
+        .shop(RepairShopEntity.builder().id(3L).build())
         .status(status)
         .createdAt(LocalDateTime.now())
         .updatedAt(LocalDateTime.now())
@@ -45,9 +49,9 @@ class ReviewServiceTest {
   private ReviewEntity buildReview() {
     return ReviewEntity.builder()
         .id(100L)
-        .bookingId(1L)
-        .userId(5L)
-        .shopId(3L)
+        .booking(BookingEntity.builder().id(1L).build())
+        .user(UserEntity.builder().id(5L).build())
+        .shop(RepairShopEntity.builder().id(3L).build())
         .rating(5)
         .comment("Great service!")
         .createdAt(LocalDateTime.now())

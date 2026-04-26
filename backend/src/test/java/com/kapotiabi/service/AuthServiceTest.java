@@ -111,7 +111,7 @@ class AuthServiceTest {
     ArgumentCaptor<RepairShopEntity> shopCaptor = ArgumentCaptor.forClass(RepairShopEntity.class);
     verify(repairShopRepository).save(shopCaptor.capture());
     assertThat(shopCaptor.getValue().getStatus()).isEqualTo("draft");
-    assertThat(shopCaptor.getValue().getOwnerId()).isEqualTo(2L);
+    assertThat(shopCaptor.getValue().getOwner().getId()).isEqualTo(2L);
   }
 
   @Test
@@ -290,7 +290,7 @@ class AuthServiceTest {
     ArgumentCaptor<PasswordResetTokenEntity> tokenCaptor =
         ArgumentCaptor.forClass(PasswordResetTokenEntity.class);
     verify(passwordResetTokenRepository).save(tokenCaptor.capture());
-    assertThat(tokenCaptor.getValue().getUserId()).isEqualTo(1L);
+    assertThat(tokenCaptor.getValue().getUser().getId()).isEqualTo(1L);
     assertThat(tokenCaptor.getValue().isUsed()).isFalse();
     assertThat(tokenCaptor.getValue().getExpiresAt()).isAfter(LocalDateTime.now());
   }
@@ -321,7 +321,7 @@ class AuthServiceTest {
     PasswordResetTokenEntity token =
         PasswordResetTokenEntity.builder()
             .id(1L)
-            .userId(1L)
+            .user(user)
             .token("valid-uuid")
             .expiresAt(LocalDateTime.now().plusHours(1))
             .used(false)
@@ -344,7 +344,7 @@ class AuthServiceTest {
     PasswordResetTokenEntity token =
         PasswordResetTokenEntity.builder()
             .id(1L)
-            .userId(1L)
+            .user(UserEntity.builder().id(1L).build())
             .token("expired-uuid")
             .expiresAt(LocalDateTime.now().minusHours(1)) // already expired
             .used(false)
@@ -365,7 +365,7 @@ class AuthServiceTest {
     PasswordResetTokenEntity token =
         PasswordResetTokenEntity.builder()
             .id(1L)
-            .userId(1L)
+            .user(UserEntity.builder().id(1L).build())
             .token("used-uuid")
             .expiresAt(LocalDateTime.now().plusHours(1))
             .used(true) // already used

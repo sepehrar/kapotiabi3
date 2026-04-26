@@ -2,17 +2,22 @@ package com.kapotiabi.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,11 +29,13 @@ public class GuestEstimateResultEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "guest_estimate_id", nullable = false)
-  private Long guestEstimateId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "guest_estimate_id", nullable = false)
+  private GuestEstimateEntity guestEstimate;
 
-  @Column(name = "shop_id", nullable = false)
-  private Long shopId;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "shop_id", nullable = false)
+  private RepairShopEntity shop;
 
   @Column(name = "price_from")
   private BigDecimal priceFrom;

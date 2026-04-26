@@ -9,9 +9,11 @@ import static org.mockito.Mockito.when;
 import com.kapotiabi.dto.request.CarRequest;
 import com.kapotiabi.dto.response.CarResponse;
 import com.kapotiabi.entity.CarEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.CarRepository;
+import com.kapotiabi.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +27,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CarServiceTest {
 
   @Mock private CarRepository carRepository;
+  @Mock private UserRepository userRepository;
 
   @InjectMocks private CarService carService;
 
   private CarEntity buildCar() {
     return CarEntity.builder()
         .id(1L)
-        .ownerId(10L)
+        .owner(UserEntity.builder().id(10L).build())
         .plateNumber("ABC123")
         .make("Toyota")
         .model("Corolla")
@@ -78,7 +81,7 @@ class CarServiceTest {
     var saved =
         CarEntity.builder()
             .id(2L)
-            .ownerId(10L)
+            .owner(UserEntity.builder().id(10L).build())
             .plateNumber("XYZ789")
             .make("BMW")
             .model("3 Series")

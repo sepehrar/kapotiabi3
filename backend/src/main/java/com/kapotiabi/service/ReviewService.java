@@ -27,7 +27,7 @@ public class ReviewService {
     if (!"completed".equals(booking.getStatus())) {
       throw new IllegalStateException("Booking is not completed");
     }
-    if (!authUserId.equals(booking.getUserId())) {
+    if (!authUserId.equals(booking.getUser().getId())) {
       throw new ForbiddenException("You don't have access to this booking");
     }
     if (reviewRepository.findByBookingId(bookingId).isPresent()) {
@@ -35,9 +35,9 @@ public class ReviewService {
     }
     ReviewEntity review =
         ReviewEntity.builder()
-            .bookingId(bookingId)
-            .userId(booking.getUserId())
-            .shopId(booking.getShopId())
+            .booking(booking)
+            .user(booking.getUser())
+            .shop(booking.getShop())
             .rating(req.rating())
             .comment(req.comment())
             .createdAt(LocalDateTime.now())

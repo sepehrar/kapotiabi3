@@ -7,10 +7,12 @@ import static org.mockito.Mockito.when;
 
 import com.kapotiabi.dto.response.BookingResponse;
 import com.kapotiabi.entity.BookingEntity;
+import com.kapotiabi.entity.CarEntity;
 import com.kapotiabi.entity.JobRequestEntity;
 import com.kapotiabi.entity.OfferSlotEntity;
 import com.kapotiabi.entity.RepairShopEntity;
 import com.kapotiabi.entity.ShopOfferEntity;
+import com.kapotiabi.entity.UserEntity;
 import com.kapotiabi.exception.ForbiddenException;
 import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.BookingRepository;
@@ -51,10 +53,10 @@ class BookingServiceTest {
   private BookingEntity buildBooking(String status) {
     return BookingEntity.builder()
         .id(1L)
-        .offerId(OFFER_ID)
-        .jobRequestId(10L)
-        .userId(CAR_OWNER_ID)
-        .shopId(SHOP_ID)
+        .offer(ShopOfferEntity.builder().id(OFFER_ID).build())
+        .jobRequest(JobRequestEntity.builder().id(10L).build())
+        .user(UserEntity.builder().id(CAR_OWNER_ID).build())
+        .shop(RepairShopEntity.builder().id(SHOP_ID).build())
         .scheduledAt(LocalDateTime.of(2026, 5, 10, 10, 0))
         .confirmedByShop(false)
         .status(status)
@@ -66,8 +68,8 @@ class BookingServiceTest {
   private ShopOfferEntity buildOffer() {
     return ShopOfferEntity.builder()
         .id(OFFER_ID)
-        .jobRequestId(10L)
-        .shopId(SHOP_ID)
+        .jobRequest(JobRequestEntity.builder().id(10L).build())
+        .shop(RepairShopEntity.builder().id(SHOP_ID).build())
         .priceEstimate(new BigDecimal("100.00"))
         .status("pending")
         .createdAt(LocalDateTime.now())
@@ -77,8 +79,8 @@ class BookingServiceTest {
   private JobRequestEntity buildJobRequest() {
     return JobRequestEntity.builder()
         .id(10L)
-        .userId(CAR_OWNER_ID)
-        .carId(7L)
+        .user(UserEntity.builder().id(CAR_OWNER_ID).build())
+        .car(CarEntity.builder().id(7L).build())
         .description("Oil change")
         .status("offers_received")
         .createdAt(LocalDateTime.now())
@@ -87,13 +89,17 @@ class BookingServiceTest {
   }
 
   private RepairShopEntity buildShop() {
-    return RepairShopEntity.builder().id(SHOP_ID).ownerId(SHOP_OWNER_ID).name("Test Shop").build();
+    return RepairShopEntity.builder()
+        .id(SHOP_ID)
+        .owner(UserEntity.builder().id(SHOP_OWNER_ID).build())
+        .name("Test Shop")
+        .build();
   }
 
   private OfferSlotEntity buildSlot(Long offerId) {
     return OfferSlotEntity.builder()
         .id(SLOT_ID)
-        .offerId(offerId)
+        .offer(ShopOfferEntity.builder().id(offerId).build())
         .startsAt(LocalDateTime.of(2026, 5, 10, 10, 0))
         .createdAt(LocalDateTime.now())
         .build();
@@ -187,7 +193,11 @@ class BookingServiceTest {
   @Test
   void confirm_wrongShop_throwsForbidden() {
     when(bookingRepository.findById(1L)).thenReturn(Optional.of(buildBooking("awaiting_shop")));
-    RepairShopEntity wrongShop = RepairShopEntity.builder().id(99L).ownerId(SHOP_OWNER_ID).build();
+    RepairShopEntity wrongShop =
+        RepairShopEntity.builder()
+            .id(99L)
+            .owner(UserEntity.builder().id(SHOP_OWNER_ID).build())
+            .build();
     when(repairShopRepository.findByOwnerId(SHOP_OWNER_ID)).thenReturn(Optional.of(wrongShop));
 
     assertThatThrownBy(() -> bookingService.confirm(1L, SHOP_OWNER_ID))
@@ -290,7 +300,7 @@ class BookingServiceTest {
     Page<BookingResponse> result = bookingService.getByUser(CAR_OWNER_ID, pageable);
 
     assertThat(result.getContent()).hasSize(1);
-    assertThat(result.getContent().get(0).userId()).isEqualTo(CAR_OWNER_ID);
+    assertThat(result.getContent().getFirst().userId()).isEqualTo(CAR_OWNER_ID);
   }
 
   @Test
@@ -303,7 +313,7 @@ class BookingServiceTest {
     Page<BookingResponse> result = bookingService.getByShop(SHOP_ID, SHOP_OWNER_ID, pageable);
 
     assertThat(result.getContent()).hasSize(1);
-    assertThat(result.getContent().get(0).shopId()).isEqualTo(SHOP_ID);
+    assertThat(result.getContent().getFirst().shopId()).isEqualTo(SHOP_ID);
   }
 
   @Test

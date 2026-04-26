@@ -17,10 +17,10 @@ public record BookingResponse(
   public static BookingResponse from(BookingEntity e) {
     return new BookingResponse(
         e.getId(),
-        e.getOfferId(),
-        e.getJobRequestId(),
-        e.getUserId(),
-        e.getShopId(),
+        e.getOffer().getId(),
+        e.getJobRequest().getId(),
+        e.getUser().getId(),
+        e.getShop().getId(),
         e.getScheduledAt(),
         e.getConfirmedByShop(),
         e.getShopConfirmedAt(),

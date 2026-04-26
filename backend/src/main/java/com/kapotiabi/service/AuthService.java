@@ -63,7 +63,7 @@ public class AuthService {
     if (req.getRole() == UserRole.SHOP_OWNER) {
       RepairShopEntity shop =
           RepairShopEntity.builder()
-              .ownerId(user.getId())
+              .owner(user)
               .name(user.getFirstName() + " " + user.getLastName() + "'s Shop")
               .status("draft")
               .build();
@@ -103,7 +103,7 @@ public class AuthService {
               String token = UUID.randomUUID().toString();
               PasswordResetTokenEntity resetToken =
                   PasswordResetTokenEntity.builder()
-                      .userId(user.getId())
+                      .user(user)
                       .token(token)
                       .expiresAt(LocalDateTime.now().plusHours(1))
                       .used(false)
@@ -130,7 +130,7 @@ public class AuthService {
 
     UserEntity user =
         userRepository
-            .findById(resetToken.getUserId())
+            .findById(resetToken.getUser().getId())
             .orElseThrow(() -> new InvalidTokenException("User not found"));
 
     user.setPasswordHash(passwordEncoder.encode(req.getNewPassword()));
