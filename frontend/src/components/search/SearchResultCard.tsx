@@ -79,7 +79,9 @@ export default function SearchResultCard({
               {result.rating} ({result.reviews} {t("reviews")})
             </p>
             <p>
-              <span className="font-medium text-black">{t("priceStatus")}:</span>{" "}
+              <span className="font-medium text-black">
+                {t("priceStatus")}:
+              </span>{" "}
               {result.updatedAt}
             </p>
           </div>

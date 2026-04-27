@@ -30,7 +30,8 @@ export default function SearchChatPanel({
 }: SearchChatPanelProps) {
   const t = useTranslations("searchChat");
   const [draft, setDraft] = useState("");
-  const isDisabled = isPending || guestLimitReached || status === "limit_reached";
+  const isDisabled =
+    isPending || guestLimitReached || status === "limit_reached";
 
   async function handleSubmit() {
     const value = draft.trim();
@@ -44,10 +45,10 @@ export default function SearchChatPanel({
   }
 
   return (
-    <aside className="rounded-3xl border border-black/10 bg-[#f8f8f8] p-5 sm:p-6">
+    <aside className="rounded-3xl bg-(--pills-background)  shadow ring-1 ring-inset ring-white/10  p-5 sm:p-6">
       <div>
-        <h2 className="text-xl font-semibold text-black">{t("title")}</h2>
-        <p className="mt-2 text-sm leading-6 text-black/70">
+        <h2 className="text-xl font-semibold text-white">{t("title")}</h2>
+        <p className="mt-2 text-sm leading-6 text-white/70">
           {t("description")}
         </p>
       </div>

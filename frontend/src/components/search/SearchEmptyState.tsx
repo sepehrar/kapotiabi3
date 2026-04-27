@@ -10,9 +10,9 @@ export default function SearchEmptyState({
   examples = [],
 }: SearchEmptyStateProps) {
   return (
-    <div className="rounded-3xl border border-dashed border-black/15 bg-[#f8f8f8] p-8 text-center">
-      <h3 className="text-xl font-semibold text-black">{title}</h3>
-      <p className="mt-3 text-sm leading-6 text-black/70 sm:text-base">
+    <div className="rounded-3xl border border-dashed border-black/15  p-8 text-center">
+      <h3 className="text-xl font-semibold text-white">{title}</h3>
+      <p className="mt-3 text-sm leading-6 text-white/60 sm:text-base">
         {description}
       </p>
 
@@ -21,7 +21,7 @@ export default function SearchEmptyState({
           {examples.map((example) => (
             <span
               key={example}
-              className="rounded-full bg-white px-4 py-2 text-sm text-black ring-1 ring-black/5"
+              className="rounded-full px-4 py-2 text-sm bg-(--pills-background)  shadow ring-1 ring-inset ring-white/10 "
             >
               {example}
             </span>
