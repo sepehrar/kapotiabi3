@@ -71,7 +71,7 @@ export default function CategoryDetailsView({
                 </Link>
 
                 <Link
-                  href="/business"
+                  href={`/register?role=SHOP_OWNER`}
                   className="shrink-0 rounded-full bg-(--pills-background) px-5 py-3 text-sm shadow ring-1 ring-inset ring-white/10 transition-colors duration-300 hover:bg-(--accent)/40 hover:ring-(--accent)"
                 >
                   {businessButton}

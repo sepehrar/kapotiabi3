@@ -37,7 +37,7 @@ export default function HeroBusiness() {
 
             <div className="mt-8 flex w-full max-w-xl flex-col gap-4 sm:flex-row sm:justify-center">
               <Link
-                href="/register"
+                href={`/register?role=SHOP_OWNER`}
                 className="inline-flex justify-center rounded-full border border-transparent bg-(--accent) px-8 py-3 text-base font-medium text-white ring-1 ring-inset ring-(--accent) transition hover:bg-(--accent-hover)"
               >
                 {t("cta")}

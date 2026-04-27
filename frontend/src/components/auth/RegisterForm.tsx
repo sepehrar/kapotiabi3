@@ -12,6 +12,7 @@ import {
   validateRegisterForm,
   type RegisterFormData,
 } from "@/lib/validations/auth";
+import { useSearchParams } from "next/navigation";
 
 type RegisterApiResponse = {
   token: string;
@@ -39,9 +40,12 @@ export default function RegisterForm() {
   const t = useTranslations("register");
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const localeFromPath = pathname.split("/")[1];
   const currentLocale = localeFromPath === "et" ? "et" : "en";
+
+  const roleFromUrl = normalizeRole(searchParams.get("role"));
 
   const [form, setForm] = useState<RegisterFormData>({
     firstName: "",
@@ -50,7 +54,7 @@ export default function RegisterForm() {
     password: "",
     confirmPassword: "",
     phone: "",
-    role: "CAR_OWNER",
+    role: roleFromUrl ?? "CAR_OWNER",
   });
 
   const [error, setError] = useState("");
