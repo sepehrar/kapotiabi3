@@ -1,5 +1,6 @@
 package com.kapotiabi.security;
 
+import com.kapotiabi.constants.SecurityConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -15,6 +16,9 @@ public class SecurityUtils {
   public static boolean hasRole(String role) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     return auth.getAuthorities().stream()
-        .anyMatch(a -> a.getAuthority().equals("ROLE_" + role.toUpperCase()));
+        .anyMatch(
+            a ->
+                a.getAuthority()
+                    .equals(SecurityConstants.ROLE_AUTHORITY_PREFIX + role.toUpperCase()));
   }
 }

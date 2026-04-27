@@ -1,6 +1,7 @@
 package com.kapotiabi.security;
 
 import com.kapotiabi.config.JwtConfig;
+import com.kapotiabi.constants.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -39,8 +40,8 @@ public class JwtTokenProvider {
     Instant expiry = now.plusMillis(jwtConfig.getExpirationMs());
     return Jwts.builder()
         .subject(String.valueOf(userId))
-        .claim("email", email)
-        .claim("role", role)
+        .claim(SecurityConstants.EMAIL_CLAIM, email)
+        .claim(SecurityConstants.ROLE_CLAIM, role)
         .issuedAt(Date.from(now))
         .expiration(Date.from(expiry))
         .signWith(signingKey())

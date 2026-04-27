@@ -8,10 +8,14 @@ import com.kapotiabi.exception.NotFoundException;
 import com.kapotiabi.repository.RepairShopRepository;
 import com.kapotiabi.repository.UserRepository;
 import com.kapotiabi.repository.UserSavedShopRepository;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +30,10 @@ public class UserSavedShopService {
   private final UserRepository userRepository;
 
   public PagedResponse<SavedShopResponse> getSaved(Long userId, int page, int size) {
-    var pageable = PageRequest.of(page, size, Sort.by("savedAt").descending());
-    var savedPage = savedShopRepository.findByUserId(userId, pageable);
-    var shopIds = savedPage.getContent().stream().map(s -> s.getShop().getId()).toList();
-    var shopMap =
+    Pageable pageable = PageRequest.of(page, size, Sort.by("savedAt").descending());
+    Page<UserSavedShopEntity> savedPage = savedShopRepository.findByUserId(userId, pageable);
+    List<Long> shopIds = savedPage.getContent().stream().map(s -> s.getShop().getId()).toList();
+    Map<Long, RepairShopEntity> shopMap =
         repairShopRepository.findAllById(shopIds).stream()
             .collect(Collectors.toMap(RepairShopEntity::getId, Function.identity()));
     return PagedResponse.from(
