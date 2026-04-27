@@ -38,7 +38,10 @@ public class CarEntity {
 
   private String make;
   private String model;
+
+  @Column(name = "model_year")
   private Integer year;
+
   private String engine;
 
   @Column(name = "created_at", updatable = false)
