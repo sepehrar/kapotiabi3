@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "/tmp/kapotiabi-frontend-tests",
+    "rootDir": "..",
+    "target": "ES2022",
+    "types": ["node"]
+  },
+  "include": ["./*.test.ts", "../src/lib/demoFlowSession.ts"]
+}
