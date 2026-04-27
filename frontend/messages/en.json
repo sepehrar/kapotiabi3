@@ -460,6 +460,7 @@
     }
   },
   "accountProfile": {
+    "brand": "KapotiAbi",
     "title": "Profile",
     "description": "Manage your personal details and search preferences.",
     "sections": {
