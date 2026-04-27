@@ -177,12 +177,12 @@ export default function RegisterForm() {
                     {t("role.label")}
                   </span>
 
-                  <div className="overflow-hidden rounded-full border border-(--accent)">
-                    <div className="grid grid-cols-2">
+                  <div className="mt-6 overflow-hidden rounded-full border border-(--accent)">
+                    <div className=" w-full flex flex-row overflow-hidden rounded-full ring-1 ring-white/10">
                       <button
                         type="button"
                         onClick={() => handleRoleChange("CAR_OWNER")}
-                        className={`px-4 py-3 text-sm font-semibold transition ${
+                        className={`w-full px-4 py-3 text-sm font-semibold transition ${
                           form.role === "CAR_OWNER"
                             ? "bg-(--accent) text-(--accent-foreground)"
                             : "bg-transparent text-white hover:bg-white/5"
@@ -194,7 +194,7 @@ export default function RegisterForm() {
                       <button
                         type="button"
                         onClick={() => handleRoleChange("SHOP_OWNER")}
-                        className={`px-4 py-3 text-sm font-semibold transition ${
+                        className={`w-full px-4 py-3 text-sm font-semibold transition ${
                           form.role === "SHOP_OWNER"
                             ? "bg-(--accent) text-(--accent-foreground) hover:bg-(--accent-hover)"
                             : "bg-transparent text-gray-500 hover:bg-white/5"
