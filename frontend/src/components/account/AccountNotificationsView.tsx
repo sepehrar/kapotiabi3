@@ -4,40 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
-// function AccentCheckbox({
-//   checked,
-//   onChange,
-// }: {
-//   checked: boolean;
-//   onChange: (value: boolean) => void;
-// }) {
-//   return (
-//     <div className="flex h-7 shrink-0 items-center">
-//       <div className="group grid size-6 grid-cols-1">
-//         <input
-//           type="checkbox"
-//           checked={checked}
-//           onChange={(event) => onChange(event.target.checked)}
-//           className="col-start-1 row-start-1 size-6 appearance-none rounded-md border border-white/15 bg-white/5 checked:border-(--accent) checked:bg-(--accent) hover:border-white/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) forced-colors:appearance-auto"
-//         />
-//         <svg
-//           fill="none"
-//           viewBox="0 0 14 14"
-//           className="pointer-events-none col-start-1 row-start-1 size-4 self-center justify-self-center stroke-(--accent-foreground)"
-//         >
-//           <path
-//             d="M3 8L6 11L11 3.5"
-//             strokeWidth={2.5}
-//             strokeLinecap="round"
-//             strokeLinejoin="round"
-//             className={checked ? "opacity-100" : "opacity-0"}
-//           />
-//         </svg>
-//       </div>
-//     </div>
-//   );
-// }
-
 type RequestStatus = "new" | "accepted" | "booked";
 
 type Reply = {
@@ -150,7 +116,6 @@ export default function AccountNotificationsView() {
               key={req.id}
               className="overflow-hidden rounded-2xl border border-white/10 bg-(--pills-background)"
             >
-              {/* Header */}
               <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
@@ -224,7 +189,6 @@ export default function AccountNotificationsView() {
                 </div>
               </div>
 
-              {/* Replies */}
               {isOpen && (
                 <div className="space-y-3 border-t border-white/10 p-6">
                   {req.replies.length === 0 ? (
@@ -241,7 +205,6 @@ export default function AccountNotificationsView() {
                             : "bg-white/2 opacity-50 ring-1 ring-inset ring-white/5"
                         }`}
                       >
-                        {/* Avatar */}
                         <div
                           className={`flex size-10 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${
                             reply.booked
@@ -252,7 +215,6 @@ export default function AccountNotificationsView() {
                           {reply.avatar}
                         </div>
 
-                        {/* Left: name + message | Right: price + buttons */}
                         <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                           <div className="min-w-0 flex-1">
                             <div className="mb-2 flex items-center gap-2">
@@ -284,7 +246,6 @@ export default function AccountNotificationsView() {
                             </p>
                           </div>
 
-                          {/* Price + actions */}
                           <div className="flex shrink-0 flex-row items-center gap-2 sm:flex-col sm:items-end">
                             <p
                               className={`text-base font-semibold ${

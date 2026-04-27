@@ -1,4 +1,3 @@
-// AccountProfileView.tsx — остаётся серверным, без "use client"
 import AccountProfileForm from "./AccountProfileForm";
 
 type AccountProfileViewProps = {
