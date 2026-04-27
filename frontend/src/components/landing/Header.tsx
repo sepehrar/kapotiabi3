@@ -83,10 +83,10 @@ export default function Header() {
   };
 
   const navigation = [
-    { name: t("nav.findService"), href: "#" },
+    { name: t("nav.findService"), href: `/${currentLocale}/search`  },
     { name: t("nav.categories"), href: `/${currentLocale}/categories` },
-    { name: t("nav.howItWorks"), href: "#" },
-    { name: t("nav.forBusinesses"), href: "#" },
+    // { name: t("nav.howItWorks"), href: "#" },
+    { name: t("nav.forBusinesses"), href: `/${currentLocale}/for-businesses` },
   ];
 
   return (

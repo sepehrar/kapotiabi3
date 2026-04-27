@@ -824,5 +824,142 @@
       "bookingConfirmed": "Broneering kinnitatud!",
       "redirecting": "Suuname sind teavituste lehele…"
     }
+  },
+  "businessLanding": {
+    "hero": {
+      "eyebrow": "Autoremontijatele ja teenusepakkujatele",
+      "title": "Kasvatage oma autoremonditeenust KapotiAbiga",
+      "description": "Looge oma töökoja leht, saage teenusepäringuid lähipiirkonna klientidelt, pakkuge oma hinda ja aega — ning broneeringud tulevad otse platvormi kaudu.",
+      "cta": "Loo tasuta konto",
+      "ctaSecondary": "Vaata kuidas see toimib"
+    },
+    "howItWorks": {
+      "title": "Kuidas see töötab ettevõtetele",
+      "description": "Viis lihtsat sammu, et alustada klientide vastuvõtmist KapotiAbi kaudu.",
+      "steps": {
+        "register": {
+          "title": "Loo ettevõtte konto",
+          "desc": "Registreeru teenusepakkujana ja kinnita oma ettevõtte andmed."
+        },
+        "fillServices": {
+          "title": "Lisa teenused ja hinnad",
+          "desc": "Nimeta pakutavad teenused, määra hinnad ja kirjelda, mis teeb sinu töökoja eriliseks."
+        },
+        "getPage": {
+          "title": "Saa oma töökoja leht",
+          "desc": "Loome sinu ettevõttele eraldi lehe, kus on näha teenused, hinnad, asukoht ja klientide arvustused."
+        },
+        "receiveRequests": {
+          "title": "Saa klientide päringuid",
+          "desc": "Kui autoomanik otsib sinu pakutavat teenust lähipiirkonnas, saadame talle sinu pakkumise automaatselt."
+        },
+        "proposeAndBook": {
+          "title": "Paku aega ja saa broneering",
+          "desc": "Vasta oma vaba aja ja hinnaga. Klient vaatab pakkumise üle ja broneerib otse KapotiAbi kaudu."
+        }
+      }
+    },
+    "whatYouGet": {
+      "title": "Kõik, mida su töökoda vajab, et kliendid sind leiaksid",
+      "description": "KapotiAbi annab sinu ettevõttele professionaalse kohalolu ja ühendab sind klientidega, kes otsivad aktiivselt sinu teenuseid.",
+      "items": {
+        "shopPage": {
+          "title": "Oma töökoja leht",
+          "desc": "Eraldi leht koos teenuste, hindade, asukoha, telefoninumbri ja klientide arvustustega — alati ajakohane."
+        },
+        "requests": {
+          "title": "Sissetulevad teenusepäringud",
+          "desc": "Saa päringuid klientidelt, kes otsivad täpselt sinu pakutavat teenust sinu piirkonnas."
+        },
+        "bookings": {
+          "title": "Broneeringute haldamine",
+          "desc": "Paku vabad ajad. Kliendid kinnitavad broneeringu otse platvormil."
+        },
+        "reviews": {
+          "title": "Google'i arvustused nähtaval",
+          "desc": "Sinu Google'i reiting ja arvustuste arv kuvatakse sinu loendi kõrval, et kasvatada klientide usaldust."
+        },
+        "analytics": {
+          "title": "Lihtsad tulemusnäitajad",
+          "desc": "Jälgi, kui palju inimesi vaatas sinu lehte, helistas või küsis teed."
+        }
+      }
+    },
+    "requestFlow": {
+      "title": "Päringust broneeringuni minutitega",
+      "description": "Ei mingit telefonimängu ega edasi-tagasi kirjutamist. Kogu protsess toimub KapotiAbi sees.",
+      "steps": {
+        "receive": {
+          "title": "Saad päringu",
+          "desc": "Lähipiirkonna klient vajab teenust, mida sa pakud. Tema päring saabub sinu töölauale koos auto andmete ja eelistustega."
+        },
+        "propose": {
+          "title": "Pakud aja ja hinna",
+          "desc": "Vasta oma vaba ajaga ja kinnita hind. Lisa vajadusel kliendile märkusi."
+        },
+        "booked": {
+          "title": "Klient broneerib sinu juurde",
+          "desc": "Klient vaatab sinu pakkumise üle, valib sobiva aja ja kinnitab broneeringu. Kõik on valmis."
+        }
+      }
+    },
+    "pricing": {
+      "title": "Lihtne ja läbipaistev hinnakiri",
+      "description": "Alusta tasuta ja uuenda paketti vastavalt äri kasvule. Peidetud tasusid pole.",
+      "popular": "Populaarseim",
+      "month": "kuu",
+      "cta": "Alusta",
+      "features": {
+        "shopPage": "Töökoja leht",
+        "requests": "Sissetulevad päringud",
+        "bookings": "Broneeringute haldamine",
+        "reviews": "Arvustuste kuvamine",
+        "analytics": "Tulemusnäitajad",
+        "priority": "Eelistatud koht otsingus",
+        "support": "Isiklik kontohaldur"
+      },
+      "plans": {
+        "basic": {
+          "name": "Põhi",
+          "desc": "Ideaalne alustamiseks",
+          "price": "Tasuta"
+        },
+        "pro": {
+          "name": "Pro",
+          "desc": "Kasvavale ettevõttele",
+          "price": "€29"
+        },
+        "business": {
+          "name": "Äri",
+          "desc": "Mitme asukohaga töökodadele",
+          "price": "€79"
+        }
+      }
+    },
+    "reviews": {
+      "title": "Mida töökoja omanikud ütlevad",
+      "items": {
+        "first": {
+          "text": "Hakkasime broneeringupäringuid saama juba esimese nädalaga. Seadistamine oli lihtne ja klientide kvaliteet on palju parem kui juhuslikud külastajad.",
+          "author": "Jüri K.",
+          "business": "AutoMaster Tallinn"
+        },
+        "second": {
+          "text": "Kliendid saabuvad juba teades hinda ja mida oodata. See säästab meil kõneaega ja vähendab oluliselt ärajäänud broneeringuid.",
+          "author": "Marek L.",
+          "business": "Tartu Auto Teenindus"
+        },
+        "third": {
+          "text": "Meie teenuste ja hindade nähtavus ühes kohas on toonud kliente linna osadest, kuhu me varem harva jõudsime.",
+          "author": "Andres V.",
+          "business": "Pärnu Auto OÜ"
+        }
+      }
+    },
+    "cta": {
+      "title": "Valmis rohkem kliente saama?",
+      "description": "Loo täna tasuta konto ja hakka saama teenusepäringuid autoomanikelt oma piirkonnas.",
+      "button": "Loo tasuta konto"
+    }
   }
 }

@@ -824,5 +824,90 @@
       "bookingConfirmed": "Booking confirmed!",
       "redirecting": "Redirecting to notifications…"
     }
+  },
+  "businessLanding": {
+    "hero": {
+      "eyebrow": "For repair shops & service providers",
+      "title": "Grow your auto service business with KapotiAbi",
+      "description": "Create your shop page, receive service requests from nearby customers, propose your price and time — and get booked directly through the platform.",
+      "cta": "Create your free account",
+      "ctaSecondary": "See how it works"
+    },
+    "howItWorks": {
+      "title": "How it works for businesses",
+      "description": "Five simple steps to start receiving customers through KapotiAbi.",
+      "steps": {
+        "register": {
+          "title": "Create your business account",
+          "desc": "Sign up as a service provider and verify your business details."
+        },
+        "fillServices": {
+          "title": "Add your services and prices",
+          "desc": "List the services you offer, set your prices, and describe what makes your shop stand out."
+        },
+        "getPage": {
+          "title": "Get your shop page",
+          "desc": "We create a dedicated page for your business showing your services, prices, location, and customer reviews."
+        },
+        "receiveRequests": {
+          "title": "Receive customer requests",
+          "desc": "When a car owner searches for a service you provide nearby, we send you their request automatically."
+        },
+        "proposeAndBook": {
+          "title": "Propose a time and get booked",
+          "desc": "Reply with your availability and price. The customer reviews your offer and books directly through KapotiAbi."
+        }
+      }
+    },
+    "whatYouGet": {
+      "title": "Everything your shop needs to get found",
+      "description": "KapotiAbi gives your business a professional presence and connects you with customers who are actively looking for your services.",
+      "items": {
+        "shopPage": {
+          "title": "Your own shop page",
+          "desc": "A dedicated page with your services, prices, location, phone, and customer reviews — always up to date."
+        },
+        "requests": {
+          "title": "Incoming service requests",
+          "desc": "Receive requests from customers looking for exactly the service you offer in your area."
+        },
+        "bookings": {
+          "title": "Direct booking management",
+          "desc": "Propose your available time slots. Customers confirm the booking right in the platform."
+        },
+        "reviews": {
+          "title": "Google reviews displayed",
+          "desc": "Your Google rating and review count are shown alongside your listing to build customer trust."
+        },
+        "analytics": {
+          "title": "Simple performance stats",
+          "desc": "Track how many people viewed your page, called, or requested directions."
+        }
+      }
+    },
+    "requestFlow": {
+      "title": "From request to booking in minutes",
+      "description": "No phone tag, no back-and-forth. The whole process happens inside KapotiAbi.",
+      "steps": {
+        "receive": {
+          "title": "You receive a request",
+          "desc": "A customer nearby needs a service you offer. Their request lands in your dashboard with car details and preferences."
+        },
+        "propose": {
+          "title": "You propose a time and price",
+          "desc": "Reply with your availability and confirm your price. Add any relevant notes for the customer."
+        },
+        "booked": {
+          "title": "Customer books with you",
+          "desc": "The customer reviews your offer, picks a time slot, and confirms the booking. You're all set."
+        }
+      }
+    },
+
+    "cta": {
+      "title": "Ready to reach more customers?",
+      "description": "Create your free account today and start receiving service requests from car owners in your area.",
+      "button": "Create your free account"
+    }
   }
 }
