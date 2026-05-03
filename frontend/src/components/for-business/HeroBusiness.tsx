@@ -16,7 +16,7 @@ export default function HeroBusiness() {
           className="object-contain object-top"
         />
 
-        <div className="absolute inset-0 bg-black/50" />
+        {/* <div className="absolute inset-0 bg-black/50" /> */}
 
         <div className="relative  ">
           <div className="mx-auto max-w-7xl  px-8 pt-32">

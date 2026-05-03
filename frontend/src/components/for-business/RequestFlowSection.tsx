@@ -17,8 +17,8 @@ export default function RequestFlowSection() {
             height={350}
             className="h-87.5 w-full object-cover object-center"
           />
-
-          <div className="absolute inset-0 bg-black/60" />
+          {/* 
+          <div className="absolute inset-0 bg-black/60" /> */}
 
           <div className="absolute inset-0 flex flex-col items-center  justify-end px-6 text-center">
             <h2 className="max-w-xl text-balance text-3xl font-light tracking-tight text-white sm:text-4xl mb-14">

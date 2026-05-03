@@ -35,7 +35,7 @@ export default function WhatYouGetSection() {
               {t("description")}
             </p>
 
-            <div className="mt-10 max-w-52 space-y-5">
+            <div className="mt-10 space-y-5">
               {items.map((key) => (
                 <div
                   key={key}
